@@ -1,15 +1,24 @@
-= Mature Modular Meta-framework (mmm)
+image:https://raw.github.com/m-m-m/mmm/master/src/site/resources/images/logo.png[logo,link="https://m-m-m.github.io"]
 
-image:https://raw.github.com/m-m-m/mmm/master/src/site/resources/images/logo.png[logo]
+= mmm-entity
 
-*Welcome to the wonderful world of http://m-m-m.sourceforge.net/index.html[mmm]*
-
-== mmm-entity
-
-image:https://travis-ci.org/m-m-m/entity.svg?branch=develop["build-status",link="https://travis-ci.org/m-m-m/entity"]
+image:https://img.shields.io/github/license/m-m-m/entity.svg?label=License["Apache License, Version 2.0",link=https://github.com/m-m-m/entity/blob/master/LICENSE]
+image:https://img.shields.io/maven-central/v/io.github.m-m-m/mmm-entity.svg?label=Maven%20Central["Maven Central",link=https://search.maven.org/search?q=g:io.github.m-m-m]image:https://travis-ci.org/m-m-m/entity.svg?branch=develop["build-status",link="https://travis-ci.org/m-m-m/entity"]
 
 The module `mmm-entity` provides API and fundamentals for persistent entities.
 Especially it provides `Id` and `Link` with sophisticated support for entity handling.
 
-* https://m-m-m.github.io/maven/apidocs/net/sf/mmm/entity/package-summary.html#package.description[Entity API]
-* https://m-m-m.github.io/maven/apidocs/[and much more... ]
+== Usage
+
+Maven Dependency:
+```xml
+<dependency>
+  <groupId>io.github.m-m-m</groupId>
+  <artifactId>mmm-entity-bean</artifactId>
+</dependency>
+```
+
+Module Dependency:
+```java
+  requires transitive io.github.mmm.entity.bean;
+```
