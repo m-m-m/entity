@@ -3,10 +3,12 @@ image:https://raw.github.com/m-m-m/mmm/master/src/site/resources/images/logo.png
 = mmm-entity
 
 image:https://img.shields.io/github/license/m-m-m/entity.svg?label=License["Apache License, Version 2.0",link=https://github.com/m-m-m/entity/blob/master/LICENSE]
-image:https://img.shields.io/maven-central/v/io.github.m-m-m/mmm-entity.svg?label=Maven%20Central["Maven Central",link=https://search.maven.org/search?q=g:io.github.m-m-m]image:https://travis-ci.org/m-m-m/entity.svg?branch=develop["build-status",link="https://travis-ci.org/m-m-m/entity"]
+image:https://img.shields.io/maven-central/v/io.github.m-m-m/mmm-entity.svg?label=Maven%20Central["Maven Central",link=https://search.maven.org/search?q=g:io.github.m-m-m]
+image:https://travis-ci.org/m-m-m/entity.svg?branch=develop["build-status",link="https://travis-ci.org/m-m-m/entity"]
 
 The module `mmm-entity` provides API and fundamentals for persistent entities.
 Especially it provides `Id` and `Link` with sophisticated support for entity handling.
+The module `mmm-entity-bean` adds propery and bean support on top of this.
 
 == Usage
 

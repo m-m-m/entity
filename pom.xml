@@ -3,9 +3,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>net.sf.m-m-m</groupId>
+    <groupId>io.github.m-m-m</groupId>
     <artifactId>mmm</artifactId>
-    <version>2.7.1</version>
+    <version>7</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
   <artifactId>mmm-entity-parent</artifactId>
@@ -22,25 +22,8 @@
   <properties>
     <revision>1.0.0</revision>
     <changelist>-SNAPSHOT</changelist>
-    <java.version>11</java.version>
     <mmm.repository>entity</mmm.repository>
   </properties>
-
-  <dependencies>
-    <!-- Test -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.5.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.12.2</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 
   <dependencyManagement>
     <dependencies>
@@ -51,13 +34,23 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mmm-entity-property</artifactId>
+        <artifactId>mmm-entity-bean</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mmm-entity-bean</artifactId>
-        <version>${project.version}</version>
+        <artifactId>mmm-value</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mmm-marshall</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mmm-bean</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
