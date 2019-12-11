@@ -86,7 +86,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
   }
 
   @Override
-  protected void doSetValue(Id<E> newValue) {
+  protected void doSet(Id<E> newValue) {
 
     if (newValue != null) {
       if (this.entityClass == null) {
@@ -98,7 +98,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
         this.idFactory = ((AbstractId<?, ?, ?>) newValue).getFactory();
       }
     }
-    super.doSetValue(newValue);
+    super.doSet(newValue);
   }
 
   /**

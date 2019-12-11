@@ -14,18 +14,13 @@ module io.github.mmm.entity.bean {
 
   provides io.github.mmm.property.factory.PropertyFactory //
       with io.github.mmm.entity.property.id.PropertyFactoryId, //
-      io.github.mmm.entity.property.link.PropertyFactoryLink, //
-      io.github.mmm.entity.property.linklist.PropertyFactoryLinkList, //
-      io.github.mmm.entity.property.linkset.PropertyFactoryLinkSet; //
+      io.github.mmm.entity.property.link.PropertyFactoryLink //
+  ;
 
   exports io.github.mmm.entity.bean;
 
   exports io.github.mmm.entity.property.id;
 
   exports io.github.mmm.entity.property.link;
-
-  exports io.github.mmm.entity.property.linklist;
-
-  exports io.github.mmm.entity.property.linkset;
 
 }

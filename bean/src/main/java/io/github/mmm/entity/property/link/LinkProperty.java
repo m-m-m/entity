@@ -19,7 +19,8 @@ import io.github.mmm.property.object.ObjectProperty;
  * {@link ObjectProperty} with {@link Link} {@link #getValue() value} {@link Link#getTarget() pointing to} an
  * {@link io.github.mmm.entity.bean.EntityBean entity}.
  *
- * @param <E> the generic type of the {@link Link#getTarget() linked} {@link io.github.mmm.entity.bean.EntityBean entity}.
+ * @param <E> the generic type of the {@link Link#getTarget() linked} {@link io.github.mmm.entity.bean.EntityBean
+ *        entity}.
  *
  * @since 1.0.0
  */
@@ -88,7 +89,7 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
   }
 
   @Override
-  protected void doSetValue(Link<E> newValue) {
+  protected void doSet(Link<E> newValue) {
 
     if (newValue != null) {
       Id<E> id = newValue.getId();
@@ -103,7 +104,7 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
         }
       }
     }
-    super.doSetValue(newValue);
+    super.doSet(newValue);
   }
 
   @Override
