@@ -80,9 +80,18 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
   public IdProperty(String name, Class<? extends Id> idClass, PropertyMetadata<Id<E>> metadata, Class<E> entityClass,
       IdFactory<?, ?, ?> idFactory) {
 
-    super(name, (Class) idClass, metadata);
+    super(name, idClass(idClass), metadata);
     this.entityClass = entityClass;
     this.idFactory = idFactory;
+  }
+
+  @SuppressWarnings("rawtypes")
+  private static Class idClass(Class<? extends Id> idClass) {
+
+    if (idClass == null) {
+      return Id.class;
+    }
+    return idClass;
   }
 
   @Override
