@@ -40,47 +40,47 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
    */
   public LinkProperty(String name, PropertyMetadata<Link<E>> metadata) {
 
-    this(name, metadata, null, null, null);
+    this(name, null, null, null, metadata);
   }
 
   /**
    * The constructor.
    *
    * @param name the {@link #getName() name}.
-   * @param metadata the {@link #getMetadata() metadata}.
    * @param entityClass the optional {@link Class} of the linked entity.
+   * @param metadata the {@link #getMetadata() metadata}.
    */
-  public LinkProperty(String name, PropertyMetadata<Link<E>> metadata, Class<E> entityClass) {
+  public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata) {
 
-    this(name, metadata, entityClass, null, null);
+    this(name, null, entityClass, null, metadata);
   }
 
   /**
    * The constructor.
    *
    * @param name the {@link #getName() name}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   * @param entityClass the optional {@link Class} of the linked entity.
    * @param idFactory the optional {@link IdFactory}.
+   * @param entityClass the optional {@link Class} of the linked entity.
+   * @param metadata the {@link #getMetadata() metadata}.
    */
-  public LinkProperty(String name, PropertyMetadata<Link<E>> metadata, Class<E> entityClass,
-      IdFactory<?, ?, ?> idFactory) {
+  public LinkProperty(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass,
+      PropertyMetadata<Link<E>> metadata) {
 
-    this(name, metadata, entityClass, idFactory, null);
+    this(name, idFactory, entityClass, null, metadata);
   }
 
   /**
    * The constructor.
    *
    * @param name the {@link #getName() name}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   * @param entityClass the optional {@link Class} of the linked entity.
    * @param idFactory the optional {@link IdFactory}.
+   * @param entityClass the optional {@link Class} of the linked entity.
    * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
+   * @param metadata the {@link #getMetadata() metadata}.
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public LinkProperty(String name, PropertyMetadata<Link<E>> metadata, Class<E> entityClass,
-      IdFactory<?, ?, ?> idFactory, Function<Id<E>, E> resolver) {
+  public LinkProperty(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass, Function<Id<E>, E> resolver,
+      PropertyMetadata<Link<E>> metadata) {
 
     super(name, (Class) Link.class, metadata);
     this.entityClass = entityClass;

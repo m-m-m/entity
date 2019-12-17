@@ -2,9 +2,11 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean;
 
+import io.github.mmm.bean.PropertyMethod;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.property.id.IdProperty;
 
 /**
@@ -18,7 +20,12 @@ public interface EntityBean extends WritableBean, Entity {
   /**
    * @return the {@link IdProperty property} with the {@link Id} (primary key) of this entity.
    */
-  IdProperty<? extends EntityBean> Id();
+  @SuppressWarnings("unchecked")
+  @PropertyMethod
+  default IdProperty<? extends EntityBean> Id() {
+
+    return new IdProperty<>(LongVersionId.FACTORY, (Class<? extends EntityBean>) getType().getJavaClass());
+  }
 
   @Override
   default Id<? extends EntityBean> getId() {
@@ -31,22 +38,6 @@ public interface EntityBean extends WritableBean, Entity {
   default void setId(Id<? extends Entity> id) {
 
     Id().set((Id) id);
-  }
-
-  /**
-   * @param <B> type of {@link EntityBean}.
-   * @param bean the {@link EntityBean} instance. May be {@code null}.
-   * @return the {@link Id} of the given {@link EntityBean}. May be {@code null} if given {@link EntityBean} was
-   *         {@code null} or its {@link #Id() Id property} has {@code null} as {@link Id} {@link IdProperty#getValue()
-   *         value}.
-   */
-  @SuppressWarnings("unchecked")
-  static <B extends EntityBean> Id<B> getId(B bean) {
-
-    if (bean == null) {
-      return null;
-    }
-    return (Id<B>) bean.Id().get();
   }
 
 }

@@ -4,8 +4,12 @@ package io.github.mmm.entity.bean;
 
 import io.github.mmm.bean.AbstractBean;
 import io.github.mmm.bean.Bean;
+import io.github.mmm.bean.PropertyBuilders;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.impl.EntityPropertyBuildersImpl;
+import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
 
 /**
@@ -35,7 +39,7 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    */
   public SimpleEntityBean(AbstractBean writable, boolean dynamic) {
 
-    this(writable, LongVersionId.class, dynamic);
+    this(writable, LongVersionId.FACTORY, dynamic);
   }
 
   /**
@@ -43,20 +47,31 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    *
    * @param writable the writable {@link Bean} to create a {@link #isReadOnly() read-only} view on or {@code null} to
    *        create a regular mutable {@link Bean}.
-   * @param idClass the {@link Class} of the {@link Id} implementation.
+   * @param idFactory the {@link IdFactory} to marshal data.
    * @param dynamic the {@link #isDynamic() dynamic flag}.
    */
-  @SuppressWarnings("rawtypes")
-  public SimpleEntityBean(AbstractBean writable, Class<? extends Id> idClass, boolean dynamic) {
+  public SimpleEntityBean(AbstractBean writable, IdFactory<?, ?, ?> idFactory, boolean dynamic) {
 
     super(writable, dynamic);
-    this.Id = add(new IdProperty<>(idClass, getClass()));
+    this.Id = add(new IdProperty<>(IdProperty.NAME, idFactory, getClass()));
   }
 
   @Override
   public IdProperty<? extends SimpleEntityBean> Id() {
 
     return this.Id;
+  }
+
+  @Override
+  protected EntityPropertyBuilders add() {
+
+    return (EntityPropertyBuilders) super.add();
+  }
+
+  @Override
+  protected PropertyBuilders createPropertyBuilders() {
+
+    return new EntityPropertyBuildersImpl(this);
   }
 
 }

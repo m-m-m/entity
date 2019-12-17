@@ -47,7 +47,7 @@ public class PropertyFactoryId<E> extends AbstractPropertyFactory<Id<E>, IdPrope
   @Override
   public IdProperty<E> create(String name, Class<? extends Id<E>> valueClass, PropertyMetadata<Id<E>> metadata) {
 
-    return new IdProperty<>(name, valueClass, metadata, null);
+    return new IdProperty<>(name, valueClass, metadata);
   }
 
   @Override

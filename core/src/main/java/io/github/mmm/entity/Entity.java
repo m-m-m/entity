@@ -27,4 +27,19 @@ public interface Entity {
    */
   void setId(Id<? extends Entity> id);
 
+  /**
+   * @param <B> type of {@link Entity}.
+   * @param bean the {@link Entity} instance. May be {@code null}.
+   * @return the {@link Id} of the given {@link Entity}. May be {@code null} if given {@link Entity} was {@code null} or
+   *         its {@link #getId() Id} is {@code null}.
+   */
+  @SuppressWarnings("unchecked")
+  static <B extends Entity> Id<B> getId(B bean) {
+
+    if (bean == null) {
+      return null;
+    }
+    return (Id<B>) bean.getId();
+  }
+
 }
