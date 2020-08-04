@@ -56,6 +56,20 @@ public class SimpleEntityBean extends Bean implements EntityBean {
     this.Id = add(new IdProperty<>(IdProperty.NAME, idFactory, getClass()));
   }
 
+  /**
+   * The constructor.
+   *
+   * @param writable the writable {@link Bean} to create a {@link #isReadOnly() read-only} view on or {@code null} to
+   *        create a regular mutable {@link Bean}.
+   * @param dynamic the {@link #isDynamic() dynamic flag}.
+   * @param idProperty the {@link #Id() ID property}.
+   */
+  public SimpleEntityBean(AbstractBean writable, boolean dynamic, IdProperty<? extends SimpleEntityBean> idProperty) {
+
+    super(writable, dynamic);
+    this.Id = add(idProperty);
+  }
+
   @Override
   public IdProperty<? extends SimpleEntityBean> Id() {
 

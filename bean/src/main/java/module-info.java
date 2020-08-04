@@ -19,6 +19,8 @@ module io.github.mmm.entity.bean {
 
   exports io.github.mmm.entity.bean;
 
+  exports io.github.mmm.entity.property.builder;
+
   exports io.github.mmm.entity.property.id;
 
   exports io.github.mmm.entity.property.link;
