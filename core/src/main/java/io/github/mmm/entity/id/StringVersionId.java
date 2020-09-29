@@ -24,6 +24,17 @@ public class StringVersionId<E> extends AbstractVersionId<E, String> {
    *
    * @param type the {@link #getType() type}.
    * @param id the {@link #getId() primary key}.
+   */
+  public StringVersionId(Class<E> type, String id) {
+
+    this(type, id, Long.valueOf(0));
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param type the {@link #getType() type}.
+   * @param id the {@link #getId() primary key}.
    * @param version the {@link #getVersion() version}.
    */
   public StringVersionId(Class<E> type, String id, Long version) {
