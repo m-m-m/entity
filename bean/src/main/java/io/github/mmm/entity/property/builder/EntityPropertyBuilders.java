@@ -21,6 +21,7 @@ import io.github.mmm.property.builder.DefaultPropertyBuilders;
  *
  * @since 1.0.0
  */
+@SuppressWarnings("unchecked")
 public interface EntityPropertyBuilders extends DefaultPropertyBuilders {
 
   /**
@@ -42,7 +43,7 @@ public interface EntityPropertyBuilders extends DefaultPropertyBuilders {
    */
   default <E extends Entity> IdProperty<E> newId(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    return get(name, this, () -> accept(new IdProperty<>(name, idFactory, entityClass, null), this));
+    return get(name, this, metadata -> accept(new IdProperty<>(name, idFactory, entityClass, metadata), this));
   }
 
   /**
@@ -65,7 +66,7 @@ public interface EntityPropertyBuilders extends DefaultPropertyBuilders {
    */
   default <E extends Entity> LinkProperty<E> newLink(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    return get(name, this, () -> accept(new LinkProperty<>(name, idFactory, entityClass, null), this));
+    return get(name, this, metadata -> accept(new LinkProperty<>(name, idFactory, entityClass, metadata), this));
   }
 
   /**
