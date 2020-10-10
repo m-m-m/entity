@@ -34,10 +34,11 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    *
    * @param idFactory the {@link IdFactory} to marshal data.
    */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public SimpleEntityBean(IdFactory<?, ?, ?> idFactory) {
 
     super();
-    this.Id = add(new IdProperty<>(IdProperty.NAME, idFactory, getClass()));
+    this.Id = add(new IdProperty(IdProperty.NAME, idFactory, getClass()));
   }
 
   /**
@@ -45,10 +46,11 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    *
    * @param idProperty the {@link #Id() ID property}.
    */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public SimpleEntityBean(IdProperty<? extends SimpleEntityBean> idProperty) {
 
     super();
-    this.Id = add(idProperty);
+    this.Id = add((IdProperty) idProperty);
   }
 
   @Override
