@@ -2,7 +2,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean;
 
-import io.github.mmm.bean.AbstractBean;
 import io.github.mmm.bean.Bean;
 import io.github.mmm.bean.PropertyBuilders;
 import io.github.mmm.entity.id.Id;
@@ -27,46 +26,28 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    */
   public SimpleEntityBean() {
 
-    this(null, null, false);
+    this(LongVersionId.FACTORY);
   }
 
   /**
    * The constructor.
    *
-   * @param writable the writable {@link Bean} to create a {@link #isReadOnly() read-only} view on or {@code null} to
-   *        create a regular mutable {@link Bean}.
-   * @param dynamic the {@link #isDynamic() dynamic flag}.
-   */
-  public SimpleEntityBean(AbstractBean writable, boolean dynamic) {
-
-    this(writable, LongVersionId.FACTORY, dynamic);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param writable the writable {@link Bean} to create a {@link #isReadOnly() read-only} view on or {@code null} to
-   *        create a regular mutable {@link Bean}.
    * @param idFactory the {@link IdFactory} to marshal data.
-   * @param dynamic the {@link #isDynamic() dynamic flag}.
    */
-  public SimpleEntityBean(AbstractBean writable, IdFactory<?, ?, ?> idFactory, boolean dynamic) {
+  public SimpleEntityBean(IdFactory<?, ?, ?> idFactory) {
 
-    super(writable, dynamic);
+    super();
     this.Id = add(new IdProperty<>(IdProperty.NAME, idFactory, getClass()));
   }
 
   /**
    * The constructor.
    *
-   * @param writable the writable {@link Bean} to create a {@link #isReadOnly() read-only} view on or {@code null} to
-   *        create a regular mutable {@link Bean}.
-   * @param dynamic the {@link #isDynamic() dynamic flag}.
    * @param idProperty the {@link #Id() ID property}.
    */
-  public SimpleEntityBean(AbstractBean writable, boolean dynamic, IdProperty<? extends SimpleEntityBean> idProperty) {
+  public SimpleEntityBean(IdProperty<? extends SimpleEntityBean> idProperty) {
 
-    super(writable, dynamic);
+    super();
     this.Id = add(idProperty);
   }
 

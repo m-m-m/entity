@@ -4,6 +4,8 @@
  */
 /**
  * Provides entity-beans based on {@code mmm-bean} and {@code mmm-entity}.
+ *
+ * @provides io.github.mmm.property.factory.PropertyFactory
  */
 @SuppressWarnings("rawtypes") //
 module io.github.mmm.entity.bean {
