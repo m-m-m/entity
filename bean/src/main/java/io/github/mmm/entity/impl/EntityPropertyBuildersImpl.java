@@ -3,7 +3,7 @@
 package io.github.mmm.entity.impl;
 
 import io.github.mmm.bean.AbstractBean;
-import io.github.mmm.bean.PropertyBuilders;
+import io.github.mmm.bean.StandardPropertyBuilders;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 
 /**
@@ -11,7 +11,7 @@ import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
  * 
  * @since 1.0.0
  */
-public class EntityPropertyBuildersImpl extends PropertyBuilders implements EntityPropertyBuilders {
+public class EntityPropertyBuildersImpl extends StandardPropertyBuilders implements EntityPropertyBuilders {
 
   /**
    * The constructor.

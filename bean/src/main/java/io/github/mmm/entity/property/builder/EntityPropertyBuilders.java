@@ -14,15 +14,15 @@ import io.github.mmm.entity.property.id.IdPropertyBuilder;
 import io.github.mmm.entity.property.link.LinkProperty;
 import io.github.mmm.entity.property.link.LinkPropertyBuilder;
 import io.github.mmm.property.Property;
-import io.github.mmm.property.builder.DefaultPropertyBuilders;
+import io.github.mmm.property.builder.PropertyBuilders;
 
 /**
- * Extends {@link DefaultPropertyBuilders} for entity specific properties.
+ * Extends {@link PropertyBuilders} for entity specific properties.
  *
  * @since 1.0.0
  */
 @SuppressWarnings("unchecked")
-public interface EntityPropertyBuilders extends DefaultPropertyBuilders {
+public interface EntityPropertyBuilders extends PropertyBuilders {
 
   /**
    * @param <E> type of the referenced {@link Entity}.
@@ -54,7 +54,7 @@ public interface EntityPropertyBuilders extends DefaultPropertyBuilders {
    */
   default <E extends Entity> IdPropertyBuilder<E> newId(IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    return builder(new IdPropertyBuilder<>(idFactory, entityClass), this);
+    return builder(new IdPropertyBuilder<>(this, idFactory, entityClass), this);
   }
 
   /**
@@ -77,7 +77,7 @@ public interface EntityPropertyBuilders extends DefaultPropertyBuilders {
    */
   default <E extends Entity> LinkPropertyBuilder<E> newLink(IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    return builder(new LinkPropertyBuilder<>(idFactory, entityClass), this);
+    return builder(new LinkPropertyBuilder<>(this, idFactory, entityClass), this);
   }
 
 }

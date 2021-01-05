@@ -5,7 +5,7 @@ package io.github.mmm.entity.bean;
 import io.github.mmm.bean.AdvancedBean;
 import io.github.mmm.bean.Bean;
 import io.github.mmm.bean.BeanClass;
-import io.github.mmm.bean.PropertyBuilders;
+import io.github.mmm.bean.StandardPropertyBuilders;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.id.LongVersionId;
@@ -100,7 +100,7 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
   }
 
   @Override
-  protected PropertyBuilders createPropertyBuilders() {
+  protected StandardPropertyBuilders createPropertyBuilders() {
 
     return new EntityPropertyBuildersImpl(this);
   }

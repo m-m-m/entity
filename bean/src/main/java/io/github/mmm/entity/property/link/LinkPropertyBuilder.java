@@ -9,6 +9,7 @@ import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.link.Link;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
+import io.github.mmm.property.builder.PropertyBuilders;
 import io.github.mmm.validation.main.ValidatorBuilderObject;
 
 /**
@@ -28,21 +29,24 @@ public final class LinkPropertyBuilder<E> extends
 
   /**
    * The constructor.
+   *
+   * @param parent the {@link PropertyBuilders}.
    */
-  public LinkPropertyBuilder() {
+  public LinkPropertyBuilder(PropertyBuilders parent) {
 
-    super();
+    super(parent);
   }
 
   /**
    * The constructor.
    *
+   * @param parent the {@link PropertyBuilders}.
    * @param idFactory the {@link IdFactory} to marshal data.
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public LinkPropertyBuilder(IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
+  public LinkPropertyBuilder(PropertyBuilders parent, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    super();
+    super(parent);
     this.idFactory = idFactory;
     this.entityClass = entityClass;
   }
