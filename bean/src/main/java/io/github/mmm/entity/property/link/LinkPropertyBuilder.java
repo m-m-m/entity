@@ -7,9 +7,9 @@ import java.util.function.Function;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.link.Link;
+import io.github.mmm.property.AttributeReadOnly;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
-import io.github.mmm.property.builder.PropertyBuilders;
 import io.github.mmm.validation.main.ValidatorBuilderObject;
 
 /**
@@ -30,23 +30,23 @@ public final class LinkPropertyBuilder<E> extends
   /**
    * The constructor.
    *
-   * @param parent the {@link PropertyBuilders}.
+   * @param lock the {@link #getLock() lock}.
    */
-  public LinkPropertyBuilder(PropertyBuilders parent) {
+  public LinkPropertyBuilder(AttributeReadOnly lock) {
 
-    super(parent);
+    super(lock);
   }
 
   /**
    * The constructor.
    *
-   * @param parent the {@link PropertyBuilders}.
+   * @param lock the {@link #getLock() lock}.
    * @param idFactory the {@link IdFactory} to marshal data.
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public LinkPropertyBuilder(PropertyBuilders parent, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
+  public LinkPropertyBuilder(AttributeReadOnly lock, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    super(parent);
+    super(lock);
     this.idFactory = idFactory;
     this.entityClass = entityClass;
   }

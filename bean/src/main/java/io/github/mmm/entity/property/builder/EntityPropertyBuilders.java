@@ -54,7 +54,7 @@ public interface EntityPropertyBuilders extends PropertyBuilders {
    */
   default <E extends Entity> IdPropertyBuilder<E> newId(IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    return builder(new IdPropertyBuilder<>(this, idFactory, entityClass), this);
+    return builder(new IdPropertyBuilder<>(getLock(), idFactory, entityClass), this);
   }
 
   /**
@@ -77,7 +77,7 @@ public interface EntityPropertyBuilders extends PropertyBuilders {
    */
   default <E extends Entity> LinkPropertyBuilder<E> newLink(IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
 
-    return builder(new LinkPropertyBuilder<>(this, idFactory, entityClass), this);
+    return builder(new LinkPropertyBuilder<>(getLock(), idFactory, entityClass), this);
   }
 
 }

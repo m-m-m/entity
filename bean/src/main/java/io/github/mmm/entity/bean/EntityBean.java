@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean;
 
+import io.github.mmm.bean.AbstractInterface;
 import io.github.mmm.bean.PropertyMethod;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
@@ -15,6 +16,7 @@ import io.github.mmm.entity.property.id.IdProperty;
  *
  * @since 1.0.0
  */
+@AbstractInterface
 public interface EntityBean extends WritableBean, Entity {
 
   /**
