@@ -2,23 +2,25 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
+import java.util.UUID;
+
 import io.github.mmm.entity.Entity;
 
 /**
- * This is the interface for an ID that uniquely identifies a persistent entity of a particular {@link #getType() type}
- * ({@code <E>}). <br>
- * An {@link Id} is build out of the following parts:
+ * This is the interface for an ID that uniquely identifies a {@link Entity persistent entity} of a particular
+ * {@link #getType() type} ({@code <E>}). <br>
+ * An {@link Id} has the following properties:
  * <ul>
  * <li>{@link #getId() object-id} - the primary key that identifies the entity and is unique for a specific
- * {@link #getType() type}.</li>
+ * {@link #getType() type}. As a best practice it is recommended to make the object-id even unique for all entities of a
+ * database.</li>
  * <li>{@link #getType() type} - is the (optional) type of the identified entity.</li>
  * <li>{@link #getVersion() version} - the optional version (revision) of the entity.</li>
  * </ul>
  * Just like the {@link #getId() primary key} the {@link #getVersion() version} and {@link #getType() type} of an object
  * do not change. This allows to use the {@link Id} as globally unique identifier for its corresponding entity.<br>
- * An {@link Id} has a compact {@link #toString() string representation} that can be converted back to an {@link Id}.
- * Therefore, the implementation shall provide a {@link String}-arg constructor and a static {@code valueOf(String)}
- * method.
+ * An {@link Id} has a compact {@link #toString() string representation}. However, for structured representation and
+ * marshaling use {@link IdMarshaller} and convert to JSON, XML, or other structured format.
  *
  * @param <E> type of the identified entity.
  *
@@ -27,11 +29,11 @@ import io.github.mmm.entity.Entity;
  */
 public interface Id<E> {
 
-  /** The name of the {@link #getId() ID} property (e.g. for JSON or XML). */
+  /** Name of the {@link #getId() id} property. */
   String PROPERTY_ID = "id";
 
-  /** The name of the {@link #getVersion() version} property (e.g. for JSON or XML). */
-  String PROPERTY_VERSION = "v";
+  /** Name of the {@link #getVersion() version} property. */
+  String PROPERTY_VERSION = "version";
 
   /**
    * The value used as {@link #getVersion() version} if it unspecified. If you are using an {@link Id} as link to an
@@ -93,13 +95,12 @@ public interface Id<E> {
    *         whenever a modification is committed. However, it may also be an {@link java.time.Instant}. The version
    *         acts as a modification sequence for optimistic locking. On each update it will be verified that the version
    *         has not been increased already by another transaction. When linking an {@link io.github.mmm.entity.Entity}
-   *         ({@link Id} used as foreign key) the version can act as revision for auditing. If it is
-   *         {@link #VERSION_LATEST} ({@code null}) it points to the latest revision of the
-   *         {@link io.github.mmm.entity.Entity}. Otherwise it points to a specific historic revision of the
-   *         {@link io.github.mmm.entity.Entity}. Depending on the database technology (e.g. when using hibernate envers)
-   *         the version and the revision can be semantically different. In such case a
-   *         {@link io.github.mmm.entity.Entity#getId() primary key} can not be converted 1:1 as revisioned foreign key
-   *         {@link Id}.
+   *         ({@link Id} used as foreign key) the version can act as revision for auditing. If it is {@code null} it
+   *         points to the {@link LatestVersion latest version} of the {@link io.github.mmm.entity.Entity}. Otherwise it
+   *         points to a specific historic revision of the {@link io.github.mmm.entity.Entity}. Depending on the
+   *         database technology (e.g. when using hibernate envers) the version and the revision can be semantically
+   *         different. In such case a {@link io.github.mmm.entity.Entity#getId() primary key} can not be converted 1:1
+   *         as revisioned foreign key {@link Id}.
    */
   Comparable<?> getVersion();
 
@@ -139,6 +140,30 @@ public interface Id<E> {
       return null;
     }
     return (Id<E>) entity.getId();
+  }
+
+  /**
+   * @param <E> type of {@link Entity}.
+   * @param type the {@link Class} reflecting the {@link Entity}.
+   * @param id the {@link Id#getId() ID}.
+   * @param version the optional {@link Id#getVersion() version}.
+   * @return the {@link Id} for the given arguments.
+   */
+  static <E> Id<E> of(Class<E> type, Object id, Object version) {
+
+    if (id == null) {
+      assert (version == null);
+      return null;
+    }
+    if (id instanceof Long) {
+      return LongId.of(type, (Long) id, version);
+    } else if (id instanceof UUID) {
+      return UuidId.of(type, (UUID) id, version);
+    } else if (id instanceof String) {
+      return StringId.of(type, (String) id, version);
+    } else {
+      throw new IllegalArgumentException("Unsupported id type: " + id.getClass().getName());
+    }
   }
 
 }

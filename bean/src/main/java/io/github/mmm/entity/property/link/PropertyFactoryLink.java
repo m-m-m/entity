@@ -48,7 +48,7 @@ public class PropertyFactoryLink<E extends EntityBean> extends AbstractPropertyF
   @Override
   public LinkProperty<E> create(String name, Class<? extends Link<E>> valueClass, PropertyMetadata<Link<E>> metadata) {
 
-    return new LinkProperty<>(name, metadata);
+    return new LinkProperty<>(name, null, metadata);
   }
 
 }

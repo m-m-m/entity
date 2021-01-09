@@ -5,11 +5,10 @@ package io.github.mmm.entity.bean;
 import io.github.mmm.bean.Bean;
 import io.github.mmm.bean.StandardPropertyBuilders;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdFactory;
-import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.property.PropertyMetadata;
 
 /**
  * Implementation of {@link EntityBean} as simple {@link Bean}.
@@ -26,19 +25,7 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    */
   public SimpleEntityBean() {
 
-    this(LongVersionId.FACTORY);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param idFactory the {@link IdFactory} to marshal data.
-   */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public SimpleEntityBean(IdFactory<?, ?, ?> idFactory) {
-
-    super();
-    this.Id = add(new IdProperty(IdProperty.NAME, idFactory, getClass()));
+    this(null);
   }
 
   /**
@@ -50,6 +37,9 @@ public class SimpleEntityBean extends Bean implements EntityBean {
   public SimpleEntityBean(IdProperty<? extends SimpleEntityBean> idProperty) {
 
     super();
+    if (idProperty == null) {
+      idProperty = new IdProperty<>(getClass(), PropertyMetadata.of(this));
+    }
     this.Id = add((IdProperty) idProperty);
   }
 

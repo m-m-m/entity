@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @since 1.0.0
  */
-public class LongVersionId<E> extends AbstractVersionId<E, Long> {
+public class LongVersionId<E> extends AbstractVersionId<E, Long> implements LongId<E> {
 
   /** @see #getFactory() */
   public static final Factory FACTORY = new Factory();
@@ -50,12 +50,10 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> {
     return this.id;
   }
 
-  /**
-   * @return the {@link #getId() primary key} as primitve {@code long} value.
-   */
-  public long getIdAsLong() {
+  @Override
+  protected String getMarshalPropertyId() {
 
-    return this.id.longValue();
+    return PROPERTY_LONG_ID;
   }
 
   @Override
@@ -65,35 +63,9 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> {
   }
 
   /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @return the new {@link LongVersionId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> LongVersionId<E> of(Class<E> type, Long id) {
-
-    return of(type, id, null);
-  }
-
-  /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @param version the {@link #getVersion() version}.
-   * @return the new {@link LongVersionId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> LongVersionId<E> of(Class<E> type, Long id, Long version) {
-
-    if (id == null) {
-      return null;
-    }
-    return new LongVersionId<>(type, id, version);
-  }
-
-  /**
    * {@link IdFactory} implementation.
    */
-  public static class Factory implements IdFactory<Long, Long, LongVersionId<?>> {
+  public static class Factory extends LongIdFactory<Long> {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
@@ -103,15 +75,13 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> {
     }
 
     @Override
-    public <E> LongVersionId<E> unmarshall(Class<E> type, String id, String version) {
+    public <E> LongId<E> parse(Class<E> type, String id, String version) {
 
-      return create(type, Long.valueOf(id), Long.valueOf(version));
-    }
-
-    @Override
-    public <E> LongVersionId<E> create(Class<E> type, Long id, Long version) {
-
-      return of(type, id, version);
+      Long longVersion = null;
+      if (version != null) {
+        longVersion = Long.valueOf(version);
+      }
+      return create(type, Long.valueOf(id), longVersion);
     }
   }
 

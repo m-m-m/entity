@@ -21,7 +21,7 @@ import io.github.mmm.validation.main.ValidatorBuilderObject;
 public final class LinkPropertyBuilder<E> extends
     PropertyBuilder<Link<E>, LinkProperty<E>, ValidatorBuilderObject<Link<E>, LinkPropertyBuilder<E>>, LinkPropertyBuilder<E>> {
 
-  private IdFactory<?, ?, ?> idFactory;
+  private IdFactory<?, ?> idFactory;
 
   private Class<E> entityClass;
 
@@ -34,31 +34,32 @@ public final class LinkPropertyBuilder<E> extends
    */
   public LinkPropertyBuilder(AttributeReadOnly lock) {
 
-    super(lock);
+    this(lock, null, null);
   }
 
   /**
    * The constructor.
    *
    * @param lock the {@link #getLock() lock}.
-   * @param idFactory the {@link IdFactory} to marshal data.
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public LinkPropertyBuilder(AttributeReadOnly lock, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
+  public LinkPropertyBuilder(AttributeReadOnly lock, Class<E> entityClass) {
+
+    this(lock, entityClass, null);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param lock the {@link #getLock() lock}.
+   * @param entityClass the {@link Class} reflecting the entity.
+   * @param idFactory the {@link IdFactory} to marshal data.
+   */
+  public LinkPropertyBuilder(AttributeReadOnly lock, Class<E> entityClass, IdFactory<?, ?> idFactory) {
 
     super(lock);
     this.idFactory = idFactory;
     this.entityClass = entityClass;
-  }
-
-  /**
-   * @param factory the {@link IdFactory} to marshal data.
-   * @return this builder itself ({@code this}) for fluent API calls.
-   */
-  public LinkPropertyBuilder<E> idFactory(IdFactory<?, ?, ?> factory) {
-
-    this.idFactory = factory;
-    return this;
   }
 
   /**
@@ -68,6 +69,16 @@ public final class LinkPropertyBuilder<E> extends
   public LinkPropertyBuilder<E> entityClass(Class<E> entityType) {
 
     this.entityClass = entityType;
+    return this;
+  }
+
+  /**
+   * @param factory the {@link IdFactory}.
+   * @return this builder itself ({@code this}) for fluent API calls.
+   */
+  public LinkPropertyBuilder<E> idFactory(IdFactory<?, ?> factory) {
+
+    this.idFactory = factory;
     return this;
   }
 
@@ -91,7 +102,7 @@ public final class LinkPropertyBuilder<E> extends
   @Override
   protected LinkProperty<E> build(String name, PropertyMetadata<Link<E>> metadata) {
 
-    return new LinkProperty<>(name, this.idFactory, this.entityClass, this.resolver, metadata);
+    return new LinkProperty<>(name, this.entityClass, metadata, this.resolver, this.idFactory);
   }
 
 }

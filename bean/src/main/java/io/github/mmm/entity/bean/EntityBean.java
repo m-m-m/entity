@@ -7,7 +7,6 @@ import io.github.mmm.bean.PropertyMethod;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.property.id.IdProperty;
 
 /**
@@ -22,11 +21,11 @@ public interface EntityBean extends WritableBean, Entity {
   /**
    * @return the {@link IdProperty property} with the {@link Id} (primary key) of this entity.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @PropertyMethod
   default IdProperty<? extends EntityBean> Id() {
 
-    return new IdProperty<>(LongVersionId.FACTORY, (Class<? extends EntityBean>) getType().getJavaClass());
+    return new IdProperty(getType().getJavaClass());
   }
 
   @Override

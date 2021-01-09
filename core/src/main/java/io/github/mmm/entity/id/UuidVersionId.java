@@ -20,7 +20,7 @@ import java.util.UUID;
  *
  * @since 1.0.0
  */
-public class UuidVersionId<E> extends AbstractVersionId<E, UUID> {
+public class UuidVersionId<E> extends AbstractVersionId<E, UUID> implements UuidId<E> {
 
   /** @see #getFactory() */
   public static final Factory FACTORY = new Factory();
@@ -48,41 +48,21 @@ public class UuidVersionId<E> extends AbstractVersionId<E, UUID> {
   }
 
   @Override
+  protected String getMarshalPropertyId() {
+
+    return PROPERTY_UUID;
+  }
+
+  @Override
   public Factory getFactory() {
 
     return FACTORY;
   }
 
   /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @return the new {@link UuidVersionId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> UuidVersionId<E> of(Class<E> type, UUID id) {
-
-    return of(type, id, null);
-  }
-
-  /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @param version the {@link #getVersion() version}.
-   * @return the new {@link UuidVersionId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> UuidVersionId<E> of(Class<E> type, UUID id, Long version) {
-
-    if (id == null) {
-      return null;
-    }
-    return new UuidVersionId<>(type, id, version);
-  }
-
-  /**
    * {@link IdFactory} implementation.
    */
-  public static class Factory implements IdFactory<UUID, Long, UuidVersionId<?>> {
+  public static class Factory extends UuidIdFactory<Long> {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
@@ -92,15 +72,13 @@ public class UuidVersionId<E> extends AbstractVersionId<E, UUID> {
     }
 
     @Override
-    public <E> UuidVersionId<E> unmarshall(Class<E> type, String id, String version) {
+    public <E> UuidId<E> parse(Class<E> type, String id, String version) {
 
-      return create(type, UUID.fromString(id), Long.valueOf(version));
-    }
-
-    @Override
-    public <E> UuidVersionId<E> create(Class<E> type, UUID id, Long version) {
-
-      return of(type, id, version);
+      Long longVersion = null;
+      if (version != null) {
+        longVersion = Long.valueOf(version);
+      }
+      return create(type, UUID.fromString(id), longVersion);
     }
   }
 

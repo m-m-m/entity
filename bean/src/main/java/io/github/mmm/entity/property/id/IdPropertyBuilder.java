@@ -18,7 +18,7 @@ import io.github.mmm.validation.main.ValidatorBuilderObject;
 public final class IdPropertyBuilder<E> extends
     PropertyBuilder<Id<E>, IdProperty<E>, ValidatorBuilderObject<Id<E>, IdPropertyBuilder<E>>, IdPropertyBuilder<E>> {
 
-  private IdFactory<?, ?, ?> idFactory;
+  private IdFactory<?, ?> idFactory;
 
   private Class<E> entityClass;
 
@@ -36,13 +36,11 @@ public final class IdPropertyBuilder<E> extends
    * The constructor.
    *
    * @param lock the {@link #getLock() lock}.
-   * @param idFactory the {@link IdFactory} to marshal data.
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public IdPropertyBuilder(AttributeReadOnly lock, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
+  public IdPropertyBuilder(AttributeReadOnly lock, Class<E> entityClass) {
 
     super(lock);
-    this.idFactory = idFactory;
     this.entityClass = entityClass;
   }
 
@@ -50,7 +48,7 @@ public final class IdPropertyBuilder<E> extends
    * @param factory the {@link IdFactory} to marshal data.
    * @return this builder itself ({@code this}) for fluent API calls.
    */
-  public IdPropertyBuilder<E> idFactory(IdFactory<?, ?, ?> factory) {
+  public IdPropertyBuilder<E> idFactory(IdFactory<?, ?> factory) {
 
     this.idFactory = factory;
     return this;
@@ -75,7 +73,7 @@ public final class IdPropertyBuilder<E> extends
   @Override
   protected IdProperty<E> build(String name, PropertyMetadata<Id<E>> metadata) {
 
-    return new IdProperty<>(name, this.idFactory, this.entityClass, metadata);
+    return new IdProperty<>(name, this.entityClass, metadata, this.idFactory);
   }
 
 }

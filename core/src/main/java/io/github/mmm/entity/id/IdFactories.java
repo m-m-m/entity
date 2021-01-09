@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class IdFactories {
 
-  private final Map<Class<? extends Id<?>>, IdFactory<?, ?, ?>> factoryMap;
+  private final Map<Class<? extends Id<?>>, IdFactory<?, ?>> factoryMap;
 
   private static IdFactories instance;
 
@@ -36,19 +36,22 @@ public class IdFactories {
   protected void init() {
 
     register(LongInstantId.FACTORY);
+    register(LongLatestId.FACTORY);
     register(LongVersionId.FACTORY);
     register(StringInstantId.FACTORY);
+    register(StringLatestId.FACTORY);
     register(StringVersionId.FACTORY);
     register(UuidInstantId.FACTORY);
+    register(UuidLatestId.FACTORY);
     register(UuidVersionId.FACTORY);
   }
 
   /**
    * @param factory the {@link IdFactory} to register.
    */
-  protected void register(IdFactory<?, ?, ?> factory) {
+  protected void register(IdFactory<?, ?> factory) {
 
-    IdFactory<?, ?, ?> duplicate = this.factoryMap.putIfAbsent(factory.getIdClass(), factory);
+    IdFactory<?, ?> duplicate = this.factoryMap.putIfAbsent(factory.getIdClass(), factory);
     if (duplicate != null) {
       throw new IllegalArgumentException("Duplicate IdFactory for " + factory.getIdClass());
     }
@@ -58,24 +61,9 @@ public class IdFactories {
    * @param idClass {@link Class} of {@link Id} implementation.
    * @return the {@link IdFactory} {@link IdFactory#getIdClass() responsible for the given idClass}.
    */
-  public IdFactory<?, ?, ?> get(Class<? extends Id<?>> idClass) {
+  public IdFactory<?, ?> get(Class<? extends Id<?>> idClass) {
 
     return this.factoryMap.get(idClass);
-  }
-
-  /**
-   * @param <I> type of the {@link Id#getId() primary key}.
-   * @param <V> type of the {@link Id#getVersion() version}.
-   * @param <ID> type of {@link Id} implementation.
-   * @param idClass {@link Class} of {@link Id} implementation.
-   * @return the {@link IdFactory} {@link IdFactory#getIdClass() responsible for the given idClass}.
-   */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  public <I, V extends Comparable<?>, ID extends AbstractId<?, I, V>> IdFactory<I, V, ID> getGeeneric(
-      Class<ID> idClass) {
-
-    IdFactory factory = this.factoryMap.get(idClass);
-    return factory;
   }
 
   /**

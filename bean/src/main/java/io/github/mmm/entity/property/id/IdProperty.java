@@ -26,85 +26,78 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
 
   private Class<E> entityClass;
 
-  private IdFactory<?, ?, ?> idFactory;
+  private IdFactory<?, ?> idFactory;
 
   /**
    * The constructor.
    *
-   * @param idFactory the {@link IdFactory} to marshal data.
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public IdProperty(IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
+  public IdProperty(Class<E> entityClass) {
 
-    this(NAME, idFactory, entityClass, null);
+    this(NAME, entityClass, null, null);
   }
 
   /**
    * The constructor.
    *
-   * @param idFactory the {@link IdFactory} to marshal data.
    * @param entityClass the {@link Class} reflecting the entity.
    * @param metadata the {@link #getMetadata() metadata}.
    */
-  public IdProperty(IdFactory<?, ?, ?> idFactory, Class<E> entityClass, PropertyMetadata<Id<E>> metadata) {
+  public IdProperty(Class<E> entityClass, PropertyMetadata<Id<E>> metadata) {
 
-    this(NAME, idFactory, entityClass, metadata);
+    this(NAME, entityClass, metadata, null);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param entityClass the {@link Class} reflecting the entity.
+   * @param metadata the {@link #getMetadata() metadata}.
+   * @param idFactory the {@link IdFactory} to marshal data.
+   */
+  public IdProperty(Class<E> entityClass, PropertyMetadata<Id<E>> metadata, IdFactory<?, ?> idFactory) {
+
+    this(NAME, entityClass, metadata, idFactory);
   }
 
   /**
    * The constructor.
    *
    * @param name the {@link #getName() name}.
-   * @param idFactory the {@link IdFactory} to marshal data.
    * @param entityClass the optional {@link Class} reflecting the entity.
    */
-  public IdProperty(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass) {
+  public IdProperty(String name, Class<E> entityClass) {
 
-    this(name, idFactory, entityClass, null);
+    this(name, entityClass, null, null);
   }
 
   /**
    * The constructor.
    *
    * @param name the {@link #getName() name}.
-   * @param idClass the {@link #getValueClass() value class} reflecting the contained {@link Id}.
+   * @param entityClass the optional {@link Class} reflecting the entity.
    * @param metadata the {@link #getMetadata() metadata}.
+   */
+  public IdProperty(String name, Class<E> entityClass, PropertyMetadata<Id<E>> metadata) {
+
+    this(name, entityClass, metadata, null);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param name the {@link #getName() name}.
+   * @param entityClass the optional {@link Class} reflecting the entity.
+   * @param metadata the {@link #getMetadata() metadata}.
+   * @param idFactory the {@link IdFactory} to marshal data.
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  public IdProperty(String name, Class<? extends Id> idClass, PropertyMetadata<Id<E>> metadata) {
+  public IdProperty(String name, Class<E> entityClass, PropertyMetadata<Id<E>> metadata, IdFactory<?, ?> idFactory) {
 
-    super(name, (Class) idClass, metadata);
-    this.entityClass = null;
-    this.idFactory = null;
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param idFactory the {@link IdFactory} to marshal data.
-   * @param entityClass the optional {@link Class} reflecting the entity.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
-  @SuppressWarnings("unchecked")
-  public IdProperty(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass, PropertyMetadata<Id<E>> metadata) {
-
-    super(name, idClass(idFactory), metadata);
+    super(name, (Class) IdFactory.getIdClass(idFactory), metadata);
     this.entityClass = entityClass;
     this.idFactory = idFactory;
-  }
-
-  @SuppressWarnings("rawtypes")
-  private static Class idClass(IdFactory<?, ?, ?> idFactory) {
-
-    Class<? extends Id> idClass = null;
-    if (idFactory != null) {
-      idClass = idFactory.getIdClass();
-    }
-    if (idClass == null) {
-      idClass = Id.class;
-    }
-    return idClass;
   }
 
   @Override
@@ -118,6 +111,8 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
       }
       if (this.idFactory == null) {
         this.idFactory = ((AbstractId<?, ?, ?>) newValue).getFactory();
+      } else {
+        assert (this.idFactory.accept(newValue));
       }
     }
     super.doSet(newValue);
@@ -126,7 +121,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
   /**
    * @return the {@link IdFactory}.
    */
-  protected IdFactory<?, ?, ?> getIdFactory() {
+  protected IdFactory<?, ?> getIdFactory() {
 
     if (this.idFactory == null) {
       this.idFactory = IdFactories.get().get(getValueClass());
@@ -137,14 +132,14 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
   @Override
   public void read(StructuredReader reader) {
 
-    IdMarshaller.readId(reader, getIdFactory(), this.entityClass);
-    super.read(reader);
+    Id<E> id = IdMarshaller.get().readObject(reader, this.entityClass);
+    set(id);
   }
 
   @Override
   public void write(StructuredWriter writer) {
 
-    IdMarshaller.writeId(writer, getValue());
+    IdMarshaller.get().writeObject(writer, getValue());
   }
 
 }

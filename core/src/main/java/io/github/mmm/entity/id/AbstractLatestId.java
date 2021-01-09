@@ -3,39 +3,36 @@
 package io.github.mmm.entity.id;
 
 /**
- * An abstract base implementation of {@link Id} using {@link Long} as type for the {@link #getVersion() version}.
+ * An abstract base implementation of {@link Id} without {@link #getVersion() version}. It will always point to the
+ * latest {@link #getVersion() version}.
  *
  * @param <E> type of the identified entity.
  * @param <I> type of the {@link #getId() ID}.
  *
  * @since 1.0.0
  */
-public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
-
-  private final Long version;
+public abstract class AbstractLatestId<E, I> extends AbstractId<E, I, LatestVersion> {
 
   /**
    * The constructor.
    *
    * @param type - see {@link #getType()}.
-   * @param version - see {@link #getVersion()}.
    */
-  public AbstractVersionId(Class<E> type, Long version) {
+  public AbstractLatestId(Class<E> type) {
 
     super(type);
-    this.version = version;
   }
 
   @Override
-  public Long getVersion() {
+  public LatestVersion getVersion() {
 
-    return this.version;
+    return null;
   }
 
   @Override
   protected String getMarshalPropertyVersion() {
 
-    return PROPERTY_LONG_VERSION;
+    return null;
   }
 
 }

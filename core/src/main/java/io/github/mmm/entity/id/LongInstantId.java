@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @since 1.0.0
  */
-public class LongInstantId<E> extends AbstractInstantId<E, Long> {
+public class LongInstantId<E> extends AbstractInstantId<E, Long> implements LongId<E> {
 
   /** @see #getFactory() */
   public static final Factory FACTORY = new Factory();
@@ -51,12 +51,10 @@ public class LongInstantId<E> extends AbstractInstantId<E, Long> {
     return this.id;
   }
 
-  /**
-   * @return the {@link #getId() primary key} as primitve {@code long} value.
-   */
-  public long getIdAsLong() {
+  @Override
+  protected String getMarshalPropertyId() {
 
-    return this.id.longValue();
+    return PROPERTY_LONG_ID;
   }
 
   @Override
@@ -66,40 +64,9 @@ public class LongInstantId<E> extends AbstractInstantId<E, Long> {
   }
 
   /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @return the new {@link LongInstantId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> LongInstantId<E> of(Class<E> type, Long id) {
-
-    return of(type, id, null);
-  }
-
-  /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @param version the {@link #getVersion() version}.
-   * @return the new {@link LongInstantId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> LongInstantId<E> of(Class<E> type, Long id, Instant version) {
-
-    if (id == null) {
-      return null;
-    }
-    return new LongInstantId<>(type, id, version);
-  }
-
-  /**
    * {@link IdFactory} implementation.
    */
-  public static final class Factory implements IdFactory<Long, Instant, LongInstantId<?>> {
-
-    private Factory() {
-
-      super();
-    }
+  public static final class Factory extends LongIdFactory<Instant> {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
@@ -109,15 +76,13 @@ public class LongInstantId<E> extends AbstractInstantId<E, Long> {
     }
 
     @Override
-    public <E> LongInstantId<E> unmarshall(Class<E> type, String id, String version) {
+    public <E> LongId<E> parse(Class<E> type, String id, String version) {
 
-      return create(type, Long.valueOf(id), Instant.parse(version));
-    }
-
-    @Override
-    public <E> LongInstantId<E> create(Class<E> type, Long id, Instant version) {
-
-      return of(type, id, version);
+      Instant instant = null;
+      if (version != null) {
+        instant = Instant.parse(version);
+      }
+      return create(type, Long.valueOf(id), instant);
     }
   }
 

@@ -34,4 +34,10 @@ public abstract class AbstractInstantId<E, I> extends AbstractId<E, I, Instant> 
     return this.version;
   }
 
+  @Override
+  protected String getMarshalPropertyVersion() {
+
+    return PROPERTY_INSTANT_VERSION;
+  }
+
 }

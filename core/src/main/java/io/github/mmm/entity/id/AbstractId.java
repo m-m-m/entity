@@ -3,7 +3,6 @@
 package io.github.mmm.entity.id;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * This is the abstract base implementation of {@link Id}.
@@ -15,6 +14,48 @@ import java.util.UUID;
  * @since 1.0.0
  */
 public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E> {
+
+  /**
+   * Name of the {@link #getId() ID} property (e.g. for JSON or XML) in case of a {@link Long}.
+   *
+   * @see LongInstantId
+   * @see LongVersionId
+   */
+  public static final String PROPERTY_LONG_ID = "l";
+
+  /**
+   * Name of the {@link #getId() ID} property (e.g. for JSON or XML) in case of a {@link String}.
+   *
+   * @see StringInstantId
+   * @see StringVersionId
+   */
+  public static final String PROPERTY_STRING_ID = "s";
+
+  /**
+   * Name of the {@link #getId() ID} property (e.g. for JSON or XML) in case of a {@link java.util.UUID}.
+   *
+   * @see UuidInstantId
+   * @see UuidVersionId
+   */
+  public static final String PROPERTY_UUID = "u";
+
+  /**
+   * Name of the {@link #getVersion() version} property (e.g. for JSON or XML) in case of a {@link Long}.
+   *
+   * @see LongVersionId
+   * @see UuidVersionId
+   * @see StringVersionId
+   */
+  public static final String PROPERTY_LONG_VERSION = "v";
+
+  /**
+   * Name of the {@link #getVersion() version} property (e.g. for JSON or XML) in case of an {@link java.time.Instant}.
+   *
+   * @see LongInstantId
+   * @see UuidInstantId
+   * @see StringInstantId
+   */
+  public static final String PROPERTY_INSTANT_VERSION = "i";
 
   private final Class<E> type;
 
@@ -40,6 +81,21 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
 
   @Override
   public abstract V getVersion();
+
+  /**
+   * @return the property name of the {@link #getId() id} for marshalling.
+   * @see #PROPERTY_LONG_ID
+   * @see #PROPERTY_UUID
+   * @see #PROPERTY_STRING_ID
+   */
+  protected abstract String getMarshalPropertyId();
+
+  /**
+   * @return the property name of the {@link #getVersion() version} for marshalling.
+   * @see #PROPERTY_LONG_VERSION
+   * @see #PROPERTY_INSTANT_VERSION
+   */
+  protected abstract String getMarshalPropertyVersion();
 
   @Override
   public Id<E> withLatestVersion() {
@@ -76,7 +132,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   /**
    * @return the {@link IdFactory} responsible for this {@link Id} implementation.
    */
-  public abstract IdFactory<I, V, ?> getFactory();
+  public abstract IdFactory<I, V> getFactory();
 
   @Override
   public final int hashCode() {
@@ -208,19 +264,6 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
       throw new IllegalArgumentException(
           "Expected type " + type.getSimpleName() + " for property " + property + " but found " + value + " of type "
               + value.getClass().getSimpleName() + " from ID " + id + " of type " + id.getClass().getSimpleName());
-    }
-  }
-
-  /**
-   * @param idString the id (without version) as {@link String}.
-   * @return the {@code idString} as {@link UUID} or {@code null} if not a {@link UUID}.
-   */
-  protected static UUID parseUuid(String idString) {
-
-    if ((idString.length() > 29) && (idString.indexOf('-') > 0)) {
-      return UUID.fromString(idString);
-    } else {
-      return null;
     }
   }
 

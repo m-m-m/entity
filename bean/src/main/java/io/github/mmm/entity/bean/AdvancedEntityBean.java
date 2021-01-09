@@ -8,10 +8,10 @@ import io.github.mmm.bean.BeanClass;
 import io.github.mmm.bean.StandardPropertyBuilders;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactory;
-import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.property.PropertyMetadata;
 
 /**
  * Implementation of {@link EntityBean} as simple {@link Bean}.
@@ -28,7 +28,7 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    */
   public AdvancedEntityBean() {
 
-    this(LongVersionId.FACTORY);
+    this((BeanClass) null, null);
   }
 
   /**
@@ -36,9 +36,9 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    *
    * @param idFactory the {@link IdFactory} to marshal data.
    */
-  public AdvancedEntityBean(IdFactory<?, ?, ?> idFactory) {
+  public AdvancedEntityBean(IdFactory<?, ?> idFactory) {
 
-    this(null, idFactory);
+    this(idFactory, null);
   }
 
   /**
@@ -58,7 +58,7 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    */
   public AdvancedEntityBean(BeanClass type) {
 
-    this(type, LongVersionId.FACTORY);
+    this(null, type);
   }
 
   /**
@@ -67,11 +67,9 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    * @param type the {@link #getType() type}.
    * @param idFactory the {@link IdFactory} to marshal data.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public AdvancedEntityBean(BeanClass type, IdFactory<?, ?, ?> idFactory) {
+  public AdvancedEntityBean(IdFactory<?, ?> idFactory, BeanClass type) {
 
-    super(type);
-    this.Id = add(new IdProperty(IdProperty.NAME, idFactory, getClass()));
+    this(type, null);
   }
 
   /**
@@ -80,10 +78,21 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    * @param type the {@link #getType() type}.
    * @param idProperty the {@link #Id() ID property}.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public AdvancedEntityBean(BeanClass type, IdProperty<? extends AdvancedEntityBean> idProperty) {
 
+    this(null, type, idProperty);
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  private AdvancedEntityBean(IdFactory<?, ?> idFactory, BeanClass type,
+      IdProperty<? extends AdvancedEntityBean> idProperty) {
+
     super(type);
+    if (idProperty == null) {
+      idProperty = new IdProperty(getClass(), PropertyMetadata.of(this), idFactory);
+    } else {
+      assert idProperty.getName().equals(IdProperty.NAME);
+    }
     this.Id = add((IdProperty) idProperty);
   }
 

@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @since 1.0.0
  */
-public class StringVersionId<E> extends AbstractVersionId<E, String> implements StringId<E> {
+public class StringLatestId<E> extends AbstractLatestId<E, String> implements StringId<E> {
 
   /** @see #getFactory() */
   public static final Factory FACTORY = new Factory();
@@ -25,21 +25,9 @@ public class StringVersionId<E> extends AbstractVersionId<E, String> implements 
    * @param type the {@link #getType() type}.
    * @param id the {@link #getId() primary key}.
    */
-  public StringVersionId(Class<E> type, String id) {
+  public StringLatestId(Class<E> type, String id) {
 
-    this(type, id, Long.valueOf(0));
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @param version the {@link #getVersion() version}.
-   */
-  public StringVersionId(Class<E> type, String id, Long version) {
-
-    super(type, version);
+    super(type);
     Objects.requireNonNull(id, "id");
     this.id = id;
   }
@@ -63,25 +51,49 @@ public class StringVersionId<E> extends AbstractVersionId<E, String> implements 
   }
 
   /**
+   * @param <E> the generic type of the identified entity.
+   * @param type the {@link #getType() type}.
+   * @param id the {@link #getId() primary key}.
+   * @return the new {@link StringLatestId} or {@code null} if the given {@code id} was {@code null}.
+   */
+  public static <E> StringLatestId<E> of(Class<E> type, String id) {
+
+    if (id == null) {
+      return null;
+    }
+    return new StringLatestId<>(type, id);
+  }
+
+  /**
    * {@link IdFactory} implementation.
    */
-  public static class Factory extends StringIdFactory<Long> {
+  public static class Factory extends StringIdFactory<LatestVersion> {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public Class<StringVersionId<?>> getIdClass() {
+    public Class<StringLatestId<?>> getIdClass() {
 
-      return (Class) StringVersionId.class;
+      return (Class) StringLatestId.class;
     }
 
     @Override
-    public <E> StringId<E> parse(Class<E> type, String id, String version) {
+    public boolean hasVersion() {
 
-      Long longVersion = null;
-      if (version != null) {
-        longVersion = Long.valueOf(version);
-      }
-      return create(type, id, longVersion);
+      return false;
+    }
+
+    @Override
+    public <E> StringLatestId<E> parse(Class<E> type, String id, String version) {
+
+      assert (version == null);
+      return create(type, id, null);
+    }
+
+    @Override
+    public <E> StringLatestId<E> create(Class<E> type, String id, LatestVersion version) {
+
+      assert (version == null);
+      return of(type, id);
     }
   }
 

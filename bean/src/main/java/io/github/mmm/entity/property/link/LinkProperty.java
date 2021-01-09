@@ -28,20 +28,9 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
 
   private Class<E> entityClass;
 
-  private IdFactory<?, ?, ?> idFactory;
-
   private Function<Id<E>, E> resolver;
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
-  public LinkProperty(String name, PropertyMetadata<Link<E>> metadata) {
-
-    this(name, null, null, null, metadata);
-  }
+  private IdFactory<?, ?> idFactory;
 
   /**
    * The constructor.
@@ -52,35 +41,35 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
    */
   public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata) {
 
-    this(name, null, entityClass, null, metadata);
+    this(name, entityClass, metadata, null, null);
   }
 
   /**
    * The constructor.
    *
    * @param name the {@link #getName() name}.
-   * @param idFactory the optional {@link IdFactory}.
    * @param entityClass the optional {@link Class} of the linked entity.
    * @param metadata the {@link #getMetadata() metadata}.
-   */
-  public LinkProperty(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass,
-      PropertyMetadata<Link<E>> metadata) {
-
-    this(name, idFactory, entityClass, null, metadata);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param idFactory the optional {@link IdFactory}.
-   * @param entityClass the optional {@link Class} of the linked entity.
    * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
+   */
+  public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata,
+      Function<Id<E>, E> resolver) {
+
+    this(name, entityClass, metadata, resolver, null);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param name the {@link #getName() name}.
+   * @param entityClass the optional {@link Class} of the linked entity.
    * @param metadata the {@link #getMetadata() metadata}.
+   * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
+   * @param idFactory the optional {@link IdFactory}.
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public LinkProperty(String name, IdFactory<?, ?, ?> idFactory, Class<E> entityClass, Function<Id<E>, E> resolver,
-      PropertyMetadata<Link<E>> metadata) {
+  public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata,
+      Function<Id<E>, E> resolver, IdFactory<?, ?> idFactory) {
 
     super(name, (Class) Link.class, metadata);
     this.entityClass = entityClass;
@@ -96,6 +85,8 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
       if (id != null) {
         if (this.idFactory == null) {
           this.idFactory = ((AbstractId<?, ?, ?>) id).getFactory();
+        } else {
+          assert this.idFactory.accept(id);
         }
         if (this.entityClass == null) {
           this.entityClass = id.getType();
@@ -110,7 +101,7 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
   @Override
   public void read(StructuredReader reader) {
 
-    Id<E> id = IdMarshaller.readId(reader, this.idFactory, this.entityClass);
+    Id<E> id = IdMarshaller.get().readObject(reader, this.entityClass);
     IdLink<E> link = IdLink.of(id, this.resolver);
     setValue(link);
   }
@@ -123,7 +114,7 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
     if (link != null) {
       id = link.getId();
     }
-    IdMarshaller.writeId(writer, id);
+    IdMarshaller.get().writeObject(writer, id);
   }
 
 }

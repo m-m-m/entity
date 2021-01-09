@@ -13,7 +13,7 @@ import java.util.Objects;
  *
  * @since 1.0.0
  */
-public class StringInstantId<E> extends AbstractInstantId<E, String> {
+public class StringInstantId<E> extends AbstractInstantId<E, String> implements StringId<E> {
 
   /** @see #getFactory() */
   public static final Factory FACTORY = new Factory();
@@ -41,41 +41,21 @@ public class StringInstantId<E> extends AbstractInstantId<E, String> {
   }
 
   @Override
+  protected String getMarshalPropertyId() {
+
+    return PROPERTY_STRING_ID;
+  }
+
+  @Override
   public Factory getFactory() {
 
     return FACTORY;
   }
 
   /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @return the new {@link StringInstantId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> StringInstantId<E> of(Class<E> type, String id) {
-
-    return of(type, id, null);
-  }
-
-  /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
-   * @param version the {@link #getVersion() version}.
-   * @return the new {@link StringInstantId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  public static <E> StringInstantId<E> of(Class<E> type, String id, Instant version) {
-
-    if (id == null) {
-      return null;
-    }
-    return new StringInstantId<>(type, id, version);
-  }
-
-  /**
    * {@link IdFactory} implementation.
    */
-  public static class Factory implements IdFactory<String, Instant, StringInstantId<?>> {
+  public static class Factory extends StringIdFactory<Instant> {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
@@ -85,15 +65,13 @@ public class StringInstantId<E> extends AbstractInstantId<E, String> {
     }
 
     @Override
-    public <E> StringInstantId<E> unmarshall(Class<E> type, String id, String version) {
+    public <E> StringId<E> parse(Class<E> type, String id, String version) {
 
-      return create(type, id, Instant.parse(version));
-    }
-
-    @Override
-    public <E> StringInstantId<E> create(Class<E> type, String id, Instant version) {
-
-      return of(type, id, version);
+      Instant instant = null;
+      if (version != null) {
+        instant = Instant.parse(version);
+      }
+      return create(type, id, instant);
     }
   }
 
