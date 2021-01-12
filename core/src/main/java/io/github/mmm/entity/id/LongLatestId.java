@@ -90,7 +90,7 @@ public class LongLatestId<E> extends AbstractLatestId<E, Long> implements LongId
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Class<LongLatestId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) LongLatestId.class;
     }

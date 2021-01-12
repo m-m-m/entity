@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
+import io.github.mmm.marshall.Marshalling;
+
 /**
  * Factory to #create
  *
@@ -70,6 +72,16 @@ public interface IdFactory<I, V extends Comparable<?>> {
    * @return the parsed {@link Id}.
    */
   <E> Id<E> parse(Class<E> type, String id, String version);
+
+  /**
+   * @return the {@link IdMarshalling} used to {@link Marshalling#readObject(io.github.mmm.marshall.StructuredReader)
+   *         read} or {@link Marshalling#writeObject(io.github.mmm.marshall.StructuredWriter, Object) write} the
+   *         {@link #getIdClass() managed} {@link Id}.
+   */
+  default IdMarshalling getMarshalling() {
+
+    return IdMarshalling.get();
+  }
 
   /**
    * @param factory the optional {@link IdFactory}.

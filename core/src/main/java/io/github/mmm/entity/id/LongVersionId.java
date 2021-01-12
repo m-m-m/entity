@@ -69,7 +69,7 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> implements Long
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Class<LongVersionId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) LongVersionId.class;
     }

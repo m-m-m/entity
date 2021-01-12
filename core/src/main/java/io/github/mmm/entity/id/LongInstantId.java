@@ -70,7 +70,7 @@ public class LongInstantId<E> extends AbstractInstantId<E, Long> implements Long
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Class<LongInstantId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) LongInstantId.class;
     }

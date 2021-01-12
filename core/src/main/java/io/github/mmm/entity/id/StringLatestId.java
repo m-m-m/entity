@@ -71,7 +71,7 @@ public class StringLatestId<E> extends AbstractLatestId<E, String> implements St
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public Class<StringLatestId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) StringLatestId.class;
     }

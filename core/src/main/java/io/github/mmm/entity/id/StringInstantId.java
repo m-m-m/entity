@@ -59,7 +59,7 @@ public class StringInstantId<E> extends AbstractInstantId<E, String> implements 
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Class<StringInstantId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) StringInstantId.class;
     }

@@ -11,7 +11,7 @@
   <packaging>jar</packaging>
   <name>${project.artifactId}</name>
   <description>API and fundamentals for persistent entities (providing Id, Link, etc.).</description>
-  
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -20,7 +20,13 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>mmm-marshall</artifactId>
+      <!-- Optional to minimize dependencies for modules that only want to use Id or Entity -->
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>mmm-marshall-json</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

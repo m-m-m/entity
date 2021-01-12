@@ -49,13 +49,14 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   public static final String PROPERTY_LONG_VERSION = "v";
 
   /**
-   * Name of the {@link #getVersion() version} property (e.g. for JSON or XML) in case of an {@link java.time.Instant}.
+   * Name of the {@link #getVersion() version} property (e.g. for JSON or XML) in case of an {@link java.time.Instant}
+   * ("t" for "timestamp").
    *
    * @see LongInstantId
    * @see UuidInstantId
    * @see StringInstantId
    */
-  public static final String PROPERTY_INSTANT_VERSION = "i";
+  public static final String PROPERTY_INSTANT_VERSION = "t";
 
   private final Class<E> type;
 

@@ -66,7 +66,7 @@ public class UuidVersionId<E> extends AbstractVersionId<E, UUID> implements Uuid
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public Class<UuidVersionId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) UuidVersionId.class;
     }

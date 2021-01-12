@@ -11,7 +11,7 @@
   <packaging>jar</packaging>
   <name>${project.artifactId}</name>
   <description>Property support for entity (IdProperty, LinkProperty, LinkListProperty).</description>
-  
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -20,11 +20,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>mmm-bean</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>mmm-marshall</artifactId>
-      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

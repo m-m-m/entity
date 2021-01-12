@@ -6,7 +6,7 @@ import io.github.mmm.entity.id.AbstractId;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactories;
 import io.github.mmm.entity.id.IdFactory;
-import io.github.mmm.entity.id.IdMarshaller;
+import io.github.mmm.entity.id.IdMarshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.PropertyMetadata;
@@ -129,17 +129,27 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
     return this.idFactory;
   }
 
+  private IdMarshalling getMarshalling() {
+
+    IdFactory<?, ?> factory = getIdFactory();
+    if (factory == null) {
+      return IdMarshalling.get();
+    } else {
+      return factory.getMarshalling();
+    }
+  }
+
   @Override
   public void read(StructuredReader reader) {
 
-    Id<E> id = IdMarshaller.get().readObject(reader, this.entityClass);
+    Id<E> id = getMarshalling().readObject(reader, this.entityClass);
     set(id);
   }
 
   @Override
   public void write(StructuredWriter writer) {
 
-    IdMarshaller.get().writeObject(writer, getValue());
+    getMarshalling().writeObject(writer, getValue());
   }
 
 }

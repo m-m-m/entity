@@ -69,7 +69,7 @@ public class StringVersionId<E> extends AbstractVersionId<E, String> implements 
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public Class<StringVersionId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) StringVersionId.class;
     }

@@ -79,7 +79,7 @@ public class UuidLatestId<E> extends AbstractLatestId<E, UUID> implements UuidId
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Class<UuidLatestId<?>> getIdClass() {
+    public Class<? extends Id<?>> getIdClass() {
 
       return (Class) UuidLatestId.class;
     }

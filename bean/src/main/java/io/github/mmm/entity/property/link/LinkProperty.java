@@ -7,7 +7,7 @@ import java.util.function.Function;
 import io.github.mmm.entity.id.AbstractId;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactory;
-import io.github.mmm.entity.id.IdMarshaller;
+import io.github.mmm.entity.id.IdMarshalling;
 import io.github.mmm.entity.link.IdLink;
 import io.github.mmm.entity.link.Link;
 import io.github.mmm.marshall.StructuredReader;
@@ -101,7 +101,7 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
   @Override
   public void read(StructuredReader reader) {
 
-    Id<E> id = IdMarshaller.get().readObject(reader, this.entityClass);
+    Id<E> id = IdMarshalling.get().readObject(reader, this.entityClass);
     IdLink<E> link = IdLink.of(id, this.resolver);
     setValue(link);
   }
@@ -114,7 +114,7 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
     if (link != null) {
       id = link.getId();
     }
-    IdMarshaller.get().writeObject(writer, id);
+    IdMarshalling.get().writeObject(writer, id);
   }
 
 }

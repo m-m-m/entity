@@ -20,7 +20,7 @@ import io.github.mmm.entity.Entity;
  * Just like the {@link #getId() primary key} the {@link #getVersion() version} and {@link #getType() type} of an object
  * do not change. This allows to use the {@link Id} as globally unique identifier for its corresponding entity.<br>
  * An {@link Id} has a compact {@link #toString() string representation}. However, for structured representation and
- * marshaling use {@link IdMarshaller} and convert to JSON, XML, or other structured format.
+ * marshaling use {@link IdMarshalling} and convert to JSON, XML, or other structured format.
  *
  * @param <E> type of the identified entity.
  *
@@ -73,11 +73,15 @@ public interface Id<E> {
   Class<E> getType();
 
   /**
+   * <b>ATTENTION</b>: This method is designed to ensure and verify the expected {@link #getType() type}. It will fail
+   * if a different type is already assigned.
+   *
    * @param type the new value of {@link #getType()}. Exact type should actually be {@link Class}{@literal <E>} but this
    *        prevents simple usage. As the {@link #getType() type} can not actually be changed with this method, this
    *        should be fine.
    * @return a copy of this {@link Id} with the given {@link #getType() type} or this {@link Id} itself if already
    *         satisfying.
+   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getType() type} assigned.
    */
   Id<E> withType(Class<?> type);
 
