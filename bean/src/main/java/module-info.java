@@ -12,7 +12,7 @@ module io.github.mmm.entity.bean {
 
   requires transitive io.github.mmm.entity;
 
-  requires transitive io.github.mmm.bean;
+  requires transitive io.github.mmm.bean.factory;
 
   provides io.github.mmm.property.factory.PropertyFactory //
       with io.github.mmm.entity.property.id.PropertyFactoryId, //
