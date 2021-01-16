@@ -16,6 +16,11 @@ public final class Select {
 
   }
 
+  /**
+   * @param <E> type of the {@link EntityBean} to search for.
+   * @param entity the {@link EntityBean} to search for.
+   * @return the new {@link Query} to build.
+   */
   public static <E extends EntityBean> Query<E> from(E entity) {
 
     return new Query<>(entity);

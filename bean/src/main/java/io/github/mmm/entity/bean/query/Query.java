@@ -4,43 +4,59 @@ package io.github.mmm.entity.bean.query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.property.AttributeReadOnly;
-import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.property.criteria.CriteriaExpression;
 import io.github.mmm.property.criteria.CriteriaOrdering;
 import io.github.mmm.property.criteria.CriteriaPredicate;
+import io.github.mmm.property.criteria.CriteriaSqlFormatter;
 import io.github.mmm.value.PropertyPath;
 
 /**
  * A {@link Query} to search for {@link EntityBean}s in a database.
  *
+ * @param <E> type of the {@link EntityBean} to query.
  * @since 1.0.0
  */
 public final class Query<E extends EntityBean> {
 
-  private final Function<PropertyPath<?>, String> pathFormatter;
-
   private final E entity;
+
+  private final List<CriteriaPredicate> where;
+
+  private final List<PropertyPath<?>> groupBy;
+
+  private final List<CriteriaPredicate> having;
+
+  private final List<CriteriaOrdering> orderBy;
+
+  private String entityName;
 
   private String alias;
 
-  private List<CriteriaPredicate> where;
+  Query() {
 
-  private List<PropertyPath<?>> groupBy;
+    this(null, null);
+  }
 
-  private List<CriteriaPredicate> having;
+  Query(String entityName) {
 
-  private List<CriteriaOrdering> orderBy;
+    this(null, entityName);
+  }
 
   Query(E entity) {
 
+    this(entity, null);
+  }
+
+  Query(E entity, String entityName) {
+
     super();
-    this.pathFormatter = new PathFormatter();
     this.entity = entity;
-    this.alias = entity.getClass().getSimpleName();
+    if ((entityName == null) && (entity != null)) {
+      entityName = entity.getType().getSimpleName();
+    }
+    this.entityName = entityName;
     this.where = new ArrayList<>();
     this.groupBy = new ArrayList<>();
     this.having = new ArrayList<>();
@@ -50,6 +66,16 @@ public final class Query<E extends EntityBean> {
   E getEntity() {
 
     return this.entity;
+  }
+
+  String getEntityName() {
+
+    return this.entityName;
+  }
+
+  void setEntityName(String entityName) {
+
+    this.entityName = entityName;
   }
 
   String getAlias() {
@@ -62,17 +88,39 @@ public final class Query<E extends EntityBean> {
     return this.where;
   }
 
+  List<PropertyPath<?>> getGroupBy() {
+
+    return this.groupBy;
+  }
+
   List<CriteriaPredicate> getHaving() {
 
     return this.having;
   }
 
-  public Query<E> as(String alias) {
+  List<CriteriaOrdering> getOrderBy() {
 
-    this.alias = alias;
+    return this.orderBy;
+  }
+
+  /**
+   * @param entityAlias the alias (variable name) for the {@link EntityBean} to query.
+   * @return this {@link Query} for fluent API.
+   */
+  public Query<E> as(String entityAlias) {
+
+    this.alias = entityAlias;
+    if (this.entity != null) {
+      this.entity.path(entityAlias + ".");
+    }
     return this;
   }
 
+  /**
+   * @param predicate the {@link CriteriaPredicate} to add to the {@code WHERE} clause. If called multiple times, they
+   *        will be combined with {@code AND}.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> where(CriteriaPredicate predicate) {
 
     if (predicate != null) {
@@ -81,6 +129,11 @@ public final class Query<E extends EntityBean> {
     return this;
   }
 
+  /**
+   * @param predicates the {@link CriteriaPredicate}s to add to the {@code WHERE} clause. They will be combined with
+   *        {@code AND}.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> where(CriteriaPredicate... predicates) {
 
     for (CriteriaPredicate predicate : predicates) {
@@ -89,6 +142,10 @@ public final class Query<E extends EntityBean> {
     return this;
   }
 
+  /**
+   * @param path the {@link PropertyPath} to the property to group by.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> groupBy(PropertyPath<?> path) {
 
     if (path != null) {
@@ -97,6 +154,10 @@ public final class Query<E extends EntityBean> {
     return this;
   }
 
+  /**
+   * @param paths the {@link PropertyPath}s to the properties to group by.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> groupBy(PropertyPath<?>... paths) {
 
     for (PropertyPath<?> path : paths) {
@@ -105,6 +166,11 @@ public final class Query<E extends EntityBean> {
     return this;
   }
 
+  /**
+   * @param predicate the {@link CriteriaPredicate} to add to the {@code HAVING} clause. If called multiple times, they
+   *        will be combined with {@code AND}.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> having(CriteriaPredicate predicate) {
 
     if (predicate != null) {
@@ -113,6 +179,11 @@ public final class Query<E extends EntityBean> {
     return this;
   }
 
+  /**
+   * @param predicates the {@link CriteriaPredicate}s to add to the {@code HAVING} clause. They will be combined with
+   *        {@code AND}.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> having(CriteriaPredicate... predicates) {
 
     for (CriteriaPredicate predicate : predicates) {
@@ -121,6 +192,10 @@ public final class Query<E extends EntityBean> {
     return this;
   }
 
+  /**
+   * @param ordering the {@link CriteriaOrdering} to order by.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> orderBy(CriteriaOrdering ordering) {
 
     if (ordering != null) {
@@ -129,6 +204,10 @@ public final class Query<E extends EntityBean> {
     return this;
   }
 
+  /**
+   * @param orderings the {@link CriteriaOrdering}s to order by.
+   * @return this {@link Query} for fluent API.
+   */
   public Query<E> orderBy(CriteriaOrdering... orderings) {
 
     for (CriteriaOrdering ordering : orderings) {
@@ -141,20 +220,24 @@ public final class Query<E extends EntityBean> {
   public String toString() {
 
     StringBuilder sb = new StringBuilder(128);
+    CriteriaSqlFormatter formatter = new CriteriaSqlFormatter(sb);
+    if (this.alias == null) {
+      as(this.entity.getType().getSimpleName());
+    }
     sb.append("SELECT ");
     sb.append(this.alias);
     sb.append(" FROM ");
-    sb.append(this.entity.getType().getSimpleName());
+    sb.append(this.entityName);
     sb.append(" ");
     sb.append(this.alias);
-    append(sb, " WHERE ", this.where, " AND ");
-    append(sb, " GROUP BY ", this.groupBy, ", ");
-    append(sb, " HAVING ", this.having, " AND ");
-    append(sb, " ORDER BY ", this.orderBy, ", ");
+    append(sb, formatter, " WHERE ", this.where, " AND ");
+    append(sb, formatter, " GROUP BY ", this.groupBy, ", ");
+    append(sb, formatter, " HAVING ", this.having, " AND ");
+    append(sb, formatter, " ORDER BY ", this.orderBy, ", ");
     return sb.toString();
   }
 
-  private void append(StringBuilder sb, String key, List<?> list, String separator) {
+  private void append(StringBuilder sb, CriteriaSqlFormatter formatter, String key, List<?> list, String separator) {
 
     if (list.isEmpty()) {
       return;
@@ -164,28 +247,12 @@ public final class Query<E extends EntityBean> {
     for (Object entry : list) {
       sb.append(s);
       if (entry instanceof CriteriaExpression) {
-        ((CriteriaExpression<?>) entry).toString(sb, this.pathFormatter);
+        formatter.onExpression((CriteriaExpression<?>) entry);
       } else {
         sb.append(entry);
       }
       s = separator;
     }
-  }
-
-  private class PathFormatter implements Function<PropertyPath<?>, String> {
-
-    @Override
-    public String apply(PropertyPath<?> path) {
-
-      if (path instanceof ReadableProperty) {
-        AttributeReadOnly lock = ((ReadableProperty<?>) path).getMetadata().getLock();
-        if (lock == Query.this.entity) {
-          return Query.this.alias + "." + path.getName();
-        }
-      }
-      return path.getName();
-    }
-
   }
 
 }
