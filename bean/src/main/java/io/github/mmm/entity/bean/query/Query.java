@@ -10,6 +10,7 @@ import io.github.mmm.property.criteria.CriteriaExpression;
 import io.github.mmm.property.criteria.CriteriaOrdering;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 import io.github.mmm.property.criteria.CriteriaSqlFormatter;
+import io.github.mmm.property.criteria.PredicateOperator;
 import io.github.mmm.value.PropertyPath;
 
 /**
@@ -34,6 +35,8 @@ public final class Query<E extends EntityBean> {
 
   private String alias;
 
+  private boolean simplify;
+
   Query() {
 
     this(null, null);
@@ -57,6 +60,7 @@ public final class Query<E extends EntityBean> {
       entityName = entity.getType().getSimpleName();
     }
     this.entityName = entityName;
+    this.simplify = true;
     this.where = new ArrayList<>();
     this.groupBy = new ArrayList<>();
     this.having = new ArrayList<>();
@@ -123,9 +127,7 @@ public final class Query<E extends EntityBean> {
    */
   public Query<E> where(CriteriaPredicate predicate) {
 
-    if (predicate != null) {
-      this.where.add(predicate);
-    }
+    addPredicate(this.where, predicate);
     return this;
   }
 
@@ -173,10 +175,25 @@ public final class Query<E extends EntityBean> {
    */
   public Query<E> having(CriteriaPredicate predicate) {
 
-    if (predicate != null) {
-      this.having.add(predicate);
-    }
+    addPredicate(this.having, predicate);
     return this;
+  }
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  private void addPredicate(List<CriteriaPredicate> list, CriteriaPredicate predicate) {
+
+    if (predicate != null) {
+      if (this.simplify) {
+        predicate = predicate.simplify();
+        if (predicate.getOperator() == PredicateOperator.AND) {
+          // AND should only be used here with predicated.
+          // Boolean literal would not make sense in query as well after simplification.
+          list.addAll((List) predicate.getArgs());
+          return;
+        }
+      }
+      list.add(predicate);
+    }
   }
 
   /**
@@ -213,6 +230,17 @@ public final class Query<E extends EntityBean> {
     for (CriteriaOrdering ordering : orderings) {
       orderBy(ordering);
     }
+    return this;
+  }
+
+  /**
+   * @param newSimplify {@code true} to {@link CriteriaExpression#simplify() simplify} {@link CriteriaExpression}s
+   *        whilst recording (default), {@code false} otherwise. Shall be called at the beginning before other methods.
+   * @return this {@link Query} for fluent API.
+   */
+  public Query<E> simplify(boolean newSimplify) {
+
+    this.simplify = newSimplify;
     return this;
   }
 

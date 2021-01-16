@@ -20,7 +20,8 @@ public class QueryTest extends Assertions {
   public void testSelectQuery() {
 
     Person p = BeanFactory.get().create(Person.class);
-    Query<Person> query = Select.from(p).as("p").where(p.Age().ge(18), p.Name().like("John*")).orderBy(p.Name().asc());
+    Query<Person> query = Select.from(p).as("p").where(p.Age().ge(18).and(p.Name().like("John*")))
+        .orderBy(p.Name().asc());
     assertThat(query.toString())
         .isEqualTo("SELECT p FROM Person p WHERE p.Age >= 18 AND p.Name LIKE 'John*' ORDER BY p.Name ASC");
 

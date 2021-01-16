@@ -9,16 +9,28 @@ import io.github.mmm.property.string.StringProperty;
 import io.github.mmm.property.temporal.localdate.LocalDateProperty;
 
 /**
- *
+ * {@link EntityBean} for a human person used for testing.
  */
 public interface Person extends EntityBean {
 
+  /**
+   * @return full name of the person including first and last name.
+   */
   StringProperty Name();
 
+  /**
+   * @return date of birth.
+   */
   LocalDateProperty Birthday();
 
+  /**
+   * @return {@code true} if single, {@code false} if married. Not a good example - just for testing.
+   */
   BooleanProperty Single();
 
+  /**
+   * @return the current age of the person. Should be computed from {@link #Birthday()} but just for testing.
+   */
   IntegerProperty Age();
 
 }
