@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.property.criteria.BooleanLiteral;
 import io.github.mmm.property.criteria.CriteriaExpression;
 import io.github.mmm.property.criteria.CriteriaOrdering;
 import io.github.mmm.property.criteria.CriteriaPredicate;
@@ -20,6 +21,8 @@ import io.github.mmm.value.PropertyPath;
  * @since 1.0.0
  */
 public final class Query<E extends EntityBean> {
+
+  private static final CriteriaPredicate PARENT_AND = PredicateOperator.AND.criteria(List.of(BooleanLiteral.TRUE));
 
   private final E entity;
 
@@ -275,7 +278,7 @@ public final class Query<E extends EntityBean> {
     for (Object entry : list) {
       sb.append(s);
       if (entry instanceof CriteriaExpression) {
-        formatter.onExpression((CriteriaExpression<?>) entry);
+        formatter.onExpression((CriteriaExpression<?>) entry, PARENT_AND);
       } else {
         sb.append(entry);
       }
