@@ -21,6 +21,20 @@ module io.github.mmm.entity.bean {
 
   exports io.github.mmm.entity.bean;
 
+  exports io.github.mmm.entity.bean.sql;
+
+  exports io.github.mmm.entity.bean.sql.delete;
+
+  exports io.github.mmm.entity.bean.sql.insert;
+
+  exports io.github.mmm.entity.bean.sql.merge;
+
+  exports io.github.mmm.entity.bean.sql.select;
+
+  exports io.github.mmm.entity.bean.sql.update;
+
+  exports io.github.mmm.entity.bean.sql.upsert;
+
   exports io.github.mmm.entity.property.builder;
 
   exports io.github.mmm.entity.property.id;
