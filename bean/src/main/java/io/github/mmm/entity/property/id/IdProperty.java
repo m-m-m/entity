@@ -139,6 +139,19 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
     }
   }
 
+  /**
+   * As the generic type system of Java is lacking a build-in {@code <SELF>}, we provide this method for your
+   * convenience.
+   *
+   * @param <T> type of the expected {@link io.github.mmm.entity.bean.EntityBean entity}.
+   * @return this {@link IdProperty} casted to the property type.
+   */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public <T> IdProperty<T> cast() {
+
+    return (IdProperty) this;
+  }
+
   @Override
   public void read(StructuredReader reader) {
 

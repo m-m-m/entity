@@ -143,12 +143,36 @@ public final class Select extends AbstractClause implements StartClause {
   }
 
   /**
+   * @param aggregations the {@link CriteriaAggregation}s to add to the selection.
+   * @return this {@link Select} for fluent API calls.
+   */
+  public Select and(CriteriaAggregation<?>... aggregations) {
+
+    for (CriteriaAggregation<?> aggregation : aggregations) {
+      this.selections.add(aggregation);
+    }
+    return this;
+  }
+
+  /**
    * @param property the {@link PropertyPath property} to add to the selection.
    * @return this {@link Select} for fluent API calls.
    */
   public Select and(PropertyPath<?> property) {
 
     this.selections.add(property);
+    return this;
+  }
+
+  /**
+   * @param properties the {@link PropertyPath properties} to add to the selection.
+   * @return this {@link Select} for fluent API calls.
+   */
+  public Select and(PropertyPath<?>... properties) {
+
+    for (PropertyPath<?> property : properties) {
+      this.selections.add(property);
+    }
     return this;
   }
 

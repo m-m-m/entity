@@ -127,7 +127,7 @@ public class SqlFormatter implements ClauseVisitor {
   }
 
   @Override
-  public void onUpdate(Update update) {
+  public void onUpdate(Update<?> update) {
 
     write("UPDATE");
     ClauseVisitor.super.onUpdate(update);
@@ -149,13 +149,15 @@ public class SqlFormatter implements ClauseVisitor {
     List<Supplier<?>> selections = select.getSelections();
     if (selections.isEmpty()) {
       onSelectAll(selectFrom);
-    }
-    String s = "";
-    int i = 0;
-    for (Supplier<?> selection : selections) {
-      write(s);
-      this.criteriaFormatter.onArg(selection, i++, null);
-      s = ", ";
+    } else {
+      String s = " (";
+      int i = 0;
+      for (Supplier<?> selection : selections) {
+        write(s);
+        this.criteriaFormatter.onArg(selection, i++, null);
+        s = ", ";
+      }
+      write(")");
     }
   }
 
@@ -165,9 +167,34 @@ public class SqlFormatter implements ClauseVisitor {
    *         in JPQL you would write "SELECT a FROM Entity a ..." whereas in plain SQL you would write "SELECT * FROM
    *         Entity ..."
    */
-  protected boolean isSelectAllByAlias() {
+  public boolean isSelectAllByAlias() {
 
-    return false;
+    return this.selectAllByAlias;
+  }
+
+  /**
+   * @param selectAllByAlias new value of {@link #isSelectAllByAlias()}.
+   */
+  public void setSelectAllByAlias(boolean selectAllByAlias) {
+
+    this.selectAllByAlias = selectAllByAlias;
+  }
+
+  /**
+   * @return {@code true} to use the {@code AS} keyword before an {@link SelectFrom#getAlias() alias} (e.g. "FROM Entity
+   *         <b>AS</b> e"), {@code false} otherwise.
+   */
+  public boolean isUseAsBeforeAlias() {
+
+    return this.useAsbeforeAlias;
+  }
+
+  /**
+   * @param useAsbeforeAlias new value of {@link #isUseAsBeforeAlias()}.
+   */
+  public void setUseAsbeforeAlias(boolean useAsbeforeAlias) {
+
+    this.useAsbeforeAlias = useAsbeforeAlias;
   }
 
   /**
@@ -187,11 +214,35 @@ public class SqlFormatter implements ClauseVisitor {
   public void onFrom(From<?, ?> from) {
 
     write(" FROM ");
-    write(from.getEntityName());
-    onAlias(from.getAlias(), from);
+    onEntity(from);
+    for (EntitySubClause<?> entity : from.getAdditionalEntities()) {
+      onAdditionalEntity(entity);
+    }
     ClauseVisitor.super.onFrom(from);
   }
 
+  /**
+   * @param entity the {@link AbstractEntityClause} to format.
+   */
+  protected void onEntity(AbstractEntityClause<?, ?> entity) {
+
+    write(entity.getEntityName());
+    onAlias(entity.getAlias(), entity);
+  }
+
+  /**
+   * @param entity the {@link EntitySubClause} to format.
+   */
+  protected void onAdditionalEntity(EntitySubClause<?> entity) {
+
+    write(", ");
+    onEntity(entity);
+  }
+
+  /**
+   * @param alias the {@link EntitySubClause#getAlias() alias}.
+   * @param clause the owning {@link AbstractEntityClause}.
+   */
   protected void onAlias(String alias, Clause clause) {
 
     if (alias != null) {
@@ -201,15 +252,6 @@ public class SqlFormatter implements ClauseVisitor {
       }
       write(alias);
     }
-  }
-
-  /**
-   * @return {@code true} to use the {@code AS} keyword before an {@link SelectFrom#getAlias() alias} (e.g. "FROM Entity
-   *         <b>AS</b> e"), {@code false} otherwise.
-   */
-  protected boolean isUseAsBeforeAlias() {
-
-    return false;
   }
 
   @Override

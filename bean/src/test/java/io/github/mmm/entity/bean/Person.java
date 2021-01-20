@@ -1,8 +1,8 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.mmm.entity.bean.sql;
+package io.github.mmm.entity.bean;
 
-import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.bean.BeanFactory;
 import io.github.mmm.property.booleans.BooleanProperty;
 import io.github.mmm.property.number.integers.IntegerProperty;
 import io.github.mmm.property.string.StringProperty;
@@ -32,5 +32,13 @@ public interface Person extends EntityBean {
    * @return the current age of the person. Should be computed from {@link #Birthday()} but just for testing.
    */
   IntegerProperty Age();
+
+  /**
+   * @return a new instance of {@link Person}.
+   */
+  static Person of() {
+
+    return BeanFactory.get().create(Person.class);
+  }
 
 }

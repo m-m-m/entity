@@ -77,7 +77,7 @@ public interface ClauseVisitor {
     if (start instanceof Select) {
       onSelect((Select) start);
     } else if (start instanceof Update) {
-      onUpdate((Update) start);
+      onUpdate((Update<?>) start);
     } else if (start instanceof Insert) {
       onInsert((Insert) start);
     } else if (start instanceof Delete) {
@@ -99,7 +99,7 @@ public interface ClauseVisitor {
   /**
    * @param update the {@link Update}-{@link Clause} to visit.
    */
-  default void onUpdate(Update update) {
+  default void onUpdate(Update<?> update) {
 
   }
 

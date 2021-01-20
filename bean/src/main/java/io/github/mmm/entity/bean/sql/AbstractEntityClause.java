@@ -90,7 +90,7 @@ public abstract class AbstractEntityClause<E extends EntityBean, SELF extends Ab
 
   /**
    * @param entityAlias the alias (variable name) for the {@link EntityBean} to query.
-   * @return this {@link Clause} for fluent API calls.
+   * @return this {@link Clause} itself for fluent API calls.
    * @see #getAlias()
    */
   public SELF as(String entityAlias) {

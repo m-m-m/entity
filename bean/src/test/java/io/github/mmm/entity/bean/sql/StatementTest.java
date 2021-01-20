@@ -14,6 +14,17 @@ import io.github.mmm.marshall.StructuredFormat;
 public abstract class StatementTest extends Assertions {
 
   /**
+   * Formats the given {@link Statement} to SQL and compares with the given SQL.
+   *
+   * @param statement the {@link Statement} to check.
+   * @param sql the expected SQL corresponding to the {@link Statement}.
+   */
+  protected void check(Statement<?> statement, String sql) {
+
+    assertThat(statement).isNotNull().hasToString(sql);
+  }
+
+  /**
    * Formats the given {@link Statement} to SQL and compares with the given SQL, then marshals to JSON and compares with
    * the given JSON, the unmarshals from that JSON back to {@link Statement} and checks that this again results in the
    * same SQL.
@@ -24,7 +35,7 @@ public abstract class StatementTest extends Assertions {
    */
   protected void check(Statement<?> statement, String sql, String json) {
 
-    assertThat(statement).isNotNull().hasToString(sql);
+    check(statement, sql);
     StructuredFormat format = JsonFormat.of(MarshallingConfig.NO_INDENTATION);
     StringBuilder sb = new StringBuilder();
     statement.writeObject(format.writer(sb), statement);

@@ -14,7 +14,7 @@ import io.github.mmm.property.criteria.PredicateOperator;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class From<E extends EntityBean, SELF extends From<E, SELF>> extends AbstractEntityClause<E, SELF>
+public abstract class From<E extends EntityBean, SELF extends From<E, SELF>> extends AbstractEntitiesClause<E, SELF>
     implements MainClause<E> {
 
   /** Name of {@link From} for marshaling. */
@@ -49,14 +49,14 @@ public abstract class From<E extends EntityBean, SELF extends From<E, SELF>> ext
 
   /**
    * @param predicate the {@link CriteriaPredicate} to add as {@link Where}-clause.
-   * @return this {@link Query} for fluent API.
+   * @return the {@link Where}-{@link Clause} for fluent API calls.
    */
   public abstract Where<E, ?> where(CriteriaPredicate predicate);
 
   /**
    * @param predicates the {@link CriteriaPredicate}s to add as {@link Where}-clause. They will be combined with
    *        {@link PredicateOperator#AND AND}.
-   * @return this {@link Query} for fluent API.
+   * @return the {@link Where}-{@link Clause} for fluent API calls.
    */
   public abstract Where<E, ?> where(CriteriaPredicate... predicates);
 
