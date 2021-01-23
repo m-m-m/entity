@@ -6,7 +6,7 @@ image:https://travis-ci.com/m-m-m/entity.svg?branch=master["build-status",link="
 = mmm-entity
 
 image:https://img.shields.io/maven-central/v/io.github.m-m-m/mmm-entity.svg?label=Maven%20Central["Maven Central",link=https://search.maven.org/search?q=g:io.github.m-m-m]
-image:https://m-m-m.github.io/javadoc.svg?status=online["apidoc",link="https://m-m-m.github.io/docs/api/io.github.mmm.entity/module-summary.html"]
+image:https://javadoc.io/badge2/io.github.m-m-m/mmm-entity/javadoc.svg["base JavaDoc", link=https://javadoc.io/doc/io.github.m-m-m/mmm-entity]
 
 The module `io.github.mmm.entity` (artifactId `mmm-entity`) provides API and fundamentals for persistent entities.
 Especially it provides `Id` and `Link` with sophisticated support for entity handling.
@@ -30,7 +30,7 @@ Module Dependency:
 = mmm-entity-bean
 
 image:https://img.shields.io/maven-central/v/io.github.m-m-m/mmm-entity-bean.svg?label=Maven%20Central["Maven Central",link=https://search.maven.org/search?q=g:io.github.m-m-m]
-image:https://m-m-m.github.io/javadoc.svg?status=online["apidoc",link="https://m-m-m.github.io/docs/api/io.github.mmm.entity.bean/module-summary.html"]
+image:https://javadoc.io/badge2/io.github.m-m-m/mmm-entity-bean/javadoc.svg["base JavaDoc", link=https://javadoc.io/doc/io.github.m-m-m/mmm-entity-bean]
 
 The module `io.github.mmm.entity.bean` (artifactId `mmm-entity-bean`) adds propery and bean support on top of this.
 For motivation and details read the JavaDoc (see badge above).
