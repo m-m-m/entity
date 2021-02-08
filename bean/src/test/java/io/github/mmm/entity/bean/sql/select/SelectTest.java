@@ -4,6 +4,7 @@ package io.github.mmm.entity.bean.sql.select;
 
 import org.junit.jupiter.api.Test;
 
+import io.github.mmm.entity.bean.City;
 import io.github.mmm.entity.bean.Person;
 import io.github.mmm.entity.bean.Song;
 import io.github.mmm.entity.bean.sql.SqlFormatter;
@@ -76,6 +77,21 @@ public class SelectTest extends StatementTest {
     query.toString();
     assertThat(query).hasToString(
         "SELECT (song.Genre, COUNT(song.Id), AVG(song.Duration)) FROM Song song, Person p WHERE song.Composer = p.Id AND song.Duration <= 10800 ORDER BY song.Genre ASC");
+  }
+
+  /** Test creation of {@link SelectStatement} and verifying resulting pseudo-SQL. */
+  @Test
+  public void testSelectEmbeddedProperties() {
+
+    // given
+    City c = City.of();
+    // when
+    SelectStatement<City> query = new Select().from(c).as("c")
+        .where(c.GeoLocation().get().Latitude().eq(40.6892534).and(c.GeoLocation().get().Longitude().eq(-74.0466891)))
+        .get();
+    // then
+    assertThat(query).hasToString(
+        "SELECT * FROM City c WHERE c.GeoLocation$Latitude = 40.6892534 AND c.GeoLocation$Longitude = -74.0466891");
   }
 
 }
