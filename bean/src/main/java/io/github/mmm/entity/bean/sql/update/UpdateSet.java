@@ -32,6 +32,12 @@ public class UpdateSet<E extends EntityBean> extends Set<E, UpdateSet<E>> implem
   }
 
   @Override
+  protected E getEntity() {
+
+    return this.statement.getUpdate().getEntity();
+  }
+
+  @Override
   public UpdateStatement<E> get() {
 
     return this.statement;
