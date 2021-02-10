@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.delete;
 
+import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractClause;
 import io.github.mmm.entity.bean.sql.StartClause;
 
@@ -21,6 +22,16 @@ public final class Delete extends AbstractClause implements StartClause {
   public Delete() {
 
     super();
+  }
+
+  /**
+   * @param <E> type of the {@link EntityBean}.
+   * @param entity the {@link EntityBean entity} to delete from.
+   * @return the {@link DeleteFrom} for fluent API calls.
+   */
+  public <E extends EntityBean> DeleteFrom<E> from(E entity) {
+
+    return new DeleteFrom<>(this, entity);
   }
 
   @Override
