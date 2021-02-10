@@ -42,6 +42,9 @@ public interface ClauseVisitor {
    */
   default ClauseVisitor onOtherClause(Clause clause) {
 
+    if (clause instanceof Into) {
+      onInto((Into<?, ?>) clause);
+    }
     return this;
   }
 
@@ -61,8 +64,6 @@ public interface ClauseVisitor {
       onHaving((Having<?>) clause);
     } else if (clause instanceof OrderBy) {
       onOrderBy((OrderBy<?>) clause);
-    } else if (clause instanceof Into) {
-      onInto((Into<?, ?>) clause);
     } else if (clause instanceof Values) {
       onValues((Values<?, ?>) clause);
     }

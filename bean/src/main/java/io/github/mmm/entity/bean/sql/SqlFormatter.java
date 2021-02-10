@@ -261,7 +261,7 @@ public class SqlFormatter implements ClauseVisitor {
     write(into.getEntityName());
     if (into instanceof InsertInto) {
       InsertInto<?> insertInto = (InsertInto<?>) into;
-      InsertValues<?> values = insertInto.get().getValues();
+      InsertValues<?> values = insertInto.values(PropertyAssignment.EMPTY_ARRAY);
       String s = "(";
       int i = 0;
       for (PropertyAssignment<?> assignment : values.getAssignments()) {
@@ -282,7 +282,7 @@ public class SqlFormatter implements ClauseVisitor {
     int i = 0;
     for (PropertyAssignment<?> assignment : values.getAssignments()) {
       write(s);
-      this.criteriaFormatter.onPropertyPath(assignment.getProperty(), i++, null);
+      this.criteriaFormatter.onArg(assignment.getValue(), i++, null);
       s = ", ";
     }
     write(")");

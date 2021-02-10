@@ -65,10 +65,11 @@ public class InsertInto<E extends EntityBean> extends Into<E, InsertInto<E>> {
     return values(PropertyAssignment.of(property, value));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public InsertStatement<E> get() {
+  public InsertValues<E> values() {
 
-    return this.statement;
+    return (InsertValues<E>) super.values();
   }
 
 }

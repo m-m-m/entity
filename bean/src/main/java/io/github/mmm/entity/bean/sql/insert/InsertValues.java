@@ -29,6 +29,12 @@ public class InsertValues<E extends EntityBean> extends Values<E, InsertValues<E
   }
 
   @Override
+  protected E getEntity() {
+
+    return this.statement.getInto().getEntity();
+  }
+
+  @Override
   public InsertStatement<E> get() {
 
     return this.statement;

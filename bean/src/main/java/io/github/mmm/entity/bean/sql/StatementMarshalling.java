@@ -14,6 +14,7 @@ import io.github.mmm.marshall.Marshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
+import io.github.mmm.property.criteria.PropertyAssignment;
 
 /**
  * {@link Marshalling} for SQL {@link Statement}s.
@@ -69,7 +70,7 @@ public class StatementMarshalling implements Marshalling<Statement<?>> {
     } else if (Update.NAME_UPDATE.equals(name)) {
       return new Update<>(null).get();
     } else if (Insert.NAME_INSERT.equals(name)) {
-      return new InsertInto<>(new Insert(), null).get();
+      return new InsertInto<>(new Insert(), null).values(PropertyAssignment.EMPTY_ARRAY).get();
     } else if (Delete.NAME_DELETE.equals(name)) {
       return new DeleteFrom<>(new Delete(), null).get();
     } else if (Merge.NAME_MERGE.equals(name)) {

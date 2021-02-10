@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.insert;
 
+import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractClause;
 import io.github.mmm.entity.bean.sql.StartClause;
 
@@ -21,6 +22,16 @@ public final class Insert extends AbstractClause implements StartClause {
   public Insert() {
 
     super();
+  }
+
+  /**
+   * @param <E> type of the {@link EntityBean}.
+   * @param entity the {@link EntityBean entity} to insert into.
+   * @return the {@link InsertInto} for fluent API calls.
+   */
+  public <E extends EntityBean> InsertInto<E> into(E entity) {
+
+    return new InsertInto<>(this, entity);
   }
 
   @Override

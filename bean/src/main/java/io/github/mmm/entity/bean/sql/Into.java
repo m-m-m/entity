@@ -2,7 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql;
 
+import java.util.Objects;
+
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.criteria.PropertyAssignment;
 import io.github.mmm.value.PropertyPath;
 
@@ -14,8 +17,7 @@ import io.github.mmm.value.PropertyPath;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class Into<E extends EntityBean, SELF extends Into<E, SELF>> extends AbstractEntityClause<E, SELF>
-    implements MainClause<E> {
+public abstract class Into<E extends EntityBean, SELF extends Into<E, SELF>> extends AbstractEntityClause<E, SELF> {
 
   /** Name of {@link Into} for marshaling. */
   public static final String NAME_INTO = "into";
@@ -72,5 +74,37 @@ public abstract class Into<E extends EntityBean, SELF extends Into<E, SELF>> ext
    * @return the {@link Values} for fluent API.
    */
   public abstract <V> Values<E, ?> values(PropertyPath<V> property, V value);
+
+  /**
+   * Sets all {@link EntityBean#getProperties() properties} of the {@link #getEntity() entity} that are not
+   * {@code null}.
+   *
+   * @return the {@link Values} for fluent API.
+   */
+  public Values<E, ?> values() {
+
+    Objects.requireNonNull(this.entity);
+    Values<E, ?> values = null;
+    for (WritableProperty<?> property : this.entity.getProperties()) {
+      values = addValues(values, property);
+    }
+    if (values == null) {
+      throw new IllegalStateException("Entity must not be empty!");
+    }
+    return values;
+  }
+
+  private <V> Values<E, ?> addValues(Values<E, ?> values, WritableProperty<V> property) {
+
+    V value = property.get();
+    if (value != null) {
+      if (values == null) {
+        values = values(property, value);
+      } else {
+        values = values.and(property, value);
+      }
+    }
+    return values;
+  }
 
 }

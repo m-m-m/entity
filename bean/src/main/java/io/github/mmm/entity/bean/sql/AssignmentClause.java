@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.LongLatestId;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
@@ -56,9 +58,17 @@ public abstract class AssignmentClause<E extends EntityBean, SELF extends Assign
    * @param value the {@link io.github.mmm.property.criteria.Literal} value to insert (assign the {@code property} to).
    * @return this {@link Clause} itself for fluent API calls.
    */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public <V> SELF and(PropertyPath<V> property, V value) {
 
-    return and(PropertyAssignment.of(property, value));
+    PropertyAssignment<V> assignment;
+    if (value instanceof Id) {
+      // actually a validation of type-safty and generic contract...
+      assignment = PropertyAssignment.of((PropertyPath) property, ((Id<?>) value).getId());
+    } else {
+      assignment = PropertyAssignment.of(property, value);
+    }
+    return and(assignment);
   }
 
   /**
@@ -70,6 +80,39 @@ public abstract class AssignmentClause<E extends EntityBean, SELF extends Assign
     for (PropertyAssignment<?> assignment : propertyAssignments) {
       and(assignment);
     }
+    return self();
+  }
+
+  /**
+   * @return the {@link EntityBean}.
+   */
+  protected abstract E getEntity();
+
+  /**
+   * @param id the {@link Id} value to set as {@link EntityBean#Id() primary key}.
+   * @return this {@link Clause} itself for fluent API calls.
+   */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public SELF andId(Id<? extends E> id) {
+
+    // bug in Eclipse compiler
+    // return and(getEntity().Id(), (Id) id);
+    and(getEntity().Id(), (Id) id);
+    return self();
+  }
+
+  /**
+   * @param id the {@link EntityBean#Id() primary key} as {@link Long} value.
+   * @return this {@link Clause} itself for fluent API calls.
+   */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public SELF andId(long id) {
+
+    Class<?> javaClass = getEntity().getType().getJavaClass();
+    Id id2 = LongLatestId.of(javaClass, id);
+    // bug in Eclipse compiler
+    // return andId(id2);
+    andId(id2);
     return self();
   }
 
