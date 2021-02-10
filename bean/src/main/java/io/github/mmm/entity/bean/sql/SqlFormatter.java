@@ -254,6 +254,7 @@ public class SqlFormatter implements ClauseVisitor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void onInto(Into<?, ?> into) {
 
@@ -261,7 +262,7 @@ public class SqlFormatter implements ClauseVisitor {
     write(into.getEntityName());
     if (into instanceof InsertInto) {
       InsertInto<?> insertInto = (InsertInto<?>) into;
-      InsertValues<?> values = insertInto.values(PropertyAssignment.EMPTY_ARRAY);
+      InsertValues<?> values = insertInto.values((PropertyAssignment[]) PropertyAssignment.EMPTY_ARRAY);
       String s = "(";
       int i = 0;
       for (PropertyAssignment<?> assignment : values.getAssignments()) {
