@@ -84,6 +84,16 @@ public class LongLatestId<E> extends AbstractLatestId<E, Long> implements LongId
   }
 
   /**
+   * @param <E> the generic type of the identified entity.
+   * @param id the {@link #getId() primary key}.
+   * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
+   */
+  public static <E> LongLatestId<E> of(long id) {
+
+    return new LongLatestId<>(null, id);
+  }
+
+  /**
    * {@link IdFactory} implementation.
    */
   public static final class Factory extends LongIdFactory<LatestVersion> {
