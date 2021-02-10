@@ -9,6 +9,7 @@ import io.github.mmm.entity.bean.sql.Set;
 import io.github.mmm.entity.bean.sql.Values;
 import io.github.mmm.entity.bean.sql.insert.InsertInto;
 import io.github.mmm.entity.bean.sql.insert.InsertStatement;
+import io.github.mmm.property.criteria.CriteriaPredicate;
 
 /**
  * {@link Values}-{@link Clause} of an {@link InsertStatement}.
@@ -29,6 +30,22 @@ public class UpdateSet<E extends EntityBean> extends Set<E, UpdateSet<E>> implem
 
     super();
     this.statement = statement;
+  }
+
+  @Override
+  public UpdateWhere<E> where(CriteriaPredicate predicate) {
+
+    UpdateWhere<E> where = this.statement.getWhere();
+    where.and(predicate);
+    return where;
+  }
+
+  @Override
+  public UpdateWhere<E> where(CriteriaPredicate... predicates) {
+
+    UpdateWhere<E> where = this.statement.getWhere();
+    where.and(predicates);
+    return where;
   }
 
   @Override

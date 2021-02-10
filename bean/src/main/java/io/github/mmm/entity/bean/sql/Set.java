@@ -11,7 +11,8 @@ import io.github.mmm.entity.bean.EntityBean;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class Set<E extends EntityBean, SELF extends Set<E, SELF>> extends AssignmentClause<E, SELF> {
+public abstract class Set<E extends EntityBean, SELF extends Set<E, SELF>> extends AssignmentClause<E, SELF>
+    implements TypedClauseWithWhere<E> {
 
   /** Name of {@link Set} for marshaling. */
   public static final String NAME_SET = "set";

@@ -8,7 +8,7 @@ import java.time.Instant;
  * An abstract base implementation of {@link Id} using {@link Instant} as type for the {@link #getVersion() version}.
  *
  * @param <E> type of the identified entity.
- * @param <I> type of the {@link #getId() ID}.
+ * @param <I> type of the {@link #get() ID}.
  *
  * @since 1.0.0
  */

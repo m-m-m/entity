@@ -5,7 +5,7 @@ package io.github.mmm.entity.id;
 import java.util.Objects;
 
 /**
- * Implementation of {@link AbstractVersionId} using {@link String} as {@link #getId() primary key}. This is the most
+ * Implementation of {@link AbstractVersionId} using {@link String} as {@link #get() primary key}. This is the most
  * generic type of {@link Id}. However {@link LongVersionId} and {@link UuidVersionId} will be more efficient.
  *
  * @param <E> the generic type of the identified entity.
@@ -23,7 +23,7 @@ public class StringLatestId<E> extends AbstractLatestId<E, String> implements St
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    */
   public StringLatestId(Class<E> type, String id) {
 
@@ -33,7 +33,7 @@ public class StringLatestId<E> extends AbstractLatestId<E, String> implements St
   }
 
   @Override
-  public String getId() {
+  public String get() {
 
     return this.id;
   }
@@ -53,7 +53,7 @@ public class StringLatestId<E> extends AbstractLatestId<E, String> implements St
   /**
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @return the new {@link StringLatestId} or {@code null} if the given {@code id} was {@code null}.
    */
   public static <E> StringLatestId<E> of(Class<E> type, String id) {

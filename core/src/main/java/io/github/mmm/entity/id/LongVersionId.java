@@ -5,7 +5,7 @@ package io.github.mmm.entity.id;
 import java.util.Objects;
 
 /**
- * Implementation of {@link AbstractVersionId} using {@link Long} as {@link #getId() primary key}.
+ * Implementation of {@link AbstractVersionId} using {@link Long} as {@link #get() primary key}.
  *
  * @param <E> the generic type of the identified entity.
  *
@@ -22,7 +22,7 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> implements Long
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}. See {@link #getIdAsLong()}.
+   * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
    * @param version the {@link #getVersion() version}.
    */
   public LongVersionId(Class<E> type, long id, long version) {
@@ -34,7 +34,7 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> implements Long
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}. See {@link #getIdAsLong()}.
+   * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
    * @param version the {@link #getVersion() version}.
    */
   protected LongVersionId(Class<E> type, Long id, Long version) {
@@ -45,7 +45,7 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> implements Long
   }
 
   @Override
-  public Long getId() {
+  public Long get() {
 
     return this.id;
   }

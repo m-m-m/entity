@@ -6,14 +6,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Implementation of {@link AbstractVersionId} using {@link UUID} as {@link #getId() primary key}. Can be used in two
+ * Implementation of {@link AbstractVersionId} using {@link UUID} as {@link #get() primary key}. Can be used in two
  * scenarios:
  * <ul>
  * <li>Your data store uses {@link UUID}s natively as <em>primary key</em> (e.g. apache cassandra supports this). In
  * such case you will always directly use a {@link UUID} as the actual <em>primary key</em>.</li>
  * <li>You may need to express a link to a transient entity. Then you can temporary assign a {@link UUID} to the entity
  * on the client and link it via such ID. On the server-side the actual {@link UuidVersionId} will then be replaced with
- * the actual {@link #getId() ID} while persisting the data.</li>
+ * the actual {@link #get() ID} while persisting the data.</li>
  * </ul>
  *
  * @param <E> the generic type of the identified entity.
@@ -31,7 +31,7 @@ public class UuidVersionId<E> extends AbstractVersionId<E, UUID> implements Uuid
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @param version the {@link #getVersion() version}.
    */
   public UuidVersionId(Class<E> type, UUID id, Long version) {
@@ -42,7 +42,7 @@ public class UuidVersionId<E> extends AbstractVersionId<E, UUID> implements Uuid
   }
 
   @Override
-  public UUID getId() {
+  public UUID get() {
 
     return this.id;
   }

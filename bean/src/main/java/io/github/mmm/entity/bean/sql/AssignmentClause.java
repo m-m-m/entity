@@ -58,17 +58,9 @@ public abstract class AssignmentClause<E extends EntityBean, SELF extends Assign
    * @param value the {@link io.github.mmm.property.criteria.Literal} value to insert (assign the {@code property} to).
    * @return this {@link Clause} itself for fluent API calls.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public <V> SELF and(PropertyPath<V> property, V value) {
 
-    PropertyAssignment<V> assignment;
-    if (value instanceof Id) {
-      // actually a validation of type-safty and generic contract...
-      assignment = PropertyAssignment.of((PropertyPath) property, ((Id<?>) value).getId());
-    } else {
-      assignment = PropertyAssignment.of(property, value);
-    }
-    return and(assignment);
+    return and(PropertyAssignment.of(property, value));
   }
 
   /**

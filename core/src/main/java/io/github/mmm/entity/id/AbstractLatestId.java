@@ -7,7 +7,7 @@ package io.github.mmm.entity.id;
  * latest {@link #getVersion() version}.
  *
  * @param <E> type of the identified entity.
- * @param <I> type of the {@link #getId() ID}.
+ * @param <I> type of the {@link #get() ID}.
  *
  * @since 1.0.0
  */

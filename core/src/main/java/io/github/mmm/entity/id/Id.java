@@ -3,6 +3,7 @@
 package io.github.mmm.entity.id;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import io.github.mmm.entity.Entity;
 
@@ -11,13 +12,13 @@ import io.github.mmm.entity.Entity;
  * {@link #getType() type} ({@code <E>}). <br>
  * An {@link Id} has the following properties:
  * <ul>
- * <li>{@link #getId() object-id} - the primary key that identifies the entity and is unique for a specific
+ * <li>{@link #get() object-id} - the primary key that identifies the entity and is unique for a specific
  * {@link #getType() type}. As a best practice it is recommended to make the object-id even unique for all entities of a
  * database.</li>
  * <li>{@link #getType() type} - is the (optional) type of the identified entity.</li>
  * <li>{@link #getVersion() version} - the optional version (revision) of the entity.</li>
  * </ul>
- * Just like the {@link #getId() primary key} the {@link #getVersion() version} and {@link #getType() type} of an object
+ * Just like the {@link #get() primary key} the {@link #getVersion() version} and {@link #getType() type} of an object
  * do not change. This allows to use the {@link Id} as globally unique identifier for its corresponding entity.<br>
  * An {@link Id} has a compact {@link #toString() string representation}. However, for structured representation and
  * marshaling use {@link IdMarshalling} and convert to JSON, XML, or other structured format.
@@ -27,9 +28,9 @@ import io.github.mmm.entity.Entity;
  * @see AbstractId
  * @since 1.0.0
  */
-public interface Id<E> {
+public interface Id<E> extends Supplier<Object> {
 
-  /** Name of the {@link #getId() id} property. */
+  /** Name of the {@link #get() id} property. */
   String PROPERTY_ID = "id";
 
   /** Name of the {@link #getVersion() version} property. */
@@ -52,14 +53,14 @@ public interface Id<E> {
    * @return the <em>primary key</em> of the identified {@link Entity} as {@link Object} value. It is only unique for a
    *         particular {@link #getType() type} of an <em>entity</em>.
    */
-  Object getId();
+  Object get();
 
   /**
-   * @return the {@link #getId() primary key} as {@link String} for marshalling.
+   * @return the {@link #get() primary key} as {@link String} for marshalling.
    */
   default String getIdAsString() {
 
-    Object id = getId();
+    Object id = get();
     if (id == null) {
       return null; // should never happen...
     }
@@ -121,7 +122,7 @@ public interface Id<E> {
   }
 
   /**
-   * @return the {@link String} representation of this {@link Id}. Will consist of {@link #getId() object-id},
+   * @return the {@link String} representation of this {@link Id}. Will consist of {@link #get() object-id},
    *         {@link #getType() type} and {@link #getVersion() revision} separated with a specific separator. Segments
    *         that are {@code null} will typically be omitted in the {@link String} representation.
    */
@@ -149,7 +150,7 @@ public interface Id<E> {
   /**
    * @param <E> type of {@link Entity}.
    * @param type the {@link Class} reflecting the {@link Entity}.
-   * @param id the {@link Id#getId() ID}.
+   * @param id the {@link Id#get() ID}.
    * @param version the optional {@link Id#getVersion() version}.
    * @return the {@link Id} for the given arguments.
    */

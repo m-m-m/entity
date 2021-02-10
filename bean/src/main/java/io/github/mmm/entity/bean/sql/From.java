@@ -3,8 +3,6 @@
 package io.github.mmm.entity.bean.sql;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.property.criteria.CriteriaPredicate;
-import io.github.mmm.property.criteria.PredicateOperator;
 
 /**
  * A {@link From}-{@link Clause} of an SQL {@link Statement} such as {@link io.github.mmm.entity.bean.sql.select.Select}
@@ -15,7 +13,7 @@ import io.github.mmm.property.criteria.PredicateOperator;
  * @since 1.0.0
  */
 public abstract class From<E extends EntityBean, SELF extends From<E, SELF>> extends AbstractEntitiesClause<E, SELF>
-    implements MainClause<E> {
+    implements MainClause<E>, TypedClauseWithWhere<E> {
 
   /** Name of {@link From} for marshaling. */
   public static final String NAME_FROM = "from";
@@ -46,18 +44,5 @@ public abstract class From<E extends EntityBean, SELF extends From<E, SELF>> ext
 
     return NAME_FROM;
   }
-
-  /**
-   * @param predicate the {@link CriteriaPredicate} to add as {@link Where}-clause.
-   * @return the {@link Where}-{@link Clause} for fluent API calls.
-   */
-  public abstract Where<E, ?> where(CriteriaPredicate predicate);
-
-  /**
-   * @param predicates the {@link CriteriaPredicate}s to add as {@link Where}-clause. They will be combined with
-   *        {@link PredicateOperator#AND AND}.
-   * @return the {@link Where}-{@link Clause} for fluent API calls.
-   */
-  public abstract Where<E, ?> where(CriteriaPredicate... predicates);
 
 }

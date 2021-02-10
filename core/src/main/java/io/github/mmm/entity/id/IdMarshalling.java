@@ -27,12 +27,12 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
     }
     Object version = id.getVersion();
     if (version == null) {
-      writer.writeValue(id.getId());
+      writer.writeValue(id.get());
     } else {
       AbstractId<?, ?, ?> abstractId = (AbstractId<?, ?, ?>) id;
       writer.writeStartObject();
       writer.writeName(abstractId.getMarshalPropertyId());
-      writer.writeValue(id.getId());
+      writer.writeValue(id.get());
       String versionProperty = abstractId.getMarshalPropertyVersion();
       if (versionProperty == null) {
         Objects.requireNonNull(version);
@@ -96,7 +96,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
   /**
    * @param <E> type of the identified entity.
    * @param type the {@link Id#getType() entity type}.
-   * @param id the {@link Id#getId() id}.
+   * @param id the {@link Id#get() id}.
    * @param version the optional {@link Id#getVersion() version}.
    * @return the new {@link Id} instance.
    */

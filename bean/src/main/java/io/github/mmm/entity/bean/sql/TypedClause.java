@@ -5,7 +5,7 @@ package io.github.mmm.entity.bean.sql;
 import io.github.mmm.entity.bean.EntityBean;
 
 /**
- * A {@link Clause} that is not a {@link StartClause} and is typed by the {@link EntityBean}.
+ * A {@link Clause} that is typed by the {@link EntityBean}.
  *
  * @param <E> type of the {@link AbstractEntityClause#getEntity() entity}.
  * @since 1.0.0

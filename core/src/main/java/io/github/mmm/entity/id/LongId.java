@@ -5,7 +5,7 @@ package io.github.mmm.entity.id;
 import java.time.Instant;
 
 /**
- * {@link Id} using {@link Long} as {@link #getId() primary key (ID)}.
+ * {@link Id} using {@link Long} as {@link #get() primary key (ID)}.
  *
  * @param <E> type of the identified entity.
  *
@@ -14,20 +14,20 @@ import java.time.Instant;
 public interface LongId<E> extends Id<E> {
 
   @Override
-  Long getId();
+  Long get();
 
   /**
-   * @return the {@link #getId() primary key} as primitve {@code long} value.
+   * @return the {@link #get() primary key} as primitve {@code long} value.
    */
   default long getIdAsLong() {
 
-    return getId().longValue();
+    return get().longValue();
   }
 
   /**
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
    */
   static <E> LongId<E> of(Class<E> type, Long id) {
@@ -38,7 +38,7 @@ public interface LongId<E> extends Id<E> {
   /**
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @param version the optional {@link #getVersion() version}.
    * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
    */

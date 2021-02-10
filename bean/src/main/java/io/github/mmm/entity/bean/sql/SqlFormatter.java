@@ -129,7 +129,8 @@ public class SqlFormatter implements ClauseVisitor {
   @Override
   public void onUpdate(Update<?> update) {
 
-    write("UPDATE");
+    write("UPDATE ");
+    onEntity(update);
     ClauseVisitor.super.onUpdate(update);
   }
 
@@ -214,11 +215,19 @@ public class SqlFormatter implements ClauseVisitor {
   public void onFrom(From<?, ?> from) {
 
     write(" FROM ");
-    onEntity(from);
-    for (EntitySubClause<?> entity : from.getAdditionalEntities()) {
+    onEntities(from);
+    ClauseVisitor.super.onFrom(from);
+  }
+
+  /**
+   * @param entities the {@link AbstractEntitiesClause} to format.
+   */
+  protected void onEntities(AbstractEntitiesClause<?, ?> entities) {
+
+    onEntity(entities);
+    for (EntitySubClause<?> entity : entities.getAdditionalEntities()) {
       onAdditionalEntity(entity);
     }
-    ClauseVisitor.super.onFrom(from);
   }
 
   /**
@@ -288,6 +297,22 @@ public class SqlFormatter implements ClauseVisitor {
     }
     write(")");
     ClauseVisitor.super.onValues(values);
+  }
+
+  @Override
+  public void onSet(Set<?, ?> set) {
+
+    write(" SET ");
+    String s = "";
+    int i = 0;
+    for (PropertyAssignment<?> assignment : set.getAssignments()) {
+      write(s);
+      this.criteriaFormatter.onPropertyPath(assignment.getProperty(), i++, null);
+      write("=");
+      this.criteriaFormatter.onArg(assignment.getValue(), i++, null);
+      s = ", ";
+    }
+    ClauseVisitor.super.onSet(set);
   }
 
   @Override

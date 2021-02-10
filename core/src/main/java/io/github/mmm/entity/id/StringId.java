@@ -5,7 +5,7 @@ package io.github.mmm.entity.id;
 import java.time.Instant;
 
 /**
- * {@link Id} using {@link String} as {@link #getId() primary key (ID)}.
+ * {@link Id} using {@link String} as {@link #get() primary key (ID)}.
  *
  * @param <E> type of the identified entity.
  *
@@ -14,12 +14,12 @@ import java.time.Instant;
 public interface StringId<E> extends Id<E> {
 
   @Override
-  String getId();
+  String get();
 
   /**
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
    */
   static <E> StringId<E> of(Class<E> type, String id) {
@@ -30,7 +30,7 @@ public interface StringId<E> extends Id<E> {
   /**
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @param version the optional {@link #getVersion() version}.
    * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
    */

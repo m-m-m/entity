@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Implementation of {@link AbstractInstantId} using {@link String} as {@link #getId() primary key}. This is the most
+ * Implementation of {@link AbstractInstantId} using {@link String} as {@link #get() primary key}. This is the most
  * generic type of {@link Id}. However {@link LongVersionId} and {@link UuidVersionId} will be more efficient.
  *
  * @param <E> the generic type of the identified entity.
@@ -24,7 +24,7 @@ public class StringInstantId<E> extends AbstractInstantId<E, String> implements 
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @param version the {@link #getVersion() version}.
    */
   public StringInstantId(Class<E> type, String id, Instant version) {
@@ -35,7 +35,7 @@ public class StringInstantId<E> extends AbstractInstantId<E, String> implements 
   }
 
   @Override
-  public String getId() {
+  public String get() {
 
     return this.id;
   }

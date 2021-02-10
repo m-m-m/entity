@@ -66,6 +66,8 @@ public interface ClauseVisitor {
       onOrderBy((OrderBy<?>) clause);
     } else if (clause instanceof Values) {
       onValues((Values<?, ?>) clause);
+    } else if (clause instanceof Set) {
+      onSet((Set<?, ?>) clause);
     }
     return this;
   }
@@ -178,6 +180,13 @@ public interface ClauseVisitor {
    * @param values the {@link Values}-{@link Clause} to visit.
    */
   default void onValues(Values<?, ?> values) {
+
+  }
+
+  /**
+   * @param set the {@link Set}-{@link Clause} to visit.
+   */
+  default void onSet(Set<?, ?> set) {
 
   }
 

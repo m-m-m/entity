@@ -8,7 +8,7 @@ import java.util.Objects;
  * This is the abstract base implementation of {@link Id}.
  *
  * @param <E> type of the identified entity.
- * @param <I> type of the {@link #getId() ID}.
+ * @param <I> type of the {@link #get() ID}.
  * @param <V> type of the {@link #getVersion() Version}.
  *
  * @since 1.0.0
@@ -16,7 +16,7 @@ import java.util.Objects;
 public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E> {
 
   /**
-   * Name of the {@link #getId() ID} property (e.g. for JSON or XML) in case of a {@link Long}.
+   * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link Long}.
    *
    * @see LongInstantId
    * @see LongVersionId
@@ -24,7 +24,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   public static final String PROPERTY_LONG_ID = "l";
 
   /**
-   * Name of the {@link #getId() ID} property (e.g. for JSON or XML) in case of a {@link String}.
+   * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link String}.
    *
    * @see StringInstantId
    * @see StringVersionId
@@ -32,7 +32,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   public static final String PROPERTY_STRING_ID = "s";
 
   /**
-   * Name of the {@link #getId() ID} property (e.g. for JSON or XML) in case of a {@link java.util.UUID}.
+   * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link java.util.UUID}.
    *
    * @see UuidInstantId
    * @see UuidVersionId
@@ -78,13 +78,13 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   }
 
   @Override
-  public abstract I getId();
+  public abstract I get();
 
   @Override
   public abstract V getVersion();
 
   /**
-   * @return the property name of the {@link #getId() id} for marshalling.
+   * @return the property name of the {@link #get() id} for marshalling.
    * @see #PROPERTY_LONG_ID
    * @see #PROPERTY_UUID
    * @see #PROPERTY_STRING_ID
@@ -114,7 +114,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
     if (getVersion() == newVersion) {
       return this;
     }
-    return getFactory().create(this.type, getId(), newVersion);
+    return getFactory().create(this.type, get(), newVersion);
   }
 
   @SuppressWarnings("unchecked")
@@ -122,7 +122,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   public final Id<E> withType(Class<?> newType) {
 
     if (this.type == null) {
-      return getFactory().create((Class<E>) newType, getId(), getVersion());
+      return getFactory().create((Class<E>) newType, get(), getVersion());
     } else if (this.type != newType) {
       throw new IllegalArgumentException(
           "Illegal type " + newType + " - already typed to " + this.type + " at " + toString());
@@ -138,7 +138,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   @Override
   public final int hashCode() {
 
-    return ~getId().hashCode();
+    return ~get().hashCode();
   }
 
   @Override
@@ -151,7 +151,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
       return false;
     }
     AbstractId<?, ?, ?> other = (AbstractId<?, ?, ?>) obj;
-    if (!Objects.equals(getId(), other.getId())) {
+    if (!Objects.equals(get(), other.get())) {
       return false;
     }
     if ((this.type != null) && (other.type != null) && !this.type.equals(other.type)) {
@@ -178,7 +178,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
    */
   protected void toString(StringBuilder buffer) {
 
-    buffer.append(getId());
+    buffer.append(get());
     V version = getVersion();
     if (version != null) {
       buffer.append(VERSION_SEPARATOR);
@@ -203,10 +203,10 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
   }
 
   /**
-   * @param <I> the generic type expected for {@link Id#getId()}.
+   * @param <I> the generic type expected for {@link Id#get()}.
    * @param id the actual {@link Id} instance.
-   * @param type the {@link Class} reflecting the expected type of {@link Id#getId()}.
-   * @return the {@link #getId() primary key} of the given {@link Id}. May be {@code null} if the given {@link Id} is
+   * @param type the {@link Class} reflecting the expected type of {@link Id#get()}.
+   * @return the {@link #get() primary key} of the given {@link Id}. May be {@code null} if the given {@link Id} is
    *         {@code null}.
    * @throws IllegalArgumentException if the given {@code type} does not match.
    */
@@ -251,7 +251,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Id<E>
     }
     Object value;
     if (PROPERTY_ID.equals(property)) {
-      value = id.getId();
+      value = id.get();
     } else if (PROPERTY_VERSION.equals(property)) {
       value = id.getVersion();
     } else {

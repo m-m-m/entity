@@ -7,7 +7,7 @@ import io.github.mmm.marshall.Marshalling;
 /**
  * Factory to #create
  *
- * @param <I> type of the {@link Id#getId() primary key}.
+ * @param <I> type of the {@link Id#get() primary key}.
  * @param <V> type of the {@link Id#getVersion() version}.
  *
  * @since 1.0.0
@@ -58,7 +58,7 @@ public interface IdFactory<I, V extends Comparable<?>> {
   /**
    * @param <E> type of the identified entity.
    * @param type the {@link Id#getType() entity type}.
-   * @param id the {@link Id#getId() primary key}.
+   * @param id the {@link Id#get() primary key}.
    * @param version the {@link Id#getVersion() version}. May be {@code null}.
    * @return the {@link Id} for the given values.
    */

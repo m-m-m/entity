@@ -5,7 +5,7 @@ package io.github.mmm.entity.id;
 import java.util.Objects;
 
 /**
- * Implementation of {@link AbstractInstantId} using {@link Long} as {@link #getId() primary key}.
+ * Implementation of {@link AbstractInstantId} using {@link Long} as {@link #get() primary key}.
  *
  * @param <E> the generic type of the identified entity.
  *
@@ -22,7 +22,7 @@ public class LongLatestId<E> extends AbstractLatestId<E, Long> implements LongId
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}. See {@link #getIdAsLong()}.
+   * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
    */
   public LongLatestId(Class<E> type, long id) {
 
@@ -33,7 +33,7 @@ public class LongLatestId<E> extends AbstractLatestId<E, Long> implements LongId
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}. See {@link #getIdAsLong()}.
+   * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
    */
   protected LongLatestId(Class<E> type, Long id) {
 
@@ -43,13 +43,13 @@ public class LongLatestId<E> extends AbstractLatestId<E, Long> implements LongId
   }
 
   @Override
-  public Long getId() {
+  public Long get() {
 
     return this.id;
   }
 
   /**
-   * @return the {@link #getId() primary key} as primitve {@code long} value.
+   * @return the {@link #get() primary key} as primitve {@code long} value.
    */
   @Override
   public long getIdAsLong() {
@@ -72,7 +72,7 @@ public class LongLatestId<E> extends AbstractLatestId<E, Long> implements LongId
   /**
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getType() type}.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
    */
   public static <E> LongLatestId<E> of(Class<E> type, Long id) {
@@ -85,7 +85,7 @@ public class LongLatestId<E> extends AbstractLatestId<E, Long> implements LongId
 
   /**
    * @param <E> the generic type of the identified entity.
-   * @param id the {@link #getId() primary key}.
+   * @param id the {@link #get() primary key}.
    * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
    */
   public static <E> LongLatestId<E> of(long id) {
