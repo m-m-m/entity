@@ -23,6 +23,10 @@ module io.github.mmm.entity.bean {
 
   exports io.github.mmm.entity.bean.sql;
 
+  exports io.github.mmm.entity.bean.sql.create;
+
+  exports io.github.mmm.entity.bean.sql.constraint;
+
   exports io.github.mmm.entity.bean.sql.delete;
 
   exports io.github.mmm.entity.bean.sql.insert;

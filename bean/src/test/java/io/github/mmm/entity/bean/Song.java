@@ -3,7 +3,7 @@
 package io.github.mmm.entity.bean;
 
 import io.github.mmm.bean.BeanFactory;
-import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.bean.Mandatory;
 import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.property.number.integers.IntegerProperty;
 import io.github.mmm.property.string.StringProperty;
@@ -17,6 +17,7 @@ public interface Song extends EntityBean {
   /**
    * @return title of the song.
    */
+  @Mandatory
   StringProperty Title();
 
   /**

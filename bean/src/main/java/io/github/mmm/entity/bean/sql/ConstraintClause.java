@@ -18,16 +18,15 @@ import io.github.mmm.value.PropertyPath;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class PropertyClause<E extends EntityBean, SELF extends PropertyClause<E, SELF>>
+public abstract class ConstraintClause<E extends EntityBean, SELF extends ConstraintClause<E, SELF>>
     extends AbstractTypedClause<E, SELF> {
 
-  /** @see #getProperties() */
-  protected final List<PropertyPath<?>> properties;
+  private final List<PropertyPath<?>> properties;
 
   /**
    * The constructor.
    */
-  public PropertyClause() {
+  public ConstraintClause() {
 
     super();
     this.properties = new ArrayList<>();

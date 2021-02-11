@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.property.id;
 
+import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.AbstractId;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactories;
@@ -9,6 +10,7 @@ import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.id.IdMarshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
+import io.github.mmm.property.AttributeReadOnly;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.object.ObjectProperty;
 
@@ -21,7 +23,7 @@ import io.github.mmm.property.object.ObjectProperty;
  */
 public class IdProperty<E> extends ObjectProperty<Id<E>> {
 
-  /** Default {@link #getName() name}. */
+  /** Default {@link #getName() name} for primary key. */
   public static final String NAME = "Id";
 
   private Class<E> entityClass;
@@ -116,6 +118,27 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
       }
     }
     super.doSet(newValue);
+  }
+
+  /**
+   * @return the {@link Id#getType() entity class}.
+   */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public Class<E> getEntityClass() {
+
+    if (this.entityClass == null) {
+      if (NAME.equals(getName())) {
+        AttributeReadOnly lock = getMetadata().getLock();
+        if (lock instanceof EntityBean) {
+          this.entityClass = (Class) ((EntityBean) lock).getType().getJavaClass();
+        }
+      }
+      Id<E> id = get();
+      if (id != null) {
+        this.entityClass = id.getType();
+      }
+    }
+    return this.entityClass;
   }
 
   /**

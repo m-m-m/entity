@@ -4,6 +4,7 @@ package io.github.mmm.entity.property.link;
 
 import java.util.function.Function;
 
+import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.AbstractId;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactory;
@@ -96,6 +97,29 @@ public class LinkProperty<E> extends ObjectProperty<Link<E>> {
       }
     }
     super.doSet(newValue);
+  }
+
+  /**
+   * @return the {@link Id#getType() entity class}.
+   */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public Class<E> getEntityClass() {
+
+    if (this.entityClass == null) {
+      Link<E> link = get();
+      if (link != null) {
+        Id<E> id = link.getId();
+        if (id != null) {
+          this.entityClass = id.getType();
+        } else if (link.isResolved()) {
+          E target = link.getTarget();
+          if (target instanceof EntityBean) {
+            this.entityClass = (Class) ((EntityBean) target).getType().getJavaClass();
+          }
+        }
+      }
+    }
+    return this.entityClass;
   }
 
   @Override

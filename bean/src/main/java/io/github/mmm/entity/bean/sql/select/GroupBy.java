@@ -39,12 +39,6 @@ public class GroupBy<E extends EntityBean> extends PropertyClause<E, GroupBy<E>>
   }
 
   @Override
-  public boolean isOmit() {
-
-    return getProperties().isEmpty();
-  }
-
-  @Override
   public SelectStatement<E> get() {
 
     return this.statement;

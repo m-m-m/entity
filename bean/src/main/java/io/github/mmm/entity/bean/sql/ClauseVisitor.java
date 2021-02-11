@@ -2,6 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql;
 
+import io.github.mmm.entity.bean.sql.create.CreateIndex;
+import io.github.mmm.entity.bean.sql.create.CreateIndexColumns;
+import io.github.mmm.entity.bean.sql.create.CreateTable;
+import io.github.mmm.entity.bean.sql.create.CreateTableColumns;
 import io.github.mmm.entity.bean.sql.delete.Delete;
 import io.github.mmm.entity.bean.sql.insert.Insert;
 import io.github.mmm.entity.bean.sql.merge.Merge;
@@ -68,6 +72,10 @@ public interface ClauseVisitor {
       onValues((Values<?, ?>) clause);
     } else if (clause instanceof Set) {
       onSet((Set<?, ?>) clause);
+    } else if (clause instanceof CreateTableColumns) {
+      onColumns((CreateTableColumns<?>) clause);
+    } else if (clause instanceof CreateIndexColumns) {
+      onColumns((CreateIndexColumns<?>) clause);
     }
     return this;
   }
@@ -89,6 +97,10 @@ public interface ClauseVisitor {
       onMerge((Merge) start);
     } else if (start instanceof Upsert) {
       onUpsert((Upsert) start);
+    } else if (start instanceof CreateTable) {
+      onCreateTable((CreateTable<?>) start);
+    } else if (start instanceof CreateIndex) {
+      onCreateIndex((CreateIndex) start);
     }
   }
 
@@ -131,6 +143,20 @@ public interface ClauseVisitor {
    * @param upsert the {@link Upsert}-{@link Clause} to visit.
    */
   default void onUpsert(Upsert upsert) {
+
+  }
+
+  /**
+   * @param createTable the {@link CreateTable}-{@link Clause} to visit.
+   */
+  default void onCreateTable(CreateTable<?> createTable) {
+
+  }
+
+  /**
+   * @param createIndex the {@link CreateIndex}-{@link Clause} to visit.
+   */
+  default void onCreateIndex(CreateIndex createIndex) {
 
   }
 
@@ -184,9 +210,23 @@ public interface ClauseVisitor {
   }
 
   /**
+   * @param columns the {@link CreateTableColumns}-{@link Clause} to visit.
+   */
+  default void onColumns(CreateTableColumns<?> columns) {
+
+  }
+
+  /**
    * @param set the {@link Set}-{@link Clause} to visit.
    */
   default void onSet(Set<?, ?> set) {
+
+  }
+
+  /**
+   * @param columns the {@link CreateIndexColumns}-{@link Clause} to visit.
+   */
+  default void onColumns(CreateIndexColumns<?> columns) {
 
   }
 
