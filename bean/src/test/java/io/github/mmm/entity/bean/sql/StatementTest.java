@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions;
 
 import io.github.mmm.marshall.JsonFormat;
 import io.github.mmm.marshall.MarshallingConfig;
-import io.github.mmm.marshall.StructuredFormat;
+import io.github.mmm.marshall.StructuredTextFormat;
 
 /**
  * Abstract base class for tests of {@link Statement}s.
@@ -36,7 +36,7 @@ public abstract class StatementTest extends Assertions {
   protected void check(Statement<?> statement, String sql, String json) {
 
     check(statement, sql);
-    StructuredFormat format = JsonFormat.of(MarshallingConfig.NO_INDENTATION);
+    StructuredTextFormat format = JsonFormat.of(MarshallingConfig.NO_INDENTATION);
     StringBuilder sb = new StringBuilder();
     statement.writeObject(format.writer(sb), statement);
     String actualJson = sb.toString();
