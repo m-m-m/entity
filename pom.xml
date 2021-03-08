@@ -26,6 +26,14 @@
     <dependencies>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>mmm-bean-parent</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- own modules -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>mmm-entity</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -33,13 +41,6 @@
         <groupId>${project.groupId}</groupId>
         <artifactId>mmm-entity-bean</artifactId>
         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>mmm-bean-parent</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
