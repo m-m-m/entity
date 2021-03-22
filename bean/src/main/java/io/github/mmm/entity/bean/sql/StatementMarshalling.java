@@ -46,7 +46,7 @@ public class StatementMarshalling implements Marshalling<Statement<?>> {
   @Override
   public Statement<?> readObject(StructuredReader reader) {
 
-    reader.require(State.START_OBJECT);
+    reader.require(State.START_OBJECT, true);
     AbstractStatement<?> statement = null;
     while (!reader.readEnd()) {
       String name = reader.readName();

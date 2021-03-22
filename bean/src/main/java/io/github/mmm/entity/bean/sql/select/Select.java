@@ -222,7 +222,7 @@ public final class Select extends AbstractClause implements StartClause {
     if (NAME_DISTINCT.equals(name)) {
       this.distinct = Boolean.TRUE.equals(reader.readValueAsBoolean());
     } else if (NAME_SELECTIONS.equals(name)) {
-      reader.require(State.START_ARRAY);
+      reader.require(State.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
         Supplier<?> selection = marshalling.readArg(reader);

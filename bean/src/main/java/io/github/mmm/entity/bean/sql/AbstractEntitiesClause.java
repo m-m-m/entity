@@ -117,7 +117,7 @@ public abstract class AbstractEntitiesClause<E extends EntityBean, SELF extends 
   protected void readProperty(StructuredReader reader, String name) {
 
     if (NAME_ADDITIONAL_ENTITIES.equals(name)) {
-      reader.require(State.START_ARRAY);
+      reader.require(State.START_ARRAY, true);
       while (!reader.readEnd()) {
         EntitySubClause<EntityBean> additionalEntity = new EntitySubClause<>(null);
         additionalEntity.read(reader);

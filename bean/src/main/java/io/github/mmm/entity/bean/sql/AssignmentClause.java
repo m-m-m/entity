@@ -135,7 +135,7 @@ public abstract class AssignmentClause<E extends EntityBean, SELF extends Assign
   protected void readProperty(StructuredReader reader, String name) {
 
     if (NAME_ASSIGNMENTS.equals(name)) {
-      reader.require(State.START_ARRAY);
+      reader.require(State.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
         PropertyAssignment<?> assignment = marshalling.readAssignment(reader);

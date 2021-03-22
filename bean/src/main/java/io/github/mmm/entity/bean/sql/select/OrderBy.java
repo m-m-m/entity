@@ -115,7 +115,7 @@ public class OrderBy<E extends EntityBean> extends AbstractTypedClause<E, OrderB
   protected void readProperty(StructuredReader reader, String name) {
 
     if (NAME_ORDERINGS.equals(name)) {
-      reader.require(State.START_ARRAY);
+      reader.require(State.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
         this.orderings.add(marshalling.readOrdering(reader));
