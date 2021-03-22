@@ -9,7 +9,7 @@
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
   <artifactId>mmm-entity-parent</artifactId>
-  <version>${revision}${changelist}</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
   <name>${project.artifactId}</name>
   <description>Provides API and fundamentals for persistent entities.</description>
@@ -20,6 +20,7 @@
 
   <properties>
     <mmm.repository>entity</mmm.repository>
+    <revision>0-SNAPSHOT</revision>
   </properties>
 
   <dependencyManagement>
