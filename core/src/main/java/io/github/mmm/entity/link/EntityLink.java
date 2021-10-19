@@ -36,7 +36,7 @@ public class EntityLink<E extends Entity> extends AbstractLink<E> {
   @Override
   public Id<E> getId() {
 
-    return Id.of(this.entity);
+    return Id.from(this.entity);
   }
 
   @Override

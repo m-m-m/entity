@@ -139,7 +139,7 @@ public interface Id<E> extends Supplier<Object> {
    * @see Entity#getId()
    */
   @SuppressWarnings("unchecked")
-  static <E extends Entity> Id<E> of(E entity) {
+  static <E extends Entity> Id<E> from(E entity) {
 
     if (entity == null) {
       return null;
