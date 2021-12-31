@@ -1,6 +1,6 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.mmm.entity.bean.dao;
+package io.github.mmm.entity.dao;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.delete.DeleteStatement;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
  * @param <E> type of the {@link EntityBean}.
  * @since 1.0.0
  */
-public interface AdvancedDao<E extends EntityBean> extends SimpleDao<E> {
+public interface AdvancedDao<E extends EntityBean> extends Dao<E> {
 
   /**
    * @param select the {@link SelectStatement} used as query.

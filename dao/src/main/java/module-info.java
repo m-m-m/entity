@@ -13,6 +13,6 @@ module io.github.mmm.entity.dao {
 
   requires transitive org.reactivestreams;
 
-  exports io.github.mmm.entity.bean.dao;
+  exports io.github.mmm.entity.dao;
 
 }
