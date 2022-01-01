@@ -446,7 +446,6 @@ public class SqlFormatter implements ClauseVisitor {
   @Override
   public void onColumns(CreateIndexColumns<?> columns) {
 
-    // TODO Auto-generated method stub
     ClauseVisitor.super.onColumns(columns);
   }
 

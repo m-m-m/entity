@@ -29,6 +29,8 @@ module io.github.mmm.entity.bean {
 
   exports io.github.mmm.entity.bean.sql.delete;
 
+  exports io.github.mmm.entity.bean.sql.dialect;
+
   exports io.github.mmm.entity.bean.sql.insert;
 
   exports io.github.mmm.entity.bean.sql.merge;
