@@ -2,10 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.select;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.EntityBean;
@@ -47,8 +44,6 @@ import io.github.mmm.value.PropertyPath;
  */
 public final class SelectProjection<R extends WritableBean> extends Select<R> {
 
-  private final List<ProjectionProperty<?>> selections;
-
   /**
    * The constructor.
    *
@@ -57,7 +52,6 @@ public final class SelectProjection<R extends WritableBean> extends Select<R> {
   public SelectProjection(R resultBean) {
 
     super(resultBean);
-    this.selections = new ArrayList<>();
   }
 
   /**
@@ -86,13 +80,6 @@ public final class SelectProjection<R extends WritableBean> extends Select<R> {
 
     this(resultBean);
     and(selection, property);
-  }
-
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  @Override
-  public List<Supplier<?>> getSelections() {
-
-    return (List) this.selections;
   }
 
   /**
@@ -126,7 +113,7 @@ public final class SelectProjection<R extends WritableBean> extends Select<R> {
   public SelectProjection<R> and(ProjectionProperty<?> projectionProperty) {
 
     Objects.requireNonNull(projectionProperty, "projectionProperty");
-    this.selections.add(projectionProperty);
+    add(projectionProperty);
     return this;
   }
 
@@ -137,7 +124,7 @@ public final class SelectProjection<R extends WritableBean> extends Select<R> {
   public SelectProjection<R> and(ProjectionProperty<?>... projectionProperties) {
 
     for (ProjectionProperty<?> property : projectionProperties) {
-      this.selections.add(property);
+      add(property);
     }
     return this;
   }
@@ -152,7 +139,7 @@ public final class SelectProjection<R extends WritableBean> extends Select<R> {
   @Override
   public <E extends EntityBean> SelectFrom<R, E> from(E entity) {
 
-    if (this.selections.isEmpty()) {
+    if (getSelections().isEmpty()) {
       throw new IllegalStateException("Selections must not be empty! Call 'and' method at least once!");
     }
     return super.from(entity);

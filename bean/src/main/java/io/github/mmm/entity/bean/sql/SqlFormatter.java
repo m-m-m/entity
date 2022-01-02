@@ -176,7 +176,7 @@ public class SqlFormatter implements ClauseVisitor {
    */
   protected void onSelections(Select<?> select, SelectFrom<?, ?> selectFrom) {
 
-    List<Supplier<?>> selections = select.getSelections();
+    List<? extends Supplier<?>> selections = select.getSelections();
     if (selections.isEmpty()) {
       onSelectAll(selectFrom);
     } else {

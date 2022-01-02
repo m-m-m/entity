@@ -2,12 +2,9 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.select;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
-
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.StartClause;
+import io.github.mmm.value.PropertyPath;
 
 /**
  * {@link StartClause} of a {@link SelectStatement} to query data from the database.
@@ -28,18 +25,26 @@ public class SelectEntity<R extends EntityBean> extends Select<R> {
     setResultName(null);
   }
 
-  @Override
-  public List<Supplier<?>> getSelections() {
-
-    return Collections.emptyList();
-  }
-
   /**
    * @return the {@link SelectFrom} for fluent API calls.
    */
   public SelectFrom<R, R> from() {
 
     return new SelectFrom<>(this, getResultBean());
+  }
+
+  @Override
+  public SelectEntity<R> and(PropertyPath<?> property) {
+
+    super.and(property);
+    return this;
+  }
+
+  @Override
+  public SelectEntity<R> and(PropertyPath<?>... properties) {
+
+    super.and(properties);
+    return this;
   }
 
 }

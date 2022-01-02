@@ -1,9 +1,5 @@
 package io.github.mmm.entity.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 import io.github.mmm.entity.bean.sql.select.Select;
 
 /**
@@ -14,21 +10,12 @@ import io.github.mmm.entity.bean.sql.select.Select;
  */
 public class GenericSelect<R> extends Select<R> {
 
-  private final List<Supplier<?>> selections;
-
   /**
    * The constructor.
    */
   public GenericSelect() {
 
     super(null);
-    this.selections = new ArrayList<>();
-  }
-
-  @Override
-  public List<Supplier<?>> getSelections() {
-
-    return this.selections;
   }
 
   @Override

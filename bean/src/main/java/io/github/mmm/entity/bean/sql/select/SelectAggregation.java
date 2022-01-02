@@ -4,7 +4,7 @@ package io.github.mmm.entity.bean.sql.select;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.StartClause;
-import io.github.mmm.value.PropertyPath;
+import io.github.mmm.property.criteria.CriteriaAggregation;
 
 /**
  * {@link StartClause} of a {@link SelectStatement} to query data from the database.
@@ -12,32 +12,32 @@ import io.github.mmm.value.PropertyPath;
  * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public final class SelectColumn<R> extends Select<R> {
+public final class SelectAggregation<R> extends Select<R> {
 
-  private final PropertyPath<R> property;
+  private final CriteriaAggregation<R> aggregation;
 
   /**
    * The constructor.
    *
-   * @param property the single {@link #getProperty() property to select}.
+   * @param aggregation the single {@link #getAggregation() aggregation to select}.
    */
-  public SelectColumn(PropertyPath<R> property) {
+  public SelectAggregation(CriteriaAggregation<R> aggregation) {
 
     super(null);
-    this.property = property;
-    and(property);
+    this.aggregation = aggregation;
+    and(aggregation);
   }
 
   /**
-   * @return the property to select.
+   * @return the {@link CriteriaAggregation} to select.
    */
-  public PropertyPath<R> getProperty() {
+  public CriteriaAggregation<R> getAggregation() {
 
-    return this.property;
+    return this.aggregation;
   }
 
   @Override
-  public SelectColumn<R> distinct() {
+  public SelectAggregation<R> distinct() {
 
     super.distinct();
     return this;
