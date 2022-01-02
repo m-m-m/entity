@@ -2,35 +2,33 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.select;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.entity.bean.sql.Where;
 
 /**
  * A {@link Where}-{@link Clause} of an SQL {@link SelectStatement}.
  *
- * @param <E> type of the {@link SelectFrom#getEntity() entity}.
+ * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public class SelectWhere<E extends EntityBean> extends Where<E, SelectWhere<E>>
-    implements ClauseWithGroupBy<E>, ClauseWithOrderBy<E> {
+public class SelectWhere<R> extends Where<R, SelectWhere<R>> implements ClauseWithGroupBy<R>, ClauseWithOrderBy<R> {
 
   /** @see #get() */
-  private final SelectStatement<E> statement;
+  private final SelectStatement<R> statement;
 
   /**
    * The constructor.
    *
    * @param statement the owning {@link SelectStatement}.
    */
-  public SelectWhere(SelectStatement<E> statement) {
+  public SelectWhere(SelectStatement<R> statement) {
 
     super();
     this.statement = statement;
   }
 
   @Override
-  public SelectStatement<E> get() {
+  public SelectStatement<R> get() {
 
     return this.statement;
   }

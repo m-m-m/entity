@@ -2,29 +2,28 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.select;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.entity.bean.sql.PredicateClause;
 
 /**
  * A {@link Having}-{@link Clause} of an SQL {@link SelectStatement}.
  *
- * @param <E> type of the {@link io.github.mmm.entity.bean.sql.AbstractEntityClause#getEntity() entity}.
+ * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public class Having<E extends EntityBean> extends PredicateClause<E, Having<E>> implements ClauseWithOrderBy<E> {
+public class Having<R> extends PredicateClause<R, Having<R>> implements ClauseWithOrderBy<R> {
 
   /** Name of {@link Having} for marshaling. */
   public static final String NAME_HAVING = "having";
 
-  private final SelectStatement<E> statement;
+  private final SelectStatement<R> statement;
 
   /**
    * The constructor.
    *
    * @param statement the owning {@link SelectStatement}.
    */
-  public Having(SelectStatement<E> statement) {
+  public Having(SelectStatement<R> statement) {
 
     super();
     this.statement = statement;
@@ -37,7 +36,7 @@ public class Having<E extends EntityBean> extends PredicateClause<E, Having<E>> 
   }
 
   @Override
-  public SelectStatement<E> get() {
+  public SelectStatement<R> get() {
 
     return this.statement;
   }

@@ -4,16 +4,15 @@ package io.github.mmm.entity.bean.sql;
 
 import java.util.List;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.marshall.MarshallingObject;
 
 /**
  * A complete SQL statement that may be executed to the database.
  *
- * @param <E> type of the {@link AbstractEntityClause#getEntity() entity}.
+ * @param <E> type of the entity or object this statement primarily operates on.
  * @since 1.0.0
  */
-public abstract interface Statement<E extends EntityBean> extends MarshallingObject {
+public abstract interface Statement<E> extends MarshallingObject {
 
   /**
    * @return the {@link StartClause}

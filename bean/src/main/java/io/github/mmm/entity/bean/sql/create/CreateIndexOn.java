@@ -11,7 +11,7 @@ import io.github.mmm.value.PropertyPath;
  * @param <E> type of the {@link #getEntity() entity}.
  * @since 1.0.0
  */
-public class CreateIndexOn<E extends EntityBean> extends AbstractEntityClause<E, CreateTable<E>> {
+public class CreateIndexOn<E extends EntityBean> extends AbstractEntityClause<E, E, CreateTable<E>> {
 
   /** Name of {@link CreateIndexOn} for marshaling. */
   public static final String NAME_ON = "on";

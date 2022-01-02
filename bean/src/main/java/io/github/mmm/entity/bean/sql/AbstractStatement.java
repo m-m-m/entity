@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.marshall.AbstractMarshallingObject;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
@@ -17,8 +16,7 @@ import io.github.mmm.marshall.StructuredWriter;
  * @param <E> type of the {@link AbstractEntityClause#getEntity() entity}.
  * @since 1.0.0
  */
-public abstract class AbstractStatement<E extends EntityBean> extends AbstractMarshallingObject
-    implements Statement<E> {
+public abstract class AbstractStatement<E> extends AbstractMarshallingObject implements Statement<E> {
 
   private List<Clause> clauses;
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractTypedClause;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.entity.bean.sql.MainClause;
@@ -19,10 +18,10 @@ import io.github.mmm.property.criteria.CriteriaOrdering;
 /**
  * A {@link OrderBy}-{@link Clause} of an SQL {@link SelectStatement}.
  *
- * @param <E> type of the {@link io.github.mmm.entity.bean.sql.AbstractEntityClause#getEntity() entity}.
+ * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public class OrderBy<E extends EntityBean> extends AbstractTypedClause<E, OrderBy<E>> implements MainClause<E> {
+public class OrderBy<R> extends AbstractTypedClause<R, OrderBy<R>> implements MainClause<R> {
 
   /** Name of {@link OrderBy} for marshaling. */
   public static final String NAME_ORDER_BY = "orderBy";
@@ -30,7 +29,7 @@ public class OrderBy<E extends EntityBean> extends AbstractTypedClause<E, OrderB
   /** Name of {@link #getOrderings()} for marshaling. */
   public static final String NAME_ORDERINGS = "o";
 
-  private final SelectStatement<E> statement;
+  private final SelectStatement<R> statement;
 
   private final List<CriteriaOrdering> orderings;
 
@@ -39,7 +38,7 @@ public class OrderBy<E extends EntityBean> extends AbstractTypedClause<E, OrderB
    *
    * @param statement the owning {@link SelectStatement}.
    */
-  public OrderBy(SelectStatement<E> statement) {
+  public OrderBy(SelectStatement<R> statement) {
 
     super();
     this.statement = statement;
@@ -62,7 +61,7 @@ public class OrderBy<E extends EntityBean> extends AbstractTypedClause<E, OrderB
    * @param ordering the {@link CriteriaOrdering} to add.
    * @return this {@link OrderBy}-class itself for fluent API calls.
    */
-  public OrderBy<E> and(CriteriaOrdering ordering) {
+  public OrderBy<R> and(CriteriaOrdering ordering) {
 
     Objects.requireNonNull(ordering, "ordering");
     this.orderings.add(ordering);
@@ -73,7 +72,7 @@ public class OrderBy<E extends EntityBean> extends AbstractTypedClause<E, OrderB
    * @param criteriaOrderings the {@link CriteriaOrdering}s to add.
    * @return this {@link OrderBy}-class itself for fluent API calls.
    */
-  public OrderBy<E> and(CriteriaOrdering... criteriaOrderings) {
+  public OrderBy<R> and(CriteriaOrdering... criteriaOrderings) {
 
     for (CriteriaOrdering ordering : criteriaOrderings) {
       and(ordering);
@@ -90,7 +89,7 @@ public class OrderBy<E extends EntityBean> extends AbstractTypedClause<E, OrderB
   }
 
   @Override
-  public SelectStatement<E> get() {
+  public SelectStatement<R> get() {
 
     return this.statement;
   }

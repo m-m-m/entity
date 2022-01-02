@@ -4,7 +4,6 @@ package io.github.mmm.entity.bean.sql.select;
 
 import java.util.List;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractStatement;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.entity.bean.sql.Statement;
@@ -12,22 +11,22 @@ import io.github.mmm.entity.bean.sql.Statement;
 /**
  * {@link Statement} to query data from the database using a {@link Select}.
  *
- * @param <E> type of the {@link SelectFrom#getEntity() entity}.
+ * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> {
+public class SelectStatement<R> extends AbstractStatement<R> {
 
-  private final Select select;
+  private final Select<R> select;
 
-  private final SelectFrom<E> from;
+  private final SelectFrom<R, ?> from;
 
-  private final SelectWhere<E> where;
+  private final SelectWhere<R> where;
 
-  private final GroupBy<E> groupBy;
+  private final GroupBy<R> groupBy;
 
-  private final Having<E> having;
+  private final Having<R> having;
 
-  private final OrderBy<E> orderBy;
+  private final OrderBy<R> orderBy;
 
   /**
    * The constructor.
@@ -35,7 +34,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
    * @param select the {@link #getStart() starting} {@link Select SELECT}.
    * @param from the {@link #getFrom() FROM}.
    */
-  protected SelectStatement(Select select, SelectFrom<E> from) {
+  protected SelectStatement(Select<R> select, SelectFrom<R, ?> from) {
 
     super();
     select.setStatement(this);
@@ -52,7 +51,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
    */
   @Deprecated
   @Override
-  public Select getStart() {
+  public Select<R> getStart() {
 
     return this.select;
   }
@@ -60,7 +59,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
   /**
    * @return the opening {@link Select}.
    */
-  public Select getSelect() {
+  public Select<R> getSelect() {
 
     return this.select;
   }
@@ -68,7 +67,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
   /**
    * @return the {@link SelectFrom FROM} {@link Clause}.
    */
-  public SelectFrom<E> getFrom() {
+  public SelectFrom<R, ?> getFrom() {
 
     return this.from;
   }
@@ -76,7 +75,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
   /**
    * @return the {@link SelectWhere Where}-{@link Clause}.
    */
-  public SelectWhere<E> getWhere() {
+  public SelectWhere<R> getWhere() {
 
     return this.where;
   }
@@ -84,7 +83,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
   /**
    * @return the {@link GroupBy}-{@link Clause}.
    */
-  public GroupBy<E> getGroupBy() {
+  public GroupBy<R> getGroupBy() {
 
     return this.groupBy;
   }
@@ -92,7 +91,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
   /**
    * @return the {@link Having}-{@link Clause}.
    */
-  public Having<E> getHaving() {
+  public Having<R> getHaving() {
 
     return this.having;
   }
@@ -100,7 +99,7 @@ public class SelectStatement<E extends EntityBean> extends AbstractStatement<E> 
   /**
    * @return the {@link OrderBy}-{@link Clause}.
    */
-  public OrderBy<E> getOrderBy() {
+  public OrderBy<R> getOrderBy() {
 
     return this.orderBy;
   }

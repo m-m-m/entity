@@ -17,7 +17,7 @@ import io.github.mmm.value.PropertyPath;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class Into<E extends EntityBean, SELF extends Into<E, SELF>> extends AbstractEntityClause<E, SELF> {
+public abstract class Into<E extends EntityBean, SELF extends Into<E, SELF>> extends AbstractEntityClause<E, E, SELF> {
 
   /** Name of {@link Into} for marshaling. */
   public static final String NAME_INTO = "into";

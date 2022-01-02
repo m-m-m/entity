@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.marshall.StructuredReader;
+import io.github.mmm.marshall.StructuredReader.State;
+import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.CriteriaPredicate;
+import io.github.mmm.property.criteria.SimplePath;
 import io.github.mmm.value.PropertyPath;
 
 /**
@@ -18,8 +22,10 @@ import io.github.mmm.value.PropertyPath;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class PropertyClause<E extends EntityBean, SELF extends PropertyClause<E, SELF>>
-    extends AbstractTypedClause<E, SELF> {
+public abstract class PropertyClause<E, SELF extends PropertyClause<E, SELF>> extends AbstractTypedClause<E, SELF> {
+
+  /** Name of {@link #getProperties()} for marshaling. */
+  public static final String NAME_PROPERTIES = "p";
 
   /** @see #getProperties() */
   protected final List<PropertyPath<?>> properties;
@@ -68,6 +74,34 @@ public abstract class PropertyClause<E extends EntityBean, SELF extends Property
   public boolean isOmit() {
 
     return getProperties().isEmpty();
+  }
+
+  @Override
+  protected void writeProperties(StructuredWriter writer) {
+
+    super.writeProperties(writer);
+    if (!this.properties.isEmpty()) {
+      writer.writeName(NAME_PROPERTIES);
+      writer.writeStartArray();
+      for (PropertyPath<?> property : this.properties) {
+        writer.writeValueAsString(property.path());
+      }
+      writer.writeEnd();
+    }
+  }
+
+  @Override
+  protected void readProperty(StructuredReader reader, String name) {
+
+    if (NAME_PROPERTIES.equals(name)) {
+      reader.require(State.START_ARRAY, true);
+      while (!reader.readEnd()) {
+        String path = reader.readValueAsString();
+        this.properties.add(new SimplePath(path));
+      }
+    } else {
+      super.readProperty(reader, name);
+    }
   }
 
 }

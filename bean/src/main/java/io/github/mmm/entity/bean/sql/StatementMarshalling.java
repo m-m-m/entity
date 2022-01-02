@@ -10,6 +10,7 @@ import io.github.mmm.entity.bean.sql.merge.Merge;
 import io.github.mmm.entity.bean.sql.select.Select;
 import io.github.mmm.entity.bean.sql.select.SelectFrom;
 import io.github.mmm.entity.bean.sql.update.Update;
+import io.github.mmm.entity.impl.GenericSelect;
 import io.github.mmm.marshall.Marshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
@@ -67,7 +68,7 @@ public class StatementMarshalling implements Marshalling<Statement<?>> {
   protected AbstractStatement<?> createStatement(String name) {
 
     if (Select.NAME_SELECT.equals(name)) {
-      return new SelectFrom<>(new Select(), null).get();
+      return new SelectFrom<>(new GenericSelect<>(), null).get();
     } else if (Update.NAME_UPDATE.equals(name)) {
       return new Update<>(null).get();
     } else if (Insert.NAME_INSERT.equals(name)) {

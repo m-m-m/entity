@@ -8,10 +8,11 @@ import io.github.mmm.entity.bean.EntityBean;
  * A fragment for an additional {@link #getEntity() entity} selection. It is a sub-{@link Clause clause} and shall never
  * be part of {@link Statement#getClauses()}.
  *
+ * @param <R> type of the result. Only different from {@literal <E>} for complex selects.
  * @param <E> type of the {@link #getEntity() entity}.
  * @since 1.0.0
  */
-public class EntitySubClause<E extends EntityBean> extends AbstractEntityClause<E, EntitySubClause<E>> {
+public class EntitySubClause<R, E extends EntityBean> extends AbstractEntityClause<R, E, EntitySubClause<R, E>> {
 
   /**
    * The constructor.

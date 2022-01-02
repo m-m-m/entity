@@ -2,28 +2,27 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.select;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.MainClause;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 
 /**
  * {@link MainClause} allowing to {@link #having(CriteriaPredicate) begin} a {@link Having}-clause.
  *
- * @param <E> type of the {@link io.github.mmm.entity.bean.sql.AbstractEntityClause#getEntity() entity}.
+ * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public interface ClauseWithHaving<E extends EntityBean> extends MainClause<E> {
+public interface ClauseWithHaving<R> extends MainClause<R> {
 
   @Override
-  SelectStatement<E> get();
+  SelectStatement<R> get();
 
   /**
    * @param predicate the {@link CriteriaPredicate} to add as {@link Having}-clause.
    * @return the {@link Having}-clause for fluent API calls.
    */
-  default Having<E> having(CriteriaPredicate predicate) {
+  default Having<R> having(CriteriaPredicate predicate) {
 
-    Having<E> having = get().getHaving();
+    Having<R> having = get().getHaving();
     having.and(predicate);
     return having;
   }
@@ -33,9 +32,9 @@ public interface ClauseWithHaving<E extends EntityBean> extends MainClause<E> {
    *        {@link io.github.mmm.property.criteria.PredicateOperator#AND AND}.
    * @return the {@link Having}-clause for fluent API calls.
    */
-  default Having<E> having(CriteriaPredicate... predicates) {
+  default Having<R> having(CriteriaPredicate... predicates) {
 
-    Having<E> having = get().getHaving();
+    Having<R> having = get().getHaving();
     having.and(predicates);
     return having;
   }

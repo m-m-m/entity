@@ -14,7 +14,8 @@ import io.github.mmm.value.PropertyPath;
  * @param <E> type of the {@link #getEntity() entity}.
  * @since 1.0.0
  */
-public class CreateTable<E extends EntityBean> extends AbstractEntityClause<E, CreateTable<E>> implements StartClause {
+public class CreateTable<E extends EntityBean> extends AbstractEntityClause<E, E, CreateTable<E>>
+    implements StartClause {
 
   /** Name of {@link CreateTable} for marshaling. */
   public static final String NAME_CREATE_TABLE = "createTable";

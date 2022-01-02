@@ -10,12 +10,13 @@ import io.github.mmm.marshall.StructuredWriter;
  * A {@link AbstractEntityClause} is a {@link Clause} of an SQL {@link Statement} that specifies the {@link #getEntity()
  * entity} and/or {@link #getEntityName() entity name} (table) to operate on.
  *
+ * @param <R> type of the result. Only different from {@literal <E>} for complex selects.
  * @param <E> type of the {@link #getEntity() entity}.
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class AbstractEntityClause<E extends EntityBean, SELF extends AbstractEntityClause<E, SELF>>
-    extends AbstractTypedClause<E, SELF> {
+public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends AbstractEntityClause<R, E, SELF>>
+    extends AbstractTypedClause<R, SELF> {
 
   /** Name of property {@link #getEntityName()} for marshalling. */
   public static final String NAME_ENTITY = "entity";
@@ -50,7 +51,7 @@ public abstract class AbstractEntityClause<E extends EntityBean, SELF extends Ab
 
     super();
     if ((entityName == null) && (entity != null)) {
-      this.entityName = entity.getType().getSimpleName();
+      this.entityName = entity.getType().getStableName();
     }
     this.entity = entity;
   }
@@ -74,7 +75,7 @@ public abstract class AbstractEntityClause<E extends EntityBean, SELF extends Ab
   /**
    * @param entityName new value of {@link #getEntityName()}.
    */
-  public void setEntityName(String entityName) {
+  protected void setEntityName(String entityName) {
 
     this.entityName = entityName;
   }

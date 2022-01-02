@@ -15,7 +15,7 @@ import io.github.mmm.value.PropertyPath;
  * @param <E> type of the {@link #getEntity() entity}.
  * @since 1.0.0
  */
-public final class Update<E extends EntityBean> extends AbstractEntityClause<E, Update<E>>
+public final class Update<E extends EntityBean> extends AbstractEntityClause<E, E, Update<E>>
     implements StartClause, MainClause<E> {
 
   /** Name of {@link Update} for marshaling. */

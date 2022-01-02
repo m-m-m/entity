@@ -13,7 +13,7 @@ import io.github.mmm.property.criteria.CriteriaPredicate;
  * @param <E> type of the {@link #getEntity() entity}.
  * @since 1.0.0
  */
-public class DeleteFrom<E extends EntityBean> extends From<E, DeleteFrom<E>> {
+public class DeleteFrom<E extends EntityBean> extends From<E, E, DeleteFrom<E>> {
 
   private final DeleteStatement<E> statement;
 

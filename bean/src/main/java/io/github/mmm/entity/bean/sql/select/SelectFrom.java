@@ -10,13 +10,14 @@ import io.github.mmm.property.criteria.CriteriaPredicate;
 /**
  * A {@link From}-{@link Clause} of an SQL {@link SelectStatement}.
  *
+ * @param <R> type of the result of the selection.
  * @param <E> type of the {@link #getEntity() entity}.
  * @since 1.0.0
  */
-public class SelectFrom<E extends EntityBean> extends From<E, SelectFrom<E>>
-    implements ClauseWithGroupBy<E>, ClauseWithOrderBy<E> {
+public class SelectFrom<R, E extends EntityBean> extends From<R, E, SelectFrom<R, E>>
+    implements ClauseWithGroupBy<R>, ClauseWithOrderBy<R> {
 
-  private final SelectStatement<E> statement;
+  private final SelectStatement<R> statement;
 
   /**
    * The constructor.
@@ -24,7 +25,7 @@ public class SelectFrom<E extends EntityBean> extends From<E, SelectFrom<E>>
    * @param select the {@link Select}.
    * @param entity the {@link #getEntity() entity}.
    */
-  public SelectFrom(Select select, E entity) {
+  public SelectFrom(Select<R> select, E entity) {
 
     this(select, entity, null);
   }
@@ -36,30 +37,30 @@ public class SelectFrom<E extends EntityBean> extends From<E, SelectFrom<E>>
    * @param entity the {@link #getEntity() entity}.
    * @param entityName the {@link #getEntityName() entity name}.
    */
-  public SelectFrom(Select select, E entity, String entityName) {
+  public SelectFrom(Select<R> select, E entity, String entityName) {
 
     super(entity, entityName);
     this.statement = new SelectStatement<>(select, this);
   }
 
   @Override
-  public SelectWhere<E> where(CriteriaPredicate predicate) {
+  public SelectWhere<R> where(CriteriaPredicate predicate) {
 
-    SelectWhere<E> where = this.statement.getWhere();
+    SelectWhere<R> where = this.statement.getWhere();
     where.and(predicate);
     return where;
   }
 
   @Override
-  public SelectWhere<E> where(CriteriaPredicate... predicates) {
+  public SelectWhere<R> where(CriteriaPredicate... predicates) {
 
-    SelectWhere<E> where = this.statement.getWhere();
+    SelectWhere<R> where = this.statement.getWhere();
     where.and(predicates);
     return where;
   }
 
   @Override
-  public SelectStatement<E> get() {
+  public SelectStatement<R> get() {
 
     return this.statement;
   }

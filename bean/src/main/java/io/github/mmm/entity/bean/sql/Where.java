@@ -11,8 +11,7 @@ import io.github.mmm.entity.bean.EntityBean;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class Where<E extends EntityBean, SELF extends Where<E, SELF>> extends PredicateClause<E, SELF>
-    implements MainClause<E> {
+public abstract class Where<E, SELF extends Where<E, SELF>> extends PredicateClause<E, SELF> implements MainClause<E> {
 
   /** Name of {@link Where} for marshaling. */
   public static final String NAME_WHERE = "where";

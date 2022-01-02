@@ -59,7 +59,7 @@ public interface ClauseVisitor {
   default ClauseVisitor onMainClause(MainClause<?> clause) {
 
     if (clause instanceof From) {
-      onFrom((From<?, ?>) clause);
+      onFrom((From<?, ?, ?>) clause);
     } else if (clause instanceof Where) {
       onWhere((Where<?, ?>) clause);
     } else if (clause instanceof GroupBy) {
@@ -86,7 +86,7 @@ public interface ClauseVisitor {
   default void onStart(StartClause start) {
 
     if (start instanceof Select) {
-      onSelect((Select) start);
+      onSelect((Select<?>) start);
     } else if (start instanceof Update) {
       onUpdate((Update<?>) start);
     } else if (start instanceof Insert) {
@@ -107,7 +107,7 @@ public interface ClauseVisitor {
   /**
    * @param select the {@link Select}-{@link Clause} to visit.
    */
-  default void onSelect(Select select) {
+  default void onSelect(Select<?> select) {
 
   }
 
@@ -163,7 +163,7 @@ public interface ClauseVisitor {
   /**
    * @param from the {@link From}-{@link Clause} to visit.
    */
-  default void onFrom(From<?, ?> from) {
+  default void onFrom(From<?, ?, ?> from) {
 
   }
 

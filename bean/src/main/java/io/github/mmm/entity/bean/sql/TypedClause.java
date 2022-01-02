@@ -7,9 +7,9 @@ import io.github.mmm.entity.bean.EntityBean;
 /**
  * A {@link Clause} that is typed by the {@link EntityBean}.
  *
- * @param <E> type of the {@link AbstractEntityClause#getEntity() entity}.
+ * @param <E> type of this {@link Clause} (typically the {@link AbstractEntityClause#getEntity() entity}).
  * @since 1.0.0
  */
-public interface TypedClause<E extends EntityBean> extends Clause {
+public interface TypedClause<E> extends Clause {
 
 }

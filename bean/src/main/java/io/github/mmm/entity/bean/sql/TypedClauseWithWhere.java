@@ -1,6 +1,5 @@
 package io.github.mmm.entity.bean.sql;
 
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 import io.github.mmm.property.criteria.PredicateOperator;
 
@@ -10,7 +9,7 @@ import io.github.mmm.property.criteria.PredicateOperator;
  * @param <E> type of the {@link AbstractEntityClause#getEntity() entity}.
  * @since 1.0.0
  */
-public interface TypedClauseWithWhere<E extends EntityBean> extends TypedClause<E> {
+public interface TypedClauseWithWhere<E> extends TypedClause<E> {
 
   /**
    * @param predicate the {@link CriteriaPredicate} to add as {@link Where}-clause.

@@ -2,26 +2,26 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql.select;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractClause;
 import io.github.mmm.entity.bean.sql.StartClause;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
-import io.github.mmm.property.criteria.CriteriaAggregation;
 import io.github.mmm.property.criteria.CriteriaMarshalling;
 import io.github.mmm.value.PropertyPath;
 
 /**
  * {@link StartClause} of a {@link SelectStatement} to query data from the database.
  *
+ * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public final class Select extends AbstractClause implements StartClause {
+public abstract class Select<R> extends AbstractClause implements StartClause {
 
   /** Name of {@link Select} for marshaling. */
   public static final String NAME_SELECT = "select";
@@ -29,70 +29,29 @@ public final class Select extends AbstractClause implements StartClause {
   /** Name of property {@link #isDistinct()} for marshaling. */
   public static final String NAME_DISTINCT = "distinct";
 
+  /** Name of property {@link #getResultName()} for marshaling. */
+  public static final String NAME_RESULT = "result";
+
   /** Name of property {@link #getSelections() selections} for marshaling. */
   public static final String NAME_SELECTIONS = "sel";
 
-  private final List<Supplier<?>> selections;
+  private SelectStatement<R> statement;
 
-  private SelectStatement<?> statement;
+  private transient R resultBean;
+
+  private String resultName;
 
   private boolean distinct;
 
   /**
    * The constructor.
+   *
+   * @param resultBean the {@link #getResultBean() result bean}.
    */
-  public Select() {
+  protected Select(R resultBean) {
 
     super();
-    this.selections = new ArrayList<>();
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param property the {@link PropertyPath property} to select.
-   */
-  public Select(PropertyPath<?> property) {
-
-    this();
-    and(property);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param properties the {@link PropertyPath properties} to select.
-   */
-  public Select(PropertyPath<?>... properties) {
-
-    this();
-    for (PropertyPath<?> property : properties) {
-      and(property);
-    }
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param aggregation the {@link CriteriaAggregation} to select.
-   */
-  public Select(CriteriaAggregation<?> aggregation) {
-
-    this();
-    and(aggregation);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param aggregations the {@link CriteriaAggregation}s to select.
-   */
-  public Select(CriteriaAggregation<?>... aggregations) {
-
-    this();
-    for (CriteriaAggregation<?> aggregation : aggregations) {
-      and(aggregation);
-    }
+    setResultBean(resultBean);
   }
 
   @Override
@@ -110,70 +69,59 @@ public final class Select extends AbstractClause implements StartClause {
   }
 
   /**
-   * @return the {@link List} of selections. Only use for generic code. To build queries use fluent API methods such as
-   *         {@link #and(PropertyPath)} or {@link #from(EntityBean)}.
+   * @return the {@link List} of selections. Only use for generic code. To build queries use fluent API methods.
    */
-  public List<Supplier<?>> getSelections() {
-
-    return this.selections;
-  }
+  public abstract List<Supplier<?>> getSelections();
 
   /**
-   * @return the owning {@link SelectStatement} or {@code null} if not initialized (what happens when
-   *         {@link #from(EntityBean)} is called).
+   * @return the owning {@link SelectStatement} or {@code null} if not initialized (until {@code from} method is
+   *         called).
    */
-  public SelectStatement<?> getStatement() {
+  public SelectStatement<R> getStatement() {
 
     return this.statement;
   }
 
-  void setStatement(SelectStatement<?> statement) {
+  void setStatement(SelectStatement<R> statement) {
 
     this.statement = statement;
   }
 
   /**
-   * @param aggregation the {@link CriteriaAggregation} to add to the selection.
-   * @return this {@link Select} for fluent API calls.
+   * @return the result {@link io.github.mmm.bean.WritableBean bean} for {@link SelectProjection} or
+   *         {@link SelectEntity}, otherwise {@code null}.
    */
-  public Select and(CriteriaAggregation<?> aggregation) {
+  public R getResultBean() {
 
-    this.selections.add(aggregation);
-    return this;
+    return this.resultBean;
   }
 
   /**
-   * @param aggregations the {@link CriteriaAggregation}s to add to the selection.
-   * @return this {@link Select} for fluent API calls.
+   * @param resultBean the new value of {@link #getResultBean()}.
    */
-  public Select and(CriteriaAggregation<?>... aggregations) {
+  protected void setResultBean(R resultBean) {
 
-    for (CriteriaAggregation<?> aggregation : aggregations) {
-      this.selections.add(aggregation);
+    if ((resultBean instanceof WritableBean) && (this.resultName == null)) {
+      this.resultName = ((WritableBean) resultBean).getType().getStableName();
     }
-    return this;
+    this.resultBean = resultBean;
   }
 
   /**
-   * @param property the {@link PropertyPath property} to add to the selection.
-   * @return this {@link Select} for fluent API calls.
+   * @return the optional result name.
+   * @see io.github.mmm.entity.bean.sql.AbstractEntityClause#getEntityName()
    */
-  public Select and(PropertyPath<?> property) {
+  public String getResultName() {
 
-    this.selections.add(property);
-    return this;
+    return this.resultName;
   }
 
   /**
-   * @param properties the {@link PropertyPath properties} to add to the selection.
-   * @return this {@link Select} for fluent API calls.
+   * @param resultName new value of {@link #getResultName()}.
    */
-  public Select and(PropertyPath<?>... properties) {
+  public void setResultName(String resultName) {
 
-    for (PropertyPath<?> property : properties) {
-      this.selections.add(property);
-    }
-    return this;
+    this.resultName = resultName;
   }
 
   /**
@@ -181,7 +129,7 @@ public final class Select extends AbstractClause implements StartClause {
    *
    * @return this {@link Select} for fluent API calls.
    */
-  public Select distinct() {
+  public Select<R> distinct() {
 
     this.distinct = true;
     return this;
@@ -192,7 +140,7 @@ public final class Select extends AbstractClause implements StartClause {
    * @param entity the {@link EntityBean entity} to select from.
    * @return the {@link SelectFrom} for fluent API calls.
    */
-  public <E extends EntityBean> SelectFrom<E> from(E entity) {
+  protected <E extends EntityBean> SelectFrom<R, E> from(E entity) {
 
     return new SelectFrom<>(this, entity);
   }
@@ -204,11 +152,16 @@ public final class Select extends AbstractClause implements StartClause {
       writer.writeName(NAME_DISTINCT);
       writer.writeValueAsBoolean(Boolean.TRUE);
     }
-    if (!this.selections.isEmpty()) {
+    if (this.resultName != null) {
+      writer.writeName(NAME_RESULT);
+      writer.writeValueAsString(this.resultName);
+    }
+    List<Supplier<?>> selections = getSelections();
+    if (!selections.isEmpty()) {
       writer.writeName(NAME_SELECTIONS);
       writer.writeStartArray();
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
-      for (Supplier<?> selection : this.selections) {
+      for (Supplier<?> selection : selections) {
         marshalling.writeArg(writer, selection);
       }
       writer.writeEnd();
@@ -221,14 +174,54 @@ public final class Select extends AbstractClause implements StartClause {
 
     if (NAME_DISTINCT.equals(name)) {
       this.distinct = Boolean.TRUE.equals(reader.readValueAsBoolean());
+    } else if (NAME_RESULT.equals(name)) {
+      this.resultName = reader.readValueAsString();
     } else if (NAME_SELECTIONS.equals(name)) {
       reader.require(State.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
+      List<Supplier<?>> selections = getSelections();
       while (!reader.readEnd()) {
         Supplier<?> selection = marshalling.readArg(reader);
-        this.selections.add(selection);
+        selections.add(selection);
       }
+    } else {
+      super.readProperty(reader, name);
     }
-    super.readProperty(reader, name);
+  }
+
+  /**
+   * Alternative for {@code new SelectColumn(property)}.
+   *
+   * @param <R> type of the result of the selection.
+   * @param property the single {@link PropertyPath property} to select.
+   * @return the {@link SelectColumn} clause.
+   */
+  public static <R> SelectColumn<R> column(PropertyPath<R> property) {
+
+    return new SelectColumn<>(property);
+  }
+
+  /**
+   * Alternative for {@code new SelectEntity(entity)}.
+   *
+   * @param <R> type of the {@link EntityBean} to select.
+   * @param entity the {@link EntityBean} to select.
+   * @return the {@link SelectEntity} clause.
+   */
+  public static <R extends EntityBean> SelectEntity<R> entity(R entity) {
+
+    return new SelectEntity<>(entity);
+  }
+
+  /**
+   * Alternative for {@code new SelectProjection(bean)}.
+   *
+   * @param <R> type of the {@link WritableBean} to select.
+   * @param bean the {@link WritableBean} to select.
+   * @return the {@link SelectProjection} clause.
+   */
+  public static <R extends WritableBean> SelectProjection<R> projection(R bean) {
+
+    return new SelectProjection<>(bean);
   }
 }

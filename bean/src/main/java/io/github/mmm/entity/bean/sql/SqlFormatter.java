@@ -120,11 +120,11 @@ public class SqlFormatter implements ClauseVisitor {
   }
 
   @Override
-  public void onSelect(Select select) {
+  public void onSelect(Select<?> select) {
 
     write("SELECT");
     SelectStatement<?> statement = select.getStatement();
-    SelectFrom<?> selectFrom = null;
+    SelectFrom<?, ?> selectFrom = null;
     if (statement != null) {
       selectFrom = statement.getFrom();
     }
@@ -174,7 +174,7 @@ public class SqlFormatter implements ClauseVisitor {
    * @param select the {@link Select} with the {@link Select#getSelections() selections}.
    * @param selectFrom the {@link SelectFrom}.
    */
-  protected void onSelections(Select select, SelectFrom<?> selectFrom) {
+  protected void onSelections(Select<?> select, SelectFrom<?, ?> selectFrom) {
 
     List<Supplier<?>> selections = select.getSelections();
     if (selections.isEmpty()) {
@@ -230,7 +230,7 @@ public class SqlFormatter implements ClauseVisitor {
   /**
    * @param selectFrom the {@link SelectFrom} giving access to the {@link SelectFrom#getAlias() alias}.
    */
-  protected void onSelectAll(SelectFrom<?> selectFrom) {
+  protected void onSelectAll(SelectFrom<?, ?> selectFrom) {
 
     if (isSelectAllByAlias()) {
       write(" ");
@@ -241,7 +241,7 @@ public class SqlFormatter implements ClauseVisitor {
   }
 
   @Override
-  public void onFrom(From<?, ?> from) {
+  public void onFrom(From<?, ?, ?> from) {
 
     write(" FROM ");
     onEntities(from);
@@ -251,10 +251,10 @@ public class SqlFormatter implements ClauseVisitor {
   /**
    * @param entities the {@link AbstractEntitiesClause} to format.
    */
-  protected void onEntities(AbstractEntitiesClause<?, ?> entities) {
+  protected void onEntities(AbstractEntitiesClause<?, ?, ?> entities) {
 
     onEntity(entities);
-    for (EntitySubClause<?> entity : entities.getAdditionalEntities()) {
+    for (EntitySubClause<?, ?> entity : entities.getAdditionalEntities()) {
       onAdditionalEntity(entity);
     }
   }
@@ -262,7 +262,7 @@ public class SqlFormatter implements ClauseVisitor {
   /**
    * @param entity the {@link AbstractEntityClause} to format.
    */
-  protected void onEntity(AbstractEntityClause<?, ?> entity) {
+  protected void onEntity(AbstractEntityClause<?, ?, ?> entity) {
 
     write(entity.getEntityName());
     onAlias(entity.getAlias(), entity);
@@ -271,7 +271,7 @@ public class SqlFormatter implements ClauseVisitor {
   /**
    * @param entity the {@link EntitySubClause} to format.
    */
-  protected void onAdditionalEntity(EntitySubClause<?> entity) {
+  protected void onAdditionalEntity(EntitySubClause<?, ?> entity) {
 
     write(", ");
     onEntity(entity);

@@ -22,8 +22,7 @@ import io.github.mmm.property.criteria.PredicateOperator;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class PredicateClause<E extends EntityBean, SELF extends PredicateClause<E, SELF>>
-    extends AbstractTypedClause<E, SELF> {
+public abstract class PredicateClause<E, SELF extends PredicateClause<E, SELF>> extends AbstractTypedClause<E, SELF> {
 
   /** Name of the property {@link #getPredicates()} for marshaling. */
   public static final String NAME_PREDICATES = "and";

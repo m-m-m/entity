@@ -15,17 +15,18 @@ import io.github.mmm.marshall.StructuredWriter;
  * A {@link AbstractEntitiesClause} is a {@link Clause} of an SQL {@link Statement} that specifies the
  * {@link #getEntity() entity} and/or {@link #getEntityName() entity name} (table) to operate on.
  *
+ * @param <R> type of the result. Only different from {@literal <E>} for complex selects.
  * @param <E> type of the {@link #getEntity() entity}.
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class AbstractEntitiesClause<E extends EntityBean, SELF extends AbstractEntitiesClause<E, SELF>>
-    extends AbstractEntityClause<E, SELF> {
+public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF extends AbstractEntitiesClause<R, E, SELF>>
+    extends AbstractEntityClause<R, E, SELF> {
 
   /** Name of property {@link #getEntityName()} for marshalling. */
   public static final String NAME_ADDITIONAL_ENTITIES = "and";
 
-  private final List<EntitySubClause<?>> additionalEntities;
+  private final List<EntitySubClause<?, ?>> additionalEntities;
 
   /**
    * The constructor.
@@ -83,7 +84,7 @@ public abstract class AbstractEntitiesClause<E extends EntityBean, SELF extends 
    * @param entityFragment the {@link EntitySubClause} to add.
    * @return this {@link Clause} itself for fluent API calls.
    */
-  protected SELF and(EntitySubClause<?> entityFragment) {
+  protected SELF and(EntitySubClause<?, ?> entityFragment) {
 
     Objects.requireNonNull(entityFragment);
     this.additionalEntities.add(entityFragment);
@@ -93,7 +94,7 @@ public abstract class AbstractEntitiesClause<E extends EntityBean, SELF extends 
   /**
    * @return the {@link List} of {@link EntitySubClause}s in addition to the {@link #getEntity() main entity}.
    */
-  public List<EntitySubClause<?>> getAdditionalEntities() {
+  public List<EntitySubClause<?, ?>> getAdditionalEntities() {
 
     return this.additionalEntities;
   }
@@ -105,22 +106,23 @@ public abstract class AbstractEntitiesClause<E extends EntityBean, SELF extends 
     if (!this.additionalEntities.isEmpty()) {
       writer.writeName(NAME_ADDITIONAL_ENTITIES);
       writer.writeStartArray();
-      for (EntitySubClause<?> additionalEntity : this.additionalEntities) {
+      for (EntitySubClause<?, ?> additionalEntity : this.additionalEntities) {
         additionalEntity.write(writer);
-        this.additionalEntities.add(additionalEntity);
       }
       writer.writeEnd();
     }
   }
 
+  @SuppressWarnings("rawtypes")
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
     if (NAME_ADDITIONAL_ENTITIES.equals(name)) {
       reader.require(State.START_ARRAY, true);
       while (!reader.readEnd()) {
-        EntitySubClause<EntityBean> additionalEntity = new EntitySubClause<>(null);
+        EntitySubClause additionalEntity = new EntitySubClause<>(null);
         additionalEntity.read(reader);
+        this.additionalEntities.add(additionalEntity);
       }
     } else {
       super.readProperty(reader, name);
