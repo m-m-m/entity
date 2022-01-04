@@ -4,8 +4,10 @@ package io.github.mmm.entity.bean.sql.update;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractEntityClause;
+import io.github.mmm.entity.bean.sql.AliasMap;
 import io.github.mmm.entity.bean.sql.MainClause;
 import io.github.mmm.entity.bean.sql.StartClause;
+import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.criteria.PropertyAssignment;
 import io.github.mmm.value.PropertyPath;
 
@@ -41,8 +43,22 @@ public final class Update<E extends EntityBean> extends AbstractEntityClause<E, 
    */
   public Update(E entity, String entityName) {
 
-    super(entity, entityName);
+    super(new AliasMap(), entity, entityName);
     this.statement = new UpdateStatement<>(this);
+  }
+
+  /**
+   * Sets all properties of the {@link #getEntity() entity} to their current values.
+   *
+   * @return the {@link UpdateSet} for fluent API.
+   */
+  public UpdateSet<E> set() {
+
+    UpdateSet<E> set = this.statement.getSet();
+    for (WritableProperty<?> property : this.entity.getProperties()) {
+      set.and(PropertyAssignment.ofValue(property));
+    }
+    return set;
   }
 
   /**

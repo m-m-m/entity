@@ -25,22 +25,13 @@ public abstract class Into<E extends EntityBean, SELF extends Into<E, SELF>> ext
   /**
    * The constructor.
    *
-   * @param entity the {@link #getEntity() entity} to operate on.
-   */
-  protected Into(E entity) {
-
-    this(entity, null);
-  }
-
-  /**
-   * The constructor.
-   *
+   * @param aliasMap the {@link AliasMap}.
    * @param entity the {@link #getEntity() entity} to operate on.
    * @param entityName the {@link #getEntityName() entity name}.
    */
-  protected Into(E entity, String entityName) {
+  protected Into(AliasMap aliasMap, E entity, String entityName) {
 
-    super(entity, entityName);
+    super(aliasMap, entity, entityName);
   }
 
   @Override

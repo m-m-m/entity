@@ -2,6 +2,7 @@ package io.github.mmm.entity.bean.sql.create;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractEntityClause;
+import io.github.mmm.entity.bean.sql.AliasMap;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.value.PropertyPath;
 
@@ -38,7 +39,7 @@ public class CreateIndexOn<E extends EntityBean> extends AbstractEntityClause<E,
    */
   public CreateIndexOn(CreateIndex createIndex, E entity, String entityName) {
 
-    super(entity, entityName);
+    super(new AliasMap(), entity, entityName);
     this.statement = new CreateIndexStatement<>(createIndex, this);
   }
 

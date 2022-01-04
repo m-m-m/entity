@@ -2,6 +2,9 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql;
 
+import java.util.Map;
+import java.util.Objects;
+
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
@@ -24,6 +27,8 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
   /** Name of property {@link #getAlias() alias} for marshaling. */
   public static final String NAME_ALIAS = "as";
 
+  private final AliasMap aliasMap;
+
   /** @see #getEntityName() */
   protected final transient E entity;
 
@@ -34,26 +39,29 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
   /**
    * The constructor.
    *
-   * @param entity the {@link #getEntity() entity}.
-   */
-  protected AbstractEntityClause(E entity) {
-
-    this(entity, null);
-  }
-
-  /**
-   * The constructor.
-   *
+   * @param aliasMap the {@link AliasMap}.
    * @param entity the {@link #getEntity() entity} to operate on.
    * @param entityName the {@link #getEntityName() entity name}.
    */
-  protected AbstractEntityClause(E entity, String entityName) {
+  protected AbstractEntityClause(AliasMap aliasMap, E entity, String entityName) {
 
     super();
+    Objects.requireNonNull(aliasMap);
+    this.aliasMap = aliasMap;
     if ((entityName == null) && (entity != null)) {
       this.entityName = entity.getType().getStableName();
     }
     this.entity = entity;
+  }
+
+  /**
+   * @return the {@link Map} to {@link Map#get(Object) map} from {@link #getAlias() alias} to {@link #getEntity()
+   *         entity}. A single {@link Map} instance is used per {@link Statement} to ensure unique {@link #getAlias()
+   *         aliases}.
+   */
+  protected final AliasMap getAliasMap() {
+
+    return this.aliasMap;
   }
 
   /**
@@ -86,6 +94,9 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
    */
   public String getAlias() {
 
+    if (this.alias == null) {
+      as(this.aliasMap.createAlias(this));
+    }
     return this.alias;
   }
 
@@ -96,9 +107,16 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
    */
   public SELF as(String entityAlias) {
 
+    if (this.alias != null) {
+      EntityBean old = this.aliasMap.remove(this.alias);
+      assert (old == this.entity);
+    }
     this.alias = entityAlias;
+    if (entityAlias != null) {
+      this.aliasMap.put(entityAlias, this.entity);
+    }
     if (this.entity != null) {
-      this.entity.path(entityAlias + ".");
+      this.entity.pathSegment(entityAlias);
     }
     return self();
   }

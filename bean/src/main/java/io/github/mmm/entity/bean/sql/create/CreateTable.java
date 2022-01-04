@@ -4,6 +4,7 @@ package io.github.mmm.entity.bean.sql.create;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractEntityClause;
+import io.github.mmm.entity.bean.sql.AliasMap;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.entity.bean.sql.StartClause;
 import io.github.mmm.value.PropertyPath;
@@ -40,7 +41,7 @@ public class CreateTable<E extends EntityBean> extends AbstractEntityClause<E, E
    */
   public CreateTable(E entity, String entityName) {
 
-    super(entity, entityName);
+    super(new AliasMap(), entity, entityName);
     this.statement = new CreateTableStatement<>(this);
   }
 

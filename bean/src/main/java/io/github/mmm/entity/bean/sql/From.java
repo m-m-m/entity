@@ -22,22 +22,13 @@ public abstract class From<R, E extends EntityBean, SELF extends From<R, E, SELF
   /**
    * The constructor.
    *
-   * @param entity the {@link #getEntity() entity} to operate on.
-   */
-  protected From(E entity) {
-
-    this(entity, null);
-  }
-
-  /**
-   * The constructor.
-   *
+   * @param aliasMap the {@link AliasMap}.
    * @param entity the {@link #getEntity() entity} to operate on.
    * @param entityName the {@link #getEntityName() entity name}.
    */
-  protected From(E entity, String entityName) {
+  protected From(AliasMap aliasMap, E entity, String entityName) {
 
-    super(entity, entityName);
+    super(aliasMap, entity, entityName);
   }
 
   @Override

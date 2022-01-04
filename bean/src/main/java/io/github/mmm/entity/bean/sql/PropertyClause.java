@@ -97,7 +97,7 @@ public abstract class PropertyClause<E, SELF extends PropertyClause<E, SELF>> ex
       reader.require(State.START_ARRAY, true);
       while (!reader.readEnd()) {
         String path = reader.readValueAsString();
-        this.properties.add(new SimplePath(path));
+        this.properties.add(SimplePath.of(path));
       }
     } else {
       super.readProperty(reader, name);

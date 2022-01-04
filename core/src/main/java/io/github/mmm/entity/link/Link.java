@@ -16,7 +16,7 @@ import io.github.mmm.entity.id.Id;
  * This is the interface for a link to a persistent entity. It acts as a reference that can be evaluated lazily. It will
  * hold the {@link #getId() primary key} of the linked entity.
  *
- * @param <E> the generic type of the {@link #getTarget() linked} entity.
+ * @param <E> type of the {@link #getTarget() linked} entity.
  *
  * @see io.github.mmm.entity.Entity
  *
@@ -27,8 +27,8 @@ public interface Link<E> {
   /**
    * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getTarget() bean}.
    *         When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
-   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no ID assigned, yet. In such case
-   *         this method will return {@code null}.
+   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no ID assigned, yet. In such
+   *         case this method will return {@code null}.
    */
   Id<E> getId();
 
@@ -229,6 +229,22 @@ public interface Link<E> {
         links.add(link);
       }
     }
+  }
+
+  /**
+   * Null-safe variant of {@link Link#getId()}.
+   *
+   * @param <E> type of the {@link #getTarget() linked} entity.
+   * @param link the {@link Link} to get the {@link Id} from. May be {@code null}.
+   * @return the {@link Link#getId() ID} contained in the given {@link Link} or {@code null} if {@link Link} was
+   *         {@code null}.
+   */
+  static <E> Id<E> getId(Link<E> link) {
+
+    if (link != null) {
+      return link.getId();
+    }
+    return null;
   }
 
 }

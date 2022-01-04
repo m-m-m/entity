@@ -17,34 +17,37 @@ public class EntitySubClause<R, E extends EntityBean> extends AbstractEntityClau
   /**
    * The constructor.
    *
+   * @param aliasMap the {@link AliasMap}.
    * @param entity the {@link #getEntity() entity} to operate on.
    */
-  public EntitySubClause(E entity) {
+  public EntitySubClause(AliasMap aliasMap, E entity) {
 
-    this(entity, null, null);
+    this(aliasMap, entity, null, null);
   }
 
   /**
    * The constructor.
    *
+   * @param aliasMap the {@link AliasMap}.
    * @param entity the {@link #getEntity() entity} to operate on.
    * @param entityName the {@link #getEntityName() entity name}.
    */
-  public EntitySubClause(E entity, String entityName) {
+  public EntitySubClause(AliasMap aliasMap, E entity, String entityName) {
 
-    this(entity, entityName, null);
+    this(aliasMap, entity, entityName, null);
   }
 
   /**
    * The constructor.
    *
+   * @param aliasMap the {@link AliasMap}.
    * @param entity the {@link #getEntity() entity} to operate on.
    * @param entityName the {@link #getEntityName() entity name}.
    * @param alias the {@link #getAlias() alias}.
    */
-  public EntitySubClause(E entity, String entityName, String alias) {
+  public EntitySubClause(AliasMap aliasMap, E entity, String entityName, String alias) {
 
-    super(entity, entityName);
+    super(aliasMap, entity, entityName);
     if (alias != null) {
       as(alias);
     }

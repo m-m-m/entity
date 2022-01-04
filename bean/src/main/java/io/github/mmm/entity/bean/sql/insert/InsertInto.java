@@ -3,6 +3,7 @@
 package io.github.mmm.entity.bean.sql.insert;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.entity.bean.sql.AliasMap;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.entity.bean.sql.Into;
 import io.github.mmm.property.criteria.PropertyAssignment;
@@ -38,7 +39,7 @@ public class InsertInto<E extends EntityBean> extends Into<E, InsertInto<E>> {
    */
   public InsertInto(Insert insert, E entity, String entityName) {
 
-    super(entity, entityName);
+    super(new AliasMap(), entity, entityName);
     this.statement = new InsertStatement<>(insert, this);
   }
 

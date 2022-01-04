@@ -17,8 +17,11 @@ public interface Entity {
   String PROPERTY_NAME_ID = "Id";
 
   /**
+   * Please prefer the usage of {@link #getId(Entity)} or {@link Id#from(Entity)} instead of using this method directly.
+   *
    * @return the unique ID (primary key) of this entity or {@code null} if not available (e.g. entity is not
    *         persistent).
+   * @see #getId(Entity)
    */
   Id<? extends Entity> getId();
 

@@ -31,22 +31,13 @@ public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF exten
   /**
    * The constructor.
    *
-   * @param entity the {@link #getEntity() entity}.
-   */
-  protected AbstractEntitiesClause(E entity) {
-
-    this(entity, null);
-  }
-
-  /**
-   * The constructor.
-   *
+   * @param aliasMap the {@link #getAliasMap() aliasMap}.
    * @param entity the {@link #getEntity() entity} to operate on.
    * @param entityName the {@link #getEntityName() entity name}.
    */
-  protected AbstractEntitiesClause(E entity, String entityName) {
+  protected AbstractEntitiesClause(AliasMap aliasMap, E entity, String entityName) {
 
-    super(entity, entityName);
+    super(aliasMap, entity, entityName);
     this.additionalEntities = new ArrayList<>();
   }
 
@@ -56,7 +47,7 @@ public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF exten
    */
   public SELF and(EntityBean additionalEntity) {
 
-    return and(new EntitySubClause<>(additionalEntity, null, null));
+    return and(new EntitySubClause<>(getAliasMap(), additionalEntity, null, null));
   }
 
   /**
@@ -66,7 +57,7 @@ public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF exten
    */
   public SELF and(EntityBean additionalEntity, String alias) {
 
-    return and(new EntitySubClause<>(additionalEntity, null, alias));
+    return and(new EntitySubClause<>(getAliasMap(), additionalEntity, null, alias));
   }
 
   /**
@@ -77,7 +68,7 @@ public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF exten
    */
   public SELF and(String entityName, EntityBean additionalEntity, String alias) {
 
-    return and(new EntitySubClause<>(additionalEntity, entityName, alias));
+    return and(new EntitySubClause<>(getAliasMap(), additionalEntity, entityName, alias));
   }
 
   /**
@@ -120,7 +111,7 @@ public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF exten
     if (NAME_ADDITIONAL_ENTITIES.equals(name)) {
       reader.require(State.START_ARRAY, true);
       while (!reader.readEnd()) {
-        EntitySubClause additionalEntity = new EntitySubClause<>(null);
+        EntitySubClause additionalEntity = new EntitySubClause<>(getAliasMap(), null);
         additionalEntity.read(reader);
         this.additionalEntities.add(additionalEntity);
       }

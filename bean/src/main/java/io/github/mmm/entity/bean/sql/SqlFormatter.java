@@ -54,10 +54,6 @@ public class SqlFormatter implements ClauseVisitor {
 
   private final CriteriaSqlFormatter criteriaFormatter;
 
-  private boolean selectAllByAlias;
-
-  private boolean useAsbeforeAlias;
-
   SqlFormatter() {
 
     this(new CriteriaSqlFormatterInline());
@@ -199,15 +195,7 @@ public class SqlFormatter implements ClauseVisitor {
    */
   public boolean isSelectAllByAlias() {
 
-    return this.selectAllByAlias;
-  }
-
-  /**
-   * @param selectAllByAlias new value of {@link #isSelectAllByAlias()}.
-   */
-  public void setSelectAllByAlias(boolean selectAllByAlias) {
-
-    this.selectAllByAlias = selectAllByAlias;
+    return true;
   }
 
   /**
@@ -216,15 +204,7 @@ public class SqlFormatter implements ClauseVisitor {
    */
   public boolean isUseAsBeforeAlias() {
 
-    return this.useAsbeforeAlias;
-  }
-
-  /**
-   * @param useAsbeforeAlias new value of {@link #isUseAsBeforeAlias()}.
-   */
-  public void setUseAsbeforeAlias(boolean useAsbeforeAlias) {
-
-    this.useAsbeforeAlias = useAsbeforeAlias;
+    return false;
   }
 
   /**

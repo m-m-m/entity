@@ -3,6 +3,7 @@
 package io.github.mmm.entity.bean.sql.select;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.entity.bean.sql.AliasMap;
 import io.github.mmm.entity.bean.sql.Clause;
 import io.github.mmm.entity.bean.sql.From;
 import io.github.mmm.property.criteria.CriteriaPredicate;
@@ -39,7 +40,7 @@ public class SelectFrom<R, E extends EntityBean> extends From<R, E, SelectFrom<R
    */
   public SelectFrom(Select<R> select, E entity, String entityName) {
 
-    super(entity, entityName);
+    super(new AliasMap(), entity, entityName);
     this.statement = new SelectStatement<>(select, this);
   }
 
