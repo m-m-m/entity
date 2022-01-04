@@ -19,7 +19,7 @@ public class DeleteTest extends Assertions {
     // when
     DeleteStatement<Person> deleteStatement = new Delete().from(p).get();
     // then
-    assertThat(deleteStatement).hasToString("DELETE FROM Person");
+    assertThat(deleteStatement).hasToString("DELETE FROM Person p");
   }
 
   /** Test of {@link Delete} with where clause. */
