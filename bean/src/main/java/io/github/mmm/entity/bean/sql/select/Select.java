@@ -4,21 +4,31 @@ package io.github.mmm.entity.bean.sql.select;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.AbstractClause;
 import io.github.mmm.entity.bean.sql.StartClause;
+import io.github.mmm.entity.bean.sql.StatementMarshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
-import io.github.mmm.property.criteria.CriteriaAggregation;
+import io.github.mmm.property.criteria.CriteriaExpression;
 import io.github.mmm.property.criteria.CriteriaMarshalling;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * {@link StartClause} of a {@link SelectStatement} to query data from the database.
+ * {@link StartClause} of a {@link SelectStatement} to query data from the database. As {@link SelectStatement}s are
+ * rather complex, this class is abstract to allow property type-safety and guidance of fluent API and code completion
+ * via derived sub-classes for different scenarios. For simplest usage you can use the static methods provided by
+ * {@link Select} to start your query (typing {@code Select.} and starting code completion). However, you are still free
+ * to use regular instantiation like for other statements (typing {@code new Select} and starting code completion).
+ *
+ * <b>ATTENTION:</b> Please note that after {@link StatementMarshalling#readObject(StructuredReader) unmarshalling} or
+ * parsing a {@link SelectStatement} the {@link SelectStatement#getSelect() select} clause may not be of any of the
+ * expected sub-classes such as {@link SelectEntity}, {@link SecurityException}, etc. Use {@link #isSelectEntity()}
  *
  * @param <R> type of the result of the selection.
  * @since 1.0.0
@@ -33,6 +43,15 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
 
   /** Name of property {@link #getResultName()} for marshaling. */
   public static final String NAME_RESULT = "result";
+
+  /** Value of property {@link #NAME_RESULT} for {@link SelectEntity}. */
+  public static final String VALUE_RESULT_ENTITY = "entity";
+
+  /** Value of property {@link #NAME_RESULT} for {@link SelectColumn} or {@link SelectExpression}. */
+  public static final String VALUE_RESULT_SINLGE = "1";
+
+  /** Value of property {@link #NAME_RESULT} for {@link SelectResult}. */
+  public static final String VALUE_RESULT_RESULT = "result";
 
   /** Name of property {@link #getSelections() selections} for marshaling. */
   public static final String NAME_SELECTIONS = "sel";
@@ -116,7 +135,10 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
   }
 
   /**
-   * @return the optional result name.
+   * @return the optional result name. Will be {@link #VALUE_RESULT_ENTITY} for {@link SelectEntity},
+   *         {@link #VALUE_RESULT_SINLGE} for {@link SelectSingle}, and {@link #VALUE_RESULT_RESULT} for
+   *         {@link SelectResult}.
+   * @see #getResultBean()
    * @see io.github.mmm.entity.bean.sql.AbstractEntityClause#getEntityName()
    */
   public String getResultName() {
@@ -127,9 +149,39 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
   /**
    * @param resultName new value of {@link #getResultName()}.
    */
-  public void setResultName(String resultName) {
+  protected void setResultName(String resultName) {
 
     this.resultName = resultName;
+  }
+
+  /**
+   * @return {@code true} if the {@link SelectFrom#getEntity() primary entity} is selected, {@code false} otherwise.
+   * @see SelectEntity
+   */
+  public boolean isSelectEntity() {
+
+    return VALUE_RESULT_ENTITY.equals(this.resultName);
+  }
+
+  /**
+   * @return {@code true} if only a single {@link #getSelections() selection} is selected as raw value (in case of
+   *         {@link SelectColumn} or {@link SelectExpression}), {@code false} otherwise.
+   * @see SelectColumn
+   * @see SelectExpression
+   */
+  public boolean isSelectSingle() {
+
+    return VALUE_RESULT_SINLGE.equals(this.resultName);
+  }
+
+  /**
+   * @return {@code true} if only if the {@link SelectFrom#getEntity() main entity} is selected, {@code false}
+   *         otherwise.
+   * @see SelectEntity
+   */
+  public boolean isSelectResult() {
+
+    return VALUE_RESULT_SINLGE.equals(this.resultName);
   }
 
   /**
@@ -150,22 +202,22 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
   }
 
   /**
-   * @param aggregation the {@link CriteriaAggregation} to add to the selection.
+   * @param expression the {@link CriteriaExpression} to add to the selection.
    * @return this {@link Select} for fluent API calls.
    */
-  protected Select<R> and(CriteriaAggregation<?> aggregation) {
+  protected Select<R> and(CriteriaExpression<?> expression) {
 
-    add(aggregation);
+    add(expression);
     return this;
   }
 
   /**
-   * @param aggregations the {@link CriteriaAggregation}s to add to the selection.
+   * @param expressions the {@link CriteriaExpression}s to add to the selection.
    * @return this {@link Select} for fluent API calls.
    */
-  protected Select<R> and(CriteriaAggregation<?>... aggregations) {
+  protected Select<R> and(CriteriaExpression<?>... expressions) {
 
-    for (CriteriaAggregation<?> aggregation : aggregations) {
+    for (CriteriaExpression<?> aggregation : expressions) {
       add(aggregation);
     }
     return this;
@@ -206,13 +258,13 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
   @Override
   protected void writeProperties(StructuredWriter writer) {
 
+    if (!Objects.equals(VALUE_RESULT_ENTITY, this.resultName)) {
+      writer.writeName(NAME_RESULT);
+      writer.writeValueAsString(this.resultName);
+    }
     if (isDistinct()) {
       writer.writeName(NAME_DISTINCT);
       writer.writeValueAsBoolean(Boolean.TRUE);
-    }
-    if (this.resultName != null) {
-      writer.writeName(NAME_RESULT);
-      writer.writeValueAsString(this.resultName);
     }
     if (!this.selections.isEmpty()) {
       writer.writeName(NAME_SELECTIONS);
@@ -250,7 +302,7 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
    *
    * @param <R> type of the result of the selection.
    * @param property the single {@link PropertyPath property} to select.
-   * @return the {@link SelectColumn} clause.
+   * @return the new {@link SelectColumn} clause.
    */
   public static <R> SelectColumn<R> column(PropertyPath<R> property) {
 
@@ -258,15 +310,15 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
   }
 
   /**
-   * Alternative for {@code new SelectAggregation(aggregation)}.
+   * Alternative for {@code new SelectExpression(expression)}.
    *
    * @param <R> type of the result of the selection.
-   * @param aggregation the single {@link CriteriaAggregation property} to select.
-   * @return the {@link SelectAggregation} clause.
+   * @param expression the single {@link CriteriaExpression expression} to select.
+   * @return the new {@link SelectExpression} clause.
    */
-  public static <R> SelectAggregation<R> aggregation(CriteriaAggregation<R> aggregation) {
+  public static <R> SelectExpression<R> expression(CriteriaExpression<R> expression) {
 
-    return new SelectAggregation<>(aggregation);
+    return new SelectExpression<>(expression);
   }
 
   /**
@@ -274,7 +326,7 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
    *
    * @param <R> type of the {@link EntityBean} to select.
    * @param entity the {@link EntityBean} to select.
-   * @return the {@link SelectEntity} clause.
+   * @return the new {@link SelectEntity} clause.
    */
   public static <R extends EntityBean> SelectEntity<R> entity(R entity) {
 
@@ -286,10 +338,21 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
    *
    * @param <R> type of the {@link WritableBean} to select.
    * @param bean the {@link WritableBean} to select.
-   * @return the {@link SelectProjection} clause.
+   * @return the new {@link SelectProjection} clause.
    */
   public static <R extends WritableBean> SelectProjection<R> projection(R bean) {
 
     return new SelectProjection<>(bean);
   }
+
+  /**
+   * Alternative for {@code new SelectResult()}.
+   *
+   * @return the new {@link SelectResult} clause.
+   */
+  public static SelectResult result() {
+
+    return new SelectResult();
+  }
+
 }

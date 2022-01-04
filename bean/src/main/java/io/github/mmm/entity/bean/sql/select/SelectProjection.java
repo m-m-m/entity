@@ -6,23 +6,21 @@ import java.util.Objects;
 
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.sql.StartClause;
 import io.github.mmm.property.criteria.CriteriaAggregation;
 import io.github.mmm.property.criteria.ProjectionProperty;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * {@link StartClause} of a {@link SelectStatement} to query data from the database. Such projection is what is called a
- * <em>constructor query</em> in JPA such as
+ * {@link Select} to query a projection. This is called a <em>constructor query</em> in JPA such as
  *
  * <pre>
- * SELECT new com.example.Result(sum(i.price), count(i.price)) FROM Item AS i GROUP BY i.order
+ * SELECT new com.example.ResultBean(sum(i.price), count(i.price)) FROM Item AS i GROUP BY i.order
  * </pre>
  *
- * As analogy we can create {@code Result} as {@link WritableBean}:
+ * As analogy we can create {@code ResultBean} as {@link WritableBean}:
  *
  * <pre>
- * public interface Result extends {@link WritableBean} {
+ * public interface ResultBean extends {@link WritableBean} {
  *   {@link io.github.mmm.property.number.bigdecimal.BigDecimalProperty} Total();
  *   {@link io.github.mmm.property.number.integers.IntegerProperty} Count();
  *   static Result of() {
@@ -31,12 +29,12 @@ import io.github.mmm.value.PropertyPath;
  * }
  * </pre>
  *
- * Now we can create our query as following:
+ * Now we can create the above JPA query example as following:
  *
  * <pre>
- * Result result = Result.of();
+ * ResultBean result = ResultBean.of();
  * Item item = Item.of();
- * new {@link SelectProjection}<>(result, item.Price().count())
+ * SelectStatement<ResultBean> query = new {@link SelectProjection}<>(result, item.Price().count()).from(item).as("i").groupBy(i.Order()).get();
  * </pre>
  *
  * @param <R> type of the result of the selection.

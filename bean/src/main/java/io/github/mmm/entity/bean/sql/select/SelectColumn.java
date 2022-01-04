@@ -10,30 +10,33 @@ import io.github.mmm.value.PropertyPath;
  * {@link StartClause} of a {@link SelectStatement} to query data from the database.
  *
  * @param <R> type of the result of the selection.
+ * @see Select#column(PropertyPath)
  * @since 1.0.0
  */
-public final class SelectColumn<R> extends Select<R> {
+public final class SelectColumn<R> extends SelectSingle<R> {
 
-  private final PropertyPath<R> property;
+  private final PropertyPath<R> selection;
 
   /**
    * The constructor.
    *
-   * @param property the single {@link #getProperty() property to select}.
+   * @param selection the single {@link #getSelection() property} to select.
    */
-  public SelectColumn(PropertyPath<R> property) {
+  public SelectColumn(PropertyPath<R> selection) {
 
-    super(null);
-    this.property = property;
-    and(property);
+    super();
+    this.selection = selection;
+    and(selection);
   }
 
   /**
-   * @return the property to select.
+   * @return the single {@link PropertyPath} of the property in {@link EntityBean} and according column in the database
+   *         to select.
    */
-  public PropertyPath<R> getProperty() {
+  @Override
+  public PropertyPath<R> getSelection() {
 
-    return this.property;
+    return this.selection;
   }
 
   @Override
@@ -41,12 +44,6 @@ public final class SelectColumn<R> extends Select<R> {
 
     super.distinct();
     return this;
-  }
-
-  @Override
-  public <E extends EntityBean> SelectFrom<R, E> from(E entity) {
-
-    return super.from(entity);
   }
 
 }

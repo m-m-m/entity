@@ -16,6 +16,7 @@ public class GenericSelect<R> extends Select<R> {
   public GenericSelect() {
 
     super(null);
+    setResultName(VALUE_RESULT_ENTITY); // default if nothing else is specified
   }
 
   @Override

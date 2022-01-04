@@ -3,13 +3,13 @@
 package io.github.mmm.entity.bean.sql.select;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.sql.StartClause;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * {@link StartClause} of a {@link SelectStatement} to query data from the database.
+ * {@link Select} to query the {@link SelectFrom#getEntity() primary entity}.
  *
  * @param <R> type of the result of the selection.
+ * @see Select#entity(EntityBean)
  * @since 1.0.0
  */
 public class SelectEntity<R extends EntityBean> extends Select<R> {
@@ -22,7 +22,7 @@ public class SelectEntity<R extends EntityBean> extends Select<R> {
   public SelectEntity(R entity) {
 
     super(entity);
-    setResultName(null);
+    setResultName(VALUE_RESULT_ENTITY);
   }
 
   /**
