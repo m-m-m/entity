@@ -52,7 +52,11 @@ public abstract class AbstractLink<E> implements Link<E> {
   @Override
   public String toString() {
 
-    return getId().toString();
+    Id<E> id = getId();
+    if (id == null) {
+      return "-";
+    }
+    return id.toString();
   }
 
 }

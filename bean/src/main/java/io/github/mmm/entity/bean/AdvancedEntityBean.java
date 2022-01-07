@@ -21,7 +21,7 @@ import io.github.mmm.property.PropertyMetadata;
 public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
 
   /** The {@link IdProperty property} with the {@link Id primary key}. */
-  public final IdProperty<? extends AdvancedEntityBean> Id;
+  public final IdProperty Id;
 
   /**
    * The constructor.
@@ -46,7 +46,7 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    *
    * @param idProperty the {@link #Id() ID property}.
    */
-  public AdvancedEntityBean(IdProperty<? extends AdvancedEntityBean> idProperty) {
+  public AdvancedEntityBean(IdProperty idProperty) {
 
     this(null, idProperty);
   }
@@ -78,14 +78,12 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    * @param type the {@link #getType() type}.
    * @param idProperty the {@link #Id() ID property}.
    */
-  public AdvancedEntityBean(BeanClass type, IdProperty<? extends AdvancedEntityBean> idProperty) {
+  public AdvancedEntityBean(BeanClass type, IdProperty idProperty) {
 
     this(null, type, idProperty);
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  private AdvancedEntityBean(IdFactory<?, ?> idFactory, BeanClass type,
-      IdProperty<? extends AdvancedEntityBean> idProperty) {
+  private AdvancedEntityBean(IdFactory<?, ?> idFactory, BeanClass type, IdProperty idProperty) {
 
     super(type);
     if (idProperty == null) {
@@ -93,11 +91,11 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
     } else {
       assert idProperty.getName().equals(IdProperty.NAME);
     }
-    this.Id = add((IdProperty) idProperty);
+    this.Id = add(idProperty);
   }
 
   @Override
-  public IdProperty<? extends AdvancedEntityBean> Id() {
+  public IdProperty Id() {
 
     return this.Id;
   }

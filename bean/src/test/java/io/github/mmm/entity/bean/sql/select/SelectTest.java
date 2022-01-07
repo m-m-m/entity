@@ -10,7 +10,6 @@ import io.github.mmm.entity.bean.Result;
 import io.github.mmm.entity.bean.Song;
 import io.github.mmm.entity.bean.sql.SqlFormatter;
 import io.github.mmm.entity.bean.sql.StatementTest;
-import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.property.criteria.CriteriaSqlFormatter;
 import io.github.mmm.property.criteria.CriteriaSqlParametersNamed;
 
@@ -71,7 +70,7 @@ public class SelectTest extends StatementTest {
     Person p = Person.of();
     Person p2 = Person.of();
     // when
-    SelectStatement<Person> query = new SelectEntity<>(p).from().and(p2).where(((IdProperty) p.Id()).eq(p2.Id())).get();
+    SelectStatement<Person> query = new SelectEntity<>(p).from().and(p2).where(p.Id().eq(p2.Id())).get();
     // then
     assertThat(query).hasToString("SELECT p FROM Person p, Person pe WHERE p.Id = pe.Id");
   }
@@ -97,7 +96,7 @@ public class SelectTest extends StatementTest {
     SelectStatement<Result> query = new SelectProjection<>(r, s.Genre(), r.Genre()).and(s.Id().count(), r.Count())
         .and(s.Duration().avg(), r.Duration()) //
         .from(s).as("song").and(p, "p") //
-        .where(s.Composer().eq(p.Id().cast()).and(s.Duration().le(3 * 60 * 60L))) //
+        .where(s.Composer().eq(p.Id()).and(s.Duration().le(3 * 60 * 60L))) //
         .groupBy(s.Genre()).orderBy(s.Genre().asc()).get();
     // then
     check(query, sql, json);

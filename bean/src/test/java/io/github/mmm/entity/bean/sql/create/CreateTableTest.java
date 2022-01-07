@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import io.github.mmm.entity.bean.Person;
 import io.github.mmm.entity.bean.Song;
 import io.github.mmm.entity.id.LongLatestId;
+import io.github.mmm.entity.link.Link;
 
 /**
  * Test of {@link CreateTable} and {@link CreateTableStatement}.
@@ -19,7 +20,7 @@ public class CreateTableTest extends Assertions {
     // given
     Song s = Song.of();
     // temporary workaround
-    s.Composer().set(LongLatestId.of(Person.class, 4711L));
+    s.Composer().set(Link.of(LongLatestId.of(Person.class, 4711L)));
     // when
     CreateTableStatement<Song> createTableStatement = new CreateTable<>(s).columns().get();
     // then

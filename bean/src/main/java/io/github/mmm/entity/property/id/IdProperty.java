@@ -17,16 +17,14 @@ import io.github.mmm.property.object.ObjectProperty;
 /**
  * {@link ObjectProperty} with {@link Id} {@link #getValue() value} pointing to an entity.
  *
- * @param <E> the generic type of the {@link io.github.mmm.entity.bean.EntityBean entity}.
- *
  * @since 1.0.0
  */
-public class IdProperty<E> extends ObjectProperty<Id<E>> {
+public class IdProperty extends ObjectProperty<Id<?>> {
 
   /** Default {@link #getName() name} for primary key. */
   public static final String NAME = "Id";
 
-  private Class<E> entityClass;
+  private Class<?> entityClass;
 
   private IdFactory<?, ?> idFactory;
 
@@ -35,7 +33,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
    *
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public IdProperty(Class<E> entityClass) {
+  public IdProperty(Class<?> entityClass) {
 
     this(NAME, entityClass, null, null);
   }
@@ -46,7 +44,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
    * @param entityClass the {@link Class} reflecting the entity.
    * @param metadata the {@link #getMetadata() metadata}.
    */
-  public IdProperty(Class<E> entityClass, PropertyMetadata<Id<E>> metadata) {
+  public IdProperty(Class<?> entityClass, PropertyMetadata<Id<?>> metadata) {
 
     this(NAME, entityClass, metadata, null);
   }
@@ -58,7 +56,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
    * @param metadata the {@link #getMetadata() metadata}.
    * @param idFactory the {@link IdFactory} to marshal data.
    */
-  public IdProperty(Class<E> entityClass, PropertyMetadata<Id<E>> metadata, IdFactory<?, ?> idFactory) {
+  public IdProperty(Class<?> entityClass, PropertyMetadata<Id<?>> metadata, IdFactory<?, ?> idFactory) {
 
     this(NAME, entityClass, metadata, idFactory);
   }
@@ -69,7 +67,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
    * @param name the {@link #getName() name}.
    * @param entityClass the optional {@link Class} reflecting the entity.
    */
-  public IdProperty(String name, Class<E> entityClass) {
+  public IdProperty(String name, Class<?> entityClass) {
 
     this(name, entityClass, null, null);
   }
@@ -81,7 +79,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
    * @param entityClass the optional {@link Class} reflecting the entity.
    * @param metadata the {@link #getMetadata() metadata}.
    */
-  public IdProperty(String name, Class<E> entityClass, PropertyMetadata<Id<E>> metadata) {
+  public IdProperty(String name, Class<?> entityClass, PropertyMetadata<Id<?>> metadata) {
 
     this(name, entityClass, metadata, null);
   }
@@ -95,7 +93,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
    * @param idFactory the {@link IdFactory} to marshal data.
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  public IdProperty(String name, Class<E> entityClass, PropertyMetadata<Id<E>> metadata, IdFactory<?, ?> idFactory) {
+  public IdProperty(String name, Class<?> entityClass, PropertyMetadata<Id<?>> metadata, IdFactory<?, ?> idFactory) {
 
     super(name, (Class) IdFactory.getIdClass(idFactory), metadata);
     this.entityClass = entityClass;
@@ -103,7 +101,7 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
   }
 
   @Override
-  protected void doSet(Id<E> newValue) {
+  protected void doSet(Id<?> newValue) {
 
     if (newValue != null) {
       if (this.entityClass == null) {
@@ -123,17 +121,16 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
   /**
    * @return the {@link Id#getType() entity class}.
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  public Class<E> getEntityClass() {
+  public Class<?> getEntityClass() {
 
     if (this.entityClass == null) {
       if (NAME.equals(getName())) {
         AttributeReadOnly lock = getMetadata().getLock();
         if (lock instanceof EntityBean) {
-          this.entityClass = (Class) ((EntityBean) lock).getType().getJavaClass();
+          this.entityClass = ((EntityBean) lock).getType().getJavaClass();
         }
       }
-      Id<E> id = get();
+      Id<?> id = get();
       if (id != null) {
         this.entityClass = id.getType();
       }
@@ -162,23 +159,10 @@ public class IdProperty<E> extends ObjectProperty<Id<E>> {
     }
   }
 
-  /**
-   * As the generic type system of Java is lacking a build-in {@code <SELF>}, we provide this method for your
-   * convenience.
-   *
-   * @param <T> type of the expected {@link io.github.mmm.entity.bean.EntityBean entity}.
-   * @return this {@link IdProperty} casted to the property type.
-   */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public <T> IdProperty<T> cast() {
-
-    return (IdProperty) this;
-  }
-
   @Override
   public void read(StructuredReader reader) {
 
-    Id<E> id = getMarshalling().readObject(reader, this.entityClass);
+    Id<?> id = getMarshalling().readObject(reader, this.entityClass);
     set(id);
   }
 

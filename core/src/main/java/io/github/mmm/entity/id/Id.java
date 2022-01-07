@@ -53,6 +53,7 @@ public interface Id<E> extends Supplier<Object> {
    * @return the <em>primary key</em> of the identified {@link Entity} as {@link Object} value. It is only unique for a
    *         particular {@link #getType() type} of an <em>entity</em>.
    */
+  @Override
   Object get();
 
   /**
@@ -145,6 +146,28 @@ public interface Id<E> extends Supplier<Object> {
       return null;
     }
     return (Id<E>) entity.getId();
+  }
+
+  /**
+   * Type-safe and {@code null}-safe variant of {@link Entity#getId()}.
+   *
+   * @param <E> type of {@link Entity}.
+   * @param entity the {@link Entity}.
+   * @return the {@link Id} {@link Entity#getId() of} the given {@link Entity}. Will be {@code null} if the given
+   *         {@link Entity} was {@code null} or {@link Entity#getId() it's ID} is {@code null}.
+   * @see Entity#getId()
+   */
+  @SuppressWarnings("unchecked")
+  static <E extends Entity> Id<E> fromSafe(E entity) {
+
+    if (entity == null) {
+      return null;
+    }
+    Id<E> id = (Id<E>) entity.getId();
+    if (id == null) {
+      throw new IllegalArgumentException("Cannot get ID from transient entity " + entity);
+    }
+    return id;
   }
 
   /**

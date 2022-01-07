@@ -84,7 +84,7 @@ public abstract class AssignmentClause<E extends EntityBean, SELF extends Assign
    * @param id the {@link Id} value to set as {@link EntityBean#Id() primary key}.
    * @return this {@link Clause} itself for fluent API calls.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings({ "rawtypes" })
   public SELF andId(Id<? extends E> id) {
 
     // bug in Eclipse compiler

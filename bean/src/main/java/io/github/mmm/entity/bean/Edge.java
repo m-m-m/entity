@@ -4,7 +4,7 @@ package io.github.mmm.entity.bean;
 
 import io.github.mmm.bean.AbstractInterface;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.entity.property.link.LinkProperty;
 
 /**
  * An {@link Edge} connects two {@link EntityBean entities} as a directed many-to-many relation. It links from an
@@ -16,16 +16,16 @@ import io.github.mmm.entity.property.id.IdProperty;
  * @since 1.0.0
  */
 @AbstractInterface
-public interface Edge<I, O> extends EntityBean {
+public interface Edge<I extends EntityBean, O extends EntityBean> extends EntityBean {
 
   /**
    * @return {@link Id} of the incoming {@link EntityBean entity} (source).
    */
-  IdProperty<I> In();
+  LinkProperty<I> In();
 
   /**
    * @return {@link Id} of the outgoing {@link EntityBean entity} (target).
    */
-  IdProperty<O> Out();
+  LinkProperty<O> Out();
 
 }

@@ -85,7 +85,7 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
           this.constraints.add(new PrimaryKeyConstraint(
               PrimaryKeyConstraint.PREFIX + this.statement.getCreateTable().getEntityName(), p));
         } else {
-          return andForeignKey((IdProperty<?>) p);
+          return andForeignKey((IdProperty) p);
         }
       } else if (p instanceof LinkProperty) {
         return andForeignKey((LinkProperty<?>) p);
@@ -131,7 +131,7 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
    * @param property the {@link IdProperty} to add as column with {@link ForeignKeyConstraint}.
    * @return this {@link CreateTableColumns} for fluent API calls.
    */
-  public CreateTableColumns<E> andForeignKey(IdProperty<?> property) {
+  public CreateTableColumns<E> andForeignKey(IdProperty property) {
 
     and(property, false);
     return andForeignKey(property, property.getEntityClass());

@@ -4,6 +4,7 @@ package io.github.mmm.entity.property.link;
 
 import java.util.function.Function;
 
+import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.link.Link;
@@ -18,7 +19,7 @@ import io.github.mmm.validation.main.ValidatorBuilderObject;
  * @param <E> the generic type of the {@link io.github.mmm.entity.bean.EntityBean entity}.
  * @since 1.0.0
  */
-public final class LinkPropertyBuilder<E> extends
+public final class LinkPropertyBuilder<E extends EntityBean> extends
     PropertyBuilder<Link<E>, LinkProperty<E>, ValidatorBuilderObject<Link<E>, LinkPropertyBuilder<E>>, LinkPropertyBuilder<E>> {
 
   private IdFactory<?, ?> idFactory;

@@ -20,23 +20,22 @@ public interface EntityBean extends WritableBean, Entity {
   /**
    * @return the {@link IdProperty property} with the {@link Id} (primary key) of this entity.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  default IdProperty<? extends EntityBean> Id() {
+  default IdProperty Id() {
 
     return new IdProperty(getType().getJavaClass());
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   default Id<? extends EntityBean> getId() {
 
-    return Id().get();
+    return (Id) Id().get();
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   @Override
   default void setId(Id<? extends Entity> id) {
 
-    Id().set((Id) id);
+    Id().set(id);
   }
 
 }

@@ -18,7 +18,7 @@ import io.github.mmm.property.PropertyMetadata;
 public class SimpleEntityBean extends Bean implements EntityBean {
 
   /** The {@link IdProperty property} with the {@link Id primary key}. */
-  public final IdProperty<? extends SimpleEntityBean> Id;
+  public final IdProperty Id;
 
   /**
    * The constructor.
@@ -33,18 +33,17 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    *
    * @param idProperty the {@link #Id() ID property}.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public SimpleEntityBean(IdProperty<? extends SimpleEntityBean> idProperty) {
+  public SimpleEntityBean(IdProperty idProperty) {
 
     super();
     if (idProperty == null) {
-      idProperty = new IdProperty<>(getClass(), PropertyMetadata.of(this));
+      idProperty = new IdProperty(getClass(), PropertyMetadata.of(this));
     }
-    this.Id = add((IdProperty) idProperty);
+    this.Id = add(idProperty);
   }
 
   @Override
-  public IdProperty<? extends SimpleEntityBean> Id() {
+  public IdProperty Id() {
 
     return this.Id;
   }

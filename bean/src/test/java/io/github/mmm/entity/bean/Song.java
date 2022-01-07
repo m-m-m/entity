@@ -4,7 +4,7 @@ package io.github.mmm.entity.bean;
 
 import io.github.mmm.bean.BeanFactory;
 import io.github.mmm.bean.Mandatory;
-import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.entity.property.link.LinkProperty;
 import io.github.mmm.property.number.integers.IntegerProperty;
 import io.github.mmm.property.string.StringProperty;
 import io.github.mmm.property.temporal.DurationInSecondsProperty;
@@ -38,7 +38,7 @@ public interface Song extends EntityBean {
   /**
    * @return the composer of the song.
    */
-  IdProperty<Person> Composer();
+  LinkProperty<Person> Composer();
 
   /**
    * @return a new instance of {@link Song}.

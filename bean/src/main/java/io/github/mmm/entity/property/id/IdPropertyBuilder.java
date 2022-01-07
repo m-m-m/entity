@@ -12,15 +12,14 @@ import io.github.mmm.validation.main.ValidatorBuilderObject;
 /**
  * {@link PropertyBuilder} for {@link IdProperty}.
  *
- * @param <E> the generic type of the {@link io.github.mmm.entity.bean.EntityBean entity}.
  * @since 1.0.0
  */
-public final class IdPropertyBuilder<E> extends
-    PropertyBuilder<Id<E>, IdProperty<E>, ValidatorBuilderObject<Id<E>, IdPropertyBuilder<E>>, IdPropertyBuilder<E>> {
+public final class IdPropertyBuilder
+    extends PropertyBuilder<Id<?>, IdProperty, ValidatorBuilderObject<Id<?>, IdPropertyBuilder>, IdPropertyBuilder> {
 
   private IdFactory<?, ?> idFactory;
 
-  private Class<E> entityClass;
+  private Class<?> entityClass;
 
   /**
    * The constructor.
@@ -38,7 +37,7 @@ public final class IdPropertyBuilder<E> extends
    * @param lock the {@link #getLock() lock}.
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public IdPropertyBuilder(AttributeReadOnly lock, Class<E> entityClass) {
+  public IdPropertyBuilder(AttributeReadOnly lock, Class<?> entityClass) {
 
     super(lock);
     this.entityClass = entityClass;
@@ -48,7 +47,7 @@ public final class IdPropertyBuilder<E> extends
    * @param factory the {@link IdFactory} to marshal data.
    * @return this builder itself ({@code this}) for fluent API calls.
    */
-  public IdPropertyBuilder<E> idFactory(IdFactory<?, ?> factory) {
+  public IdPropertyBuilder idFactory(IdFactory<?, ?> factory) {
 
     this.idFactory = factory;
     return this;
@@ -58,22 +57,22 @@ public final class IdPropertyBuilder<E> extends
    * @param entityType the {@link Class} reflecting the entity.
    * @return this builder itself ({@code this}) for fluent API calls.
    */
-  public IdPropertyBuilder<E> entityClass(Class<E> entityType) {
+  public IdPropertyBuilder entityClass(Class<?> entityType) {
 
     this.entityClass = entityType;
     return this;
   }
 
   @Override
-  protected ValidatorBuilderObject<Id<E>, IdPropertyBuilder<E>> createValidatorBuilder() {
+  protected ValidatorBuilderObject<Id<?>, IdPropertyBuilder> createValidatorBuilder() {
 
     return new ValidatorBuilderObject<>(this);
   }
 
   @Override
-  protected IdProperty<E> build(String name, PropertyMetadata<Id<E>> metadata) {
+  protected IdProperty build(String name, PropertyMetadata<Id<?>> metadata) {
 
-    return new IdProperty<>(name, this.entityClass, metadata, this.idFactory);
+    return new IdProperty(name, this.entityClass, metadata, this.idFactory);
   }
 
 }
