@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.github.mmm.base.io.AppendableWriter;
+import io.github.mmm.bean.BeanFactory;
+import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.constraint.Constraint;
 import io.github.mmm.entity.bean.sql.create.CreateIndexColumns;
 import io.github.mmm.entity.bean.sql.create.CreateTable;
@@ -34,6 +36,8 @@ import io.github.mmm.entity.id.StringVersionId;
 import io.github.mmm.entity.id.UuidInstantId;
 import io.github.mmm.entity.id.UuidLatestId;
 import io.github.mmm.entity.id.UuidVersionId;
+import io.github.mmm.entity.link.Link;
+import io.github.mmm.entity.property.link.LinkProperty;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.property.criteria.BooleanLiteral;
 import io.github.mmm.property.criteria.CriteriaOrdering;
@@ -384,13 +388,14 @@ public class SqlFormatter implements ClauseVisitor {
 
     write(column.path());
     write(" ");
-    onType(column.getValueClass());
+    onType(column.getValueClass(), column);
   }
 
   /**
    * @param valueClass the {@link ReadableProperty#getValueClass() value class} to map to an SQL type.
+   * @param property the {@link ReadableProperty} defining the column.
    */
-  protected void onType(Class<?> valueClass) {
+  protected void onType(Class<?> valueClass, ReadableProperty<?> property) {
 
     // TODO SQL Dialect abstraction
     if (String.class.equals(valueClass)) {
@@ -413,13 +418,25 @@ public class SqlFormatter implements ClauseVisitor {
       write("DECIMAL(39,0)"); // 128 bit = 3,402823669209385e38
     } else if (StringLatestId.class.equals(valueClass) || StringVersionId.class.equals(valueClass)
         || StringInstantId.class.equals(valueClass)) {
-      onType(String.class);
+      onType(String.class, property);
     } else if (UuidLatestId.class.equals(valueClass) || UuidVersionId.class.equals(valueClass)
         || UuidInstantId.class.equals(valueClass)) {
-      onType(UUID.class);
+      onType(UUID.class, property);
     } else if (LongLatestId.class.equals(valueClass) || LongVersionId.class.equals(valueClass)
         || LongInstantId.class.equals(valueClass) || Id.class.equals(valueClass)) {
       write("BIGINT");
+    } else if (Link.class.equals(valueClass)) {
+      // TODO
+      LinkProperty<?> linkProperty = (LinkProperty<?>) property;
+      Class<? extends EntityBean> entityClass = linkProperty.getEntityClass();
+      if (entityClass == null) {
+        onType(Long.class, property);
+      } else {
+        EntityBean bean = BeanFactory.get().create(entityClass);
+        onType(bean.Id().getValueClass(), property);
+      }
+    } else {
+      throw new IllegalStateException(valueClass.getName());
     }
   }
 
