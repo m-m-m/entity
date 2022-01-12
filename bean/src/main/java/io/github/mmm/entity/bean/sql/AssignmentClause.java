@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongLatestId;
+import io.github.mmm.entity.id.LongId;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
@@ -101,7 +101,7 @@ public abstract class AssignmentClause<E extends EntityBean, SELF extends Assign
   public SELF andId(long id) {
 
     Class<?> javaClass = getEntity().getType().getJavaClass();
-    Id id2 = LongLatestId.of(javaClass, id);
+    Id id2 = LongId.of(id, javaClass);
     // bug in Eclipse compiler
     // return andId(id2);
     andId(id2);

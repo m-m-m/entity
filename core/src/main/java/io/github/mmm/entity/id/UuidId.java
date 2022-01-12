@@ -5,44 +5,79 @@ package io.github.mmm.entity.id;
 import java.time.Instant;
 import java.util.UUID;
 
+import io.github.mmm.base.uuid.UuidParser;
+
 /**
- * {@link Id} using {@link UUID} as {@link #get() primary key (ID)}.
+ * {@link Id} using {@link UUID} as {@link #get() primary key (ID)}. (e.g. apache cassandra supports this).
  *
  * @param <E> type of the identified entity.
- *
+ * @param <V> type of the {@link #getVersion() version}.
  * @since 1.0.0
  */
-public interface UuidId<E> extends Id<E> {
+public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V> {
 
   @Override
   UUID get();
 
-  /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #get() primary key}.
-   * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  static <E> UuidId<E> of(Class<E> type, UUID id) {
+  @Override
+  default Class<UUID> getIdType() {
 
-    return of(type, id, null);
+    return UUID.class;
+  }
+
+  @Override
+  default UUID parseId(String idString) {
+
+    if (idString == null) {
+      return null;
+    }
+    UUID uuid = UuidParser.get().parse(idString);
+    if (uuid == null) {
+      throw new IllegalArgumentException(idString);
+    }
+    return uuid;
+  }
+
+  @Override
+  default String getMarshalPropertyId() {
+
+    return PROPERTY_UUID;
+  }
+
+  /**
+   * @param <E> type of the referenced entity.
+   * @param id the actual {@link #get() primary key}.
+   * @return the new {@link UuidId}.
+   */
+  static <E> UuidId<E, ?> of(UUID id) {
+
+    return of(id, null);
+  }
+
+  /**
+   * @param <E> type of the referenced entity.
+   * @param id the actual {@link #get() primary key}.
+   * @param entityType the {@link #getEntityType() entity type}.
+   * @return the new {@link UuidId}.
+   */
+  static <E> UuidId<E, ?> of(UUID id, Class<E> entityType) {
+
+    return of(id, entityType, null);
   }
 
   /**
    * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
+   * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
    * @param version the optional {@link #getVersion() version}.
-   * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
+   * @return the new {@link UuidId}.
    */
-  static <E> UuidId<E> of(Class<E> type, UUID id, Object version) {
+  static <E> UuidId<E, ?> of(UUID id, Class<E> type, Object version) {
 
     if (id == null) {
       return null;
     }
-    if (version == null) {
-      return new UuidLatestId<>(type, id);
-    } else if (version instanceof Long) {
+    if ((version == null) || (version instanceof Long)) {
       return new UuidVersionId<>(type, id, (Long) version);
     } else if (version instanceof Instant) {
       return new UuidInstantId<>(type, id, (Instant) version);
@@ -50,24 +85,4 @@ public interface UuidId<E> extends Id<E> {
     throw new IllegalStateException("Unsupported version type: " + version.getClass().getName());
   }
 
-  /**
-   * Abstract base implementation of {@link IdFactory}.
-   *
-   * @param <V> type of the {@link Id#getVersion() version}.
-   */
-  abstract class UuidIdFactory<V extends Comparable<?>> implements IdFactory<UUID, V> {
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public Class<? extends Id<?>> getIdInterface() {
-
-      return (Class) UuidId.class;
-    }
-
-    @Override
-    public <E> UuidId<E> create(Class<E> type, UUID id, V version) {
-
-      return UuidId.of(type, id, version);
-    }
-  }
 }

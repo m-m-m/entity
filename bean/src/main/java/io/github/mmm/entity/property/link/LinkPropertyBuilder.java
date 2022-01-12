@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.link.Link;
 import io.github.mmm.property.AttributeReadOnly;
 import io.github.mmm.property.PropertyMetadata;
@@ -22,8 +21,6 @@ import io.github.mmm.validation.main.ValidatorBuilderObject;
 public final class LinkPropertyBuilder<E extends EntityBean> extends
     PropertyBuilder<Link<E>, LinkProperty<E>, ValidatorBuilderObject<Link<E>, LinkPropertyBuilder<E>>, LinkPropertyBuilder<E>> {
 
-  private IdFactory<?, ?> idFactory;
-
   private Class<E> entityClass;
 
   private Function<Id<E>, E> resolver;
@@ -35,7 +32,7 @@ public final class LinkPropertyBuilder<E extends EntityBean> extends
    */
   public LinkPropertyBuilder(AttributeReadOnly lock) {
 
-    this(lock, null, null);
+    this(lock, null);
   }
 
   /**
@@ -46,20 +43,7 @@ public final class LinkPropertyBuilder<E extends EntityBean> extends
    */
   public LinkPropertyBuilder(AttributeReadOnly lock, Class<E> entityClass) {
 
-    this(lock, entityClass, null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param lock the {@link #getLock() lock}.
-   * @param entityClass the {@link Class} reflecting the entity.
-   * @param idFactory the {@link IdFactory} to marshal data.
-   */
-  public LinkPropertyBuilder(AttributeReadOnly lock, Class<E> entityClass, IdFactory<?, ?> idFactory) {
-
     super(lock);
-    this.idFactory = idFactory;
     this.entityClass = entityClass;
   }
 
@@ -70,16 +54,6 @@ public final class LinkPropertyBuilder<E extends EntityBean> extends
   public LinkPropertyBuilder<E> entityClass(Class<E> entityType) {
 
     this.entityClass = entityType;
-    return this;
-  }
-
-  /**
-   * @param factory the {@link IdFactory}.
-   * @return this builder itself ({@code this}) for fluent API calls.
-   */
-  public LinkPropertyBuilder<E> idFactory(IdFactory<?, ?> factory) {
-
-    this.idFactory = factory;
     return this;
   }
 
@@ -103,7 +77,7 @@ public final class LinkPropertyBuilder<E extends EntityBean> extends
   @Override
   protected LinkProperty<E> build(String name, PropertyMetadata<Link<E>> metadata) {
 
-    return new LinkProperty<>(name, this.entityClass, metadata, this.resolver, this.idFactory);
+    return new LinkProperty<>(name, this.entityClass, metadata, this.resolver);
   }
 
 }

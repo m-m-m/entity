@@ -8,73 +8,83 @@ import java.time.Instant;
  * {@link Id} using {@link Long} as {@link #get() primary key (ID)}.
  *
  * @param <E> type of the identified entity.
- *
+ * @param <V> type of the {@link #getVersion() version}.
  * @since 1.0.0
  */
-public interface LongId<E> extends Id<E> {
+public interface LongId<E, V extends Comparable<?>> extends GenericId<E, Long, V> {
 
   @Override
   Long get();
+
+  @Override
+  default Class<Long> getIdType() {
+
+    return Long.class;
+  }
 
   /**
    * @return the {@link #get() primary key} as primitve {@code long} value.
    */
   default long getIdAsLong() {
 
-    return get().longValue();
+    Long id = get();
+    if (id == null) {
+      return -1;
+    }
+    return id.longValue();
+  }
+
+  @Override
+  default Long parseId(String idString) {
+
+    return Long.valueOf(idString);
+  }
+
+  @Override
+  default String getMarshalPropertyId() {
+
+    return PROPERTY_LONG_ID;
   }
 
   /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #get() primary key}.
-   * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
+   * @param <E> type of the referenced entity.
+   * @param id the actual {@link #get() primary key}.
+   * @return the {@link LongId}.
    */
-  static <E> LongId<E> of(Class<E> type, Long id) {
+  static <E> LongId<E, ?> of(Long id) {
 
-    return of(type, id, null);
+    return of(id, null);
+  }
+
+  /**
+   * @param <E> type of the referenced entity.
+   * @param id the actual {@link #get() primary key}.
+   * @param entityType the {@link #getEntityType() entity type}.
+   * @return the {@link LongId}.
+   */
+  static <E> LongId<E, ?> of(Long id, Class<E> entityType) {
+
+    return of(id, entityType, null);
   }
 
   /**
    * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #get() primary key}.
+   * @param id the actual {@link #get() primary key}.
+   * @param entityType the {@link #getEntityType() entity type}.
    * @param version the optional {@link #getVersion() version}.
-   * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
+   * @return the new {@link LongId}.
    */
-  static <E> LongId<E> of(Class<E> type, Long id, Object version) {
+  static <E> LongId<E, ?> of(Long id, Class<E> entityType, Object version) {
 
     if (id == null) {
       return null;
     }
-    if (version == null) {
-      return new LongLatestId<>(type, id);
-    } else if (version instanceof Long) {
-      return new LongVersionId<>(type, id, (Long) version);
+    if ((version == null) || (version instanceof Long)) {
+      return new LongVersionId<>(entityType, id, (Long) version);
     } else if (version instanceof Instant) {
-      return new LongInstantId<>(type, id, (Instant) version);
+      return new LongInstantId<>(entityType, id, (Instant) version);
     }
     throw new IllegalStateException("Unsupported version type: " + version.getClass().getName());
   }
 
-  /**
-   * Abstract base implementation of {@link IdFactory}.
-   *
-   * @param <V> type of the {@link Id#getVersion() version}.
-   */
-  abstract class LongIdFactory<V extends Comparable<?>> implements IdFactory<Long, V> {
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public Class<? extends Id<?>> getIdInterface() {
-
-      return (Class) LongId.class;
-    }
-
-    @Override
-    public <E> LongId<E> create(Class<E> type, Long id, V version) {
-
-      return LongId.of(type, id, version);
-    }
-  }
 }

@@ -2,8 +2,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-import java.util.Objects;
-
 /**
  * Implementation of {@link AbstractVersionId} using {@link Long} as {@link #get() primary key}.
  *
@@ -11,36 +9,23 @@ import java.util.Objects;
  *
  * @since 1.0.0
  */
-public class LongVersionId<E> extends AbstractVersionId<E, Long> implements LongId<E> {
+public final class LongVersionId<E> extends AbstractVersionId<E, Long> implements LongId<E, Long> {
 
-  /** @see #getFactory() */
-  public static final Factory FACTORY = new Factory();
+  @SuppressWarnings("rawtypes")
+  private static final LongVersionId EMPTY = new LongVersionId<>(null, null, null);
 
   private final Long id;
 
   /**
    * The constructor.
    *
-   * @param type the {@link #getType() type}.
+   * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
    * @param version the {@link #getVersion() version}.
    */
-  public LongVersionId(Class<E> type, long id, long version) {
-
-    this(type, Long.valueOf(id), Long.valueOf(version));
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
-   * @param version the {@link #getVersion() version}.
-   */
-  protected LongVersionId(Class<E> type, Long id, Long version) {
+  public LongVersionId(Class<E> type, Long id, Long version) {
 
     super(type, version);
-    Objects.requireNonNull(id, "id");
     this.id = id;
   }
 
@@ -51,38 +36,29 @@ public class LongVersionId<E> extends AbstractVersionId<E, Long> implements Long
   }
 
   @Override
-  protected String getMarshalPropertyId() {
+  public <T> GenericId<T, Long, Long> create(Class<T> newEntityType, Long newId, Long newVersion) {
 
-    return PROPERTY_LONG_ID;
-  }
-
-  @Override
-  public Factory getFactory() {
-
-    return FACTORY;
+    return new LongVersionId<>(newEntityType, newId, newVersion);
   }
 
   /**
-   * {@link IdFactory} implementation.
+   * @param <E> type of the identified entity.
+   * @return the {@link #isEmpty() empty} template of this class.
    */
-  public static class Factory extends LongIdFactory<Long> {
+  public static <E> LongVersionId<E> getEmpty() {
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public Class<? extends Id<?>> getIdClass() {
+    return EMPTY;
+  }
 
-      return (Class) LongVersionId.class;
-    }
+  /**
+   * @param <E> type of the identified entity.
+   * @param entityType the {@link #getEntityType() entity type}.
+   * @return the {@link #isEmpty() empty} template of this class.
+   */
+  @SuppressWarnings("unchecked")
+  public static <E> LongVersionId<E> getEmpty(Class<E> entityType) {
 
-    @Override
-    public <E> LongId<E> parse(Class<E> type, String id, String version) {
-
-      Long longVersion = null;
-      if (version != null) {
-        longVersion = Long.valueOf(version);
-      }
-      return create(type, Long.valueOf(id), longVersion);
-    }
+    return (LongVersionId<E>) getEmpty().withEntityType(entityType);
   }
 
 }

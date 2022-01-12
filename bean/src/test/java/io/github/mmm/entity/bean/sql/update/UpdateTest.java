@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.github.mmm.entity.bean.Person;
-import io.github.mmm.entity.id.LongLatestId;
+import io.github.mmm.entity.id.LongId;
 
 /**
  * Test of {@link Update} and {@link UpdateStatement}.
@@ -31,7 +31,7 @@ public class UpdateTest extends Assertions {
     Person p = Person.of();
     // when
     UpdateStatement<Person> updateStatement = new Update<>(p).as("p").set(p.Single(), Boolean.FALSE)
-        .where(p.Id().eq(LongLatestId.of(4711))).get();
+        .where(p.Id().eq(LongId.of(4711L))).get();
     // then
     assertThat(updateStatement).hasToString("UPDATE Person p SET p.Single=FALSE WHERE p.Id = 4711");
   }

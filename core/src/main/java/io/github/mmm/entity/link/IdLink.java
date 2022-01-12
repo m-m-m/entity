@@ -5,6 +5,7 @@ package io.github.mmm.entity.link;
 import java.util.Objects;
 import java.util.function.Function;
 
+import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 
 /**
@@ -18,7 +19,7 @@ import io.github.mmm.entity.id.Id;
  */
 public class IdLink<E> extends AbstractLink<E> {
 
-  private final Id<E> id;
+  private final GenericId<E, ?, ?> id;
 
   private transient Function<Id<E>, E> resolver;
 
@@ -31,11 +32,12 @@ public class IdLink<E> extends AbstractLink<E> {
    * @param resolver the {@link Function} to {@link #isResolved() resolve} the {@link #getTarget() link target} (the
    *        entity).
    */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   protected IdLink(Id<E> id, Function<Id<E>, E> resolver) {
 
     super();
     Objects.requireNonNull(id, "id");
-    this.id = id;
+    this.id = (GenericId) id;
     this.resolver = resolver;
   }
 
@@ -73,15 +75,15 @@ public class IdLink<E> extends AbstractLink<E> {
   }
 
   /**
-   * @param type the new value of {@link Id#getType()}. Exact type should actually be {@link Class}{@literal <E>} but
-   *        this prevents simple usage.
-   * @return a copy of this {@link Link} with the given {@link Id#getType() type} or this {@link Link} itself if already
-   *         satisfying.
-   * @see Id#withType(Class)
+   * @param type the new value of {@link Id#getEntityType()}. Exact type should actually be {@link Class}{@literal <E>}
+   *        but this prevents simple usage.
+   * @return a copy of this {@link Link} with the given {@link Id#getEntityType() type} or this {@link Link} itself if
+   *         already satisfying.
+   * @see GenericId#withEntityType(Class)
    */
   public IdLink<E> withType(Class<?> type) {
 
-    Id<E> newId = this.id.withType(type);
+    Id<E> newId = this.id.withEntityType(type);
     if (newId == this.id) {
       return this;
     }

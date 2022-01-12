@@ -9,6 +9,8 @@ module io.github.mmm.entity {
 
   requires static io.github.mmm.marshall;
 
+  requires transitive io.github.mmm.value.converter;
+
   exports io.github.mmm.entity;
 
   exports io.github.mmm.entity.id;

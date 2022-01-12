@@ -2,16 +2,12 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.sql;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import io.github.mmm.base.exception.ObjectNotFoundException;
 import io.github.mmm.base.io.AppendableWriter;
-import io.github.mmm.bean.BeanFactory;
-import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.sql.constraint.Constraint;
 import io.github.mmm.entity.bean.sql.create.CreateIndexColumns;
 import io.github.mmm.entity.bean.sql.create.CreateTable;
@@ -24,20 +20,10 @@ import io.github.mmm.entity.bean.sql.select.OrderBy;
 import io.github.mmm.entity.bean.sql.select.Select;
 import io.github.mmm.entity.bean.sql.select.SelectFrom;
 import io.github.mmm.entity.bean.sql.select.SelectStatement;
+import io.github.mmm.entity.bean.sql.type.NoSqlTypeMapping;
 import io.github.mmm.entity.bean.sql.update.Update;
 import io.github.mmm.entity.bean.sql.upsert.Upsert;
-import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongInstantId;
-import io.github.mmm.entity.id.LongLatestId;
-import io.github.mmm.entity.id.LongVersionId;
-import io.github.mmm.entity.id.StringInstantId;
-import io.github.mmm.entity.id.StringLatestId;
-import io.github.mmm.entity.id.StringVersionId;
-import io.github.mmm.entity.id.UuidInstantId;
-import io.github.mmm.entity.id.UuidLatestId;
-import io.github.mmm.entity.id.UuidVersionId;
-import io.github.mmm.entity.link.Link;
-import io.github.mmm.entity.property.link.LinkProperty;
+import io.github.mmm.entity.bean.typemapping.TypeMapping;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.property.criteria.BooleanLiteral;
 import io.github.mmm.property.criteria.CriteriaOrdering;
@@ -46,6 +32,7 @@ import io.github.mmm.property.criteria.CriteriaSqlFormatter;
 import io.github.mmm.property.criteria.PredicateOperator;
 import io.github.mmm.property.criteria.PropertyAssignment;
 import io.github.mmm.value.PropertyPath;
+import io.github.mmm.value.converter.TypeMapper;
 
 /**
  * Formatter to format a {@link Clause} or {@link Statement} to SQL.
@@ -55,6 +42,8 @@ import io.github.mmm.value.PropertyPath;
 public class SqlFormatter implements ClauseVisitor {
 
   private static final CriteriaPredicate PARENT_AND = PredicateOperator.AND.criteria(List.of(BooleanLiteral.TRUE));
+
+  private final TypeMapping typeMapping;
 
   private final CriteriaSqlFormatter criteriaFormatter;
 
@@ -70,7 +59,19 @@ public class SqlFormatter implements ClauseVisitor {
    */
   public SqlFormatter(CriteriaSqlFormatter criteriaFormatter) {
 
+    this(NoSqlTypeMapping.get(), criteriaFormatter);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param typeMapping the {@link TypeMapping}.
+   * @param criteriaFormatter the {@link CriteriaSqlFormatter} used to format criteria fragments to SQL.
+   */
+  public SqlFormatter(TypeMapping typeMapping, CriteriaSqlFormatter criteriaFormatter) {
+
     super();
+    this.typeMapping = typeMapping;
     this.criteriaFormatter = criteriaFormatter;
   }
 
@@ -386,58 +387,31 @@ public class SqlFormatter implements ClauseVisitor {
    */
   protected void onCreateColumn(ReadableProperty<?> column) {
 
-    write(column.path());
-    write(" ");
-    onType(column.getValueClass(), column);
-  }
-
-  /**
-   * @param valueClass the {@link ReadableProperty#getValueClass() value class} to map to an SQL type.
-   * @param property the {@link ReadableProperty} defining the column.
-   */
-  protected void onType(Class<?> valueClass, ReadableProperty<?> property) {
-
-    // TODO SQL Dialect abstraction
-    if (String.class.equals(valueClass)) {
-      write("VARCHAR");
-    } else if (Long.class.equals(valueClass)) {
-      write("BIGINT");
-    } else if (Integer.class.equals(valueClass)) {
-      write("INT");
-    } else if (Boolean.class.equals(valueClass)) {
-      write("BOOL");
-    } else if (Double.class.equals(valueClass)) {
-      write("DOUBLE");
-    } else if (Float.class.equals(valueClass)) {
-      write("FLOAT");
-    } else if (BigDecimal.class.equals(valueClass)) {
-      write("DECIMAL(65,30)");
-    } else if (BigInteger.class.equals(valueClass)) {
-      write("DECIMAL(65,0)");
-    } else if (UUID.class.equals(valueClass)) {
-      write("DECIMAL(39,0)"); // 128 bit = 3,402823669209385e38
-    } else if (StringLatestId.class.equals(valueClass) || StringVersionId.class.equals(valueClass)
-        || StringInstantId.class.equals(valueClass)) {
-      onType(String.class, property);
-    } else if (UuidLatestId.class.equals(valueClass) || UuidVersionId.class.equals(valueClass)
-        || UuidInstantId.class.equals(valueClass)) {
-      onType(UUID.class, property);
-    } else if (LongLatestId.class.equals(valueClass) || LongVersionId.class.equals(valueClass)
-        || LongInstantId.class.equals(valueClass) || Id.class.equals(valueClass)) {
-      write("BIGINT");
-    } else if (Link.class.equals(valueClass)) {
-      // TODO
-      LinkProperty<?> linkProperty = (LinkProperty<?>) property;
-      Class<? extends EntityBean> entityClass = linkProperty.getEntityClass();
-      if (entityClass == null) {
-        onType(Long.class, property);
-      } else {
-        EntityBean bean = BeanFactory.get().create(entityClass);
-        onType(bean.Id().getValueClass(), property);
-      }
-    } else {
-      throw new IllegalStateException(valueClass.getName());
+    // TODO must be refactored to work recursive...
+    TypeMapper<?, ?> sqlType = this.typeMapping.getTypeMapper(column);
+    String columnName = column.path();
+    if (sqlType == null) {
+      throw new ObjectNotFoundException("SqlType", column.getValueClass());
     }
+    do {
+      write(sqlType.mapName(columnName));
+      write(" ");
+      if (sqlType.hasDeclaration()) {
+        write(sqlType.getDeclaration());
+      } else {
+        // TODO omit at least "java.lang."
+        Class<?> valueClass = column.getValueClass();
+        String name = valueClass.getName();
+        if (name.startsWith("java.lang.")) {
+          name = name.substring(10);
+        } else if (name.startsWith("io.github.mmm.")) {
+          int lastDot = name.lastIndexOf('.');
+          name = name.substring(lastDot + 1);
+        }
+        write(name);
+      }
+      sqlType = sqlType.next();
+    } while (sqlType != null);
   }
 
   @Override

@@ -2,174 +2,119 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.property.id;
 
-import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.id.AbstractId;
+import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdFactories;
-import io.github.mmm.entity.id.IdFactory;
-import io.github.mmm.entity.id.IdMarshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
-import io.github.mmm.property.AttributeReadOnly;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.object.ObjectProperty;
+import io.github.mmm.property.object.SimpleProperty;
 
 /**
- * {@link ObjectProperty} with {@link Id} {@link #getValue() value} pointing to an entity.
+ * {@link ObjectProperty} with {@link Id} {@link #get() value} pointing to an entity.
  *
  * @since 1.0.0
  */
-public class IdProperty extends ObjectProperty<Id<?>> {
+public class IdProperty extends SimpleProperty<Id<?>> {
 
   /** Default {@link #getName() name} for primary key. */
   public static final String NAME = "Id";
 
-  private Class<?> entityClass;
-
-  private IdFactory<?, ?> idFactory;
+  private GenericId<?, ?, ?> value;
 
   /**
    * The constructor.
    *
-   * @param entityClass the {@link Class} reflecting the entity.
+   * @param id the initial {@link #get() value}.
    */
-  public IdProperty(Class<?> entityClass) {
+  public IdProperty(Id<?> id) {
 
-    this(NAME, entityClass, null, null);
+    this(NAME, id, null);
   }
 
   /**
    * The constructor.
    *
-   * @param entityClass the {@link Class} reflecting the entity.
+   * @param id the initial {@link #get() value}.
    * @param metadata the {@link #getMetadata() metadata}.
    */
-  public IdProperty(Class<?> entityClass, PropertyMetadata<Id<?>> metadata) {
+  public IdProperty(Id<?> id, PropertyMetadata<Id<?>> metadata) {
 
-    this(NAME, entityClass, metadata, null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param entityClass the {@link Class} reflecting the entity.
-   * @param metadata the {@link #getMetadata() metadata}.
-   * @param idFactory the {@link IdFactory} to marshal data.
-   */
-  public IdProperty(Class<?> entityClass, PropertyMetadata<Id<?>> metadata, IdFactory<?, ?> idFactory) {
-
-    this(NAME, entityClass, metadata, idFactory);
+    this(NAME, id, metadata);
   }
 
   /**
    * The constructor.
    *
    * @param name the {@link #getName() name}.
-   * @param entityClass the optional {@link Class} reflecting the entity.
-   */
-  public IdProperty(String name, Class<?> entityClass) {
-
-    this(name, entityClass, null, null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param entityClass the optional {@link Class} reflecting the entity.
+   * @param id the initial {@link #get() value}.
    * @param metadata the {@link #getMetadata() metadata}.
    */
-  public IdProperty(String name, Class<?> entityClass, PropertyMetadata<Id<?>> metadata) {
+  @SuppressWarnings("rawtypes")
+  public IdProperty(String name, Id<?> id, PropertyMetadata<Id<?>> metadata) {
 
-    this(name, entityClass, metadata, null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param entityClass the optional {@link Class} reflecting the entity.
-   * @param metadata the {@link #getMetadata() metadata}.
-   * @param idFactory the {@link IdFactory} to marshal data.
-   */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public IdProperty(String name, Class<?> entityClass, PropertyMetadata<Id<?>> metadata, IdFactory<?, ?> idFactory) {
-
-    super(name, (Class) IdFactory.getIdClass(idFactory), metadata);
-    this.entityClass = entityClass;
-    this.idFactory = idFactory;
+    super(name, metadata);
+    assert (id != null);
+    this.value = (GenericId) id;
   }
 
   @Override
+  protected Id<?> doGet() {
+
+    return this.value;
+  }
+
+  @Override
+  @SuppressWarnings("rawtypes")
   protected void doSet(Id<?> newValue) {
 
-    if (newValue != null) {
-      if (this.entityClass == null) {
-        this.entityClass = newValue.getType();
+    GenericId<?, ?, ?> newId = (GenericId) newValue;
+    if (this.value != null) {
+      if (newId == null) {
+        newId = this.value.withIdAndVersion(null, null);
       } else {
-        newValue = newValue.withType(this.entityClass);
-      }
-      if (this.idFactory == null) {
-        this.idFactory = ((AbstractId<?, ?, ?>) newValue).getFactory();
-      } else {
-        assert (this.idFactory.accept(newValue));
-      }
-    }
-    super.doSet(newValue);
-  }
-
-  /**
-   * @return the {@link Id#getType() entity class}.
-   */
-  public Class<?> getEntityClass() {
-
-    if (this.entityClass == null) {
-      if (NAME.equals(getName())) {
-        AttributeReadOnly lock = getMetadata().getLock();
-        if (lock instanceof EntityBean) {
-          this.entityClass = ((EntityBean) lock).getType().getJavaClass();
+        Class<?> newEntityType = newId.getEntityType();
+        Class<?> entityType = this.value.getEntityType();
+        if (newEntityType == null) {
+          newId = newId.withEntityType(entityType);
+        } else if (entityType == null) {
+          assert (entityType == newEntityType) : "Can not change entity type of primary key!";
         }
       }
-      Id<?> id = get();
-      if (id != null) {
-        this.entityClass = id.getType();
-      }
     }
-    return this.entityClass;
+    this.value = newId;
   }
 
-  /**
-   * @return the {@link IdFactory}.
-   */
-  protected IdFactory<?, ?> getIdFactory() {
+  @Override
+  public Id<?> getSafe() {
 
-    if (this.idFactory == null) {
-      this.idFactory = IdFactories.get().get(getValueClass());
-    }
-    return this.idFactory;
+    return get();
   }
 
-  private IdMarshalling getMarshalling() {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @Override
+  public Class<Id<?>> getValueClass() {
 
-    IdFactory<?, ?> factory = getIdFactory();
-    if (factory == null) {
-      return IdMarshalling.get();
-    } else {
-      return factory.getMarshalling();
-    }
+    return (Class) Id.class;
+  }
+
+  @Override
+  public Id<?> parse(String valueAsString) {
+
+    return this.value.create(valueAsString);
   }
 
   @Override
   public void read(StructuredReader reader) {
 
-    Id<?> id = getMarshalling().readObject(reader, this.entityClass);
+    GenericId<?, ?, ?> id = this.value.readObject(reader);
     set(id);
   }
 
   @Override
   public void write(StructuredWriter writer) {
 
-    getMarshalling().writeObject(writer, getValue());
+    this.value.write(writer);
   }
 
 }

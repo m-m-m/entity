@@ -6,12 +6,11 @@ import java.util.function.Function;
 
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.id.AbstractId;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.entity.id.IdMarshalling;
 import io.github.mmm.entity.link.IdLink;
 import io.github.mmm.entity.link.Link;
+import io.github.mmm.entity.link.LinkMapper;
 import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
@@ -21,6 +20,7 @@ import io.github.mmm.property.criteria.CriteriaPredicate;
 import io.github.mmm.property.criteria.PredicateOperator;
 import io.github.mmm.property.object.ObjectProperty;
 import io.github.mmm.value.PropertyPath;
+import io.github.mmm.value.converter.TypeMapper;
 
 /**
  * {@link ObjectProperty} with {@link Link} {@link #getValue() value} {@link Link#getTarget() pointing to} an
@@ -37,7 +37,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
 
   private Function<Id<E>, E> resolver;
 
-  private IdFactory<?, ?> idFactory;
+  private LinkMapper valueMapper;
 
   /**
    * The constructor.
@@ -48,7 +48,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
    */
   public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata) {
 
-    this(name, entityClass, metadata, null, null);
+    this(name, entityClass, metadata, null);
   }
 
   /**
@@ -58,29 +58,13 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
    * @param entityClass the optional {@link Class} of the linked entity.
    * @param metadata the {@link #getMetadata() metadata}.
    * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
-   */
-  public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata,
-      Function<Id<E>, E> resolver) {
-
-    this(name, entityClass, metadata, resolver, null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param entityClass the optional {@link Class} of the linked entity.
-   * @param metadata the {@link #getMetadata() metadata}.
-   * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
-   * @param idFactory the optional {@link IdFactory}.
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata,
-      Function<Id<E>, E> resolver, IdFactory<?, ?> idFactory) {
+      Function<Id<E>, E> resolver) {
 
     super(name, (Class) Link.class, metadata);
     this.entityClass = entityClass;
-    this.idFactory = idFactory;
     this.resolver = resolver;
   }
 
@@ -90,13 +74,8 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     if (newValue != null) {
       Id<E> id = newValue.getId();
       if (id != null) {
-        if (this.idFactory == null) {
-          this.idFactory = ((AbstractId<?, ?, ?>) id).getFactory();
-        } else {
-          assert this.idFactory.accept(id);
-        }
         if (this.entityClass == null) {
-          this.entityClass = id.getType();
+          this.entityClass = id.getEntityType();
         } else if (newValue instanceof IdLink) {
           newValue = ((IdLink<E>) newValue).withType(this.entityClass);
         }
@@ -106,7 +85,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   /**
-   * @return the {@link Id#getType() entity class}.
+   * @return the {@link Id#getEntityType() entity class}.
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Class<E> getEntityClass() {
@@ -116,7 +95,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
       if (link != null) {
         Id<E> id = link.getId();
         if (id != null) {
-          this.entityClass = id.getType();
+          this.entityClass = id.getEntityType();
         } else if (link.isResolved()) {
           E target = link.getTarget();
           this.entityClass = (Class) ((EntityBean) target).getType().getJavaClass();
@@ -124,6 +103,17 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
       }
     }
     return this.entityClass;
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @Override
+  public TypeMapper<Link<E>, Id<E>> getTypeMapper() {
+
+    if (this.valueMapper == null) {
+      Class<? extends Id> idClass = Id.class;
+      this.valueMapper = new LinkMapper(idClass, this.resolver);
+    }
+    return (TypeMapper) this.valueMapper;
   }
 
   @Override

@@ -71,7 +71,7 @@ public class Result implements Iterable<ResultEntry> {
    *
    * @param <V> type of the {@link #getValue() value}.
    */
-  public class ResultEntry<V> {
+  public static class ResultEntry<V> {
 
     private final Supplier<V> selection;
 

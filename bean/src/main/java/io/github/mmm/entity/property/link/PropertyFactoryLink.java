@@ -3,7 +3,6 @@
 package io.github.mmm.entity.property.link;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.SimpleEntityBean;
 import io.github.mmm.entity.link.Link;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.ReadableProperty;
@@ -14,7 +13,7 @@ import io.github.mmm.property.factory.PropertyFactory;
 /**
  * Implementation of {@link PropertyFactory} for {@link LinkProperty}.
  *
- * @param <E> the generic type of the {@link Link#getTarget() linked} {@link SimpleEntityBean}.
+ * @param <E> the generic type of the {@link Link#getTarget() linked} {@link EntityBean}.
  *
  * @since 1.0.0
  */

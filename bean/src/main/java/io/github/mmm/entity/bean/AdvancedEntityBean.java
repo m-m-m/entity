@@ -7,7 +7,7 @@ import io.github.mmm.bean.Bean;
 import io.github.mmm.bean.BeanClass;
 import io.github.mmm.bean.StandardPropertyBuilders;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdFactory;
+import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
@@ -28,17 +28,7 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    */
   public AdvancedEntityBean() {
 
-    this((BeanClass) null, null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param idFactory the {@link IdFactory} to marshal data.
-   */
-  public AdvancedEntityBean(IdFactory<?, ?> idFactory) {
-
-    this(idFactory, null);
+    this(null, null);
   }
 
   /**
@@ -58,17 +48,6 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    */
   public AdvancedEntityBean(BeanClass type) {
 
-    this(null, type);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param type the {@link #getType() type}.
-   * @param idFactory the {@link IdFactory} to marshal data.
-   */
-  public AdvancedEntityBean(IdFactory<?, ?> idFactory, BeanClass type) {
-
     this(type, null);
   }
 
@@ -78,16 +57,13 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    * @param type the {@link #getType() type}.
    * @param idProperty the {@link #Id() ID property}.
    */
-  public AdvancedEntityBean(BeanClass type, IdProperty idProperty) {
-
-    this(null, type, idProperty);
-  }
-
-  private AdvancedEntityBean(IdFactory<?, ?> idFactory, BeanClass type, IdProperty idProperty) {
+  private AdvancedEntityBean(BeanClass type, IdProperty idProperty) {
 
     super(type);
     if (idProperty == null) {
-      idProperty = new IdProperty(getClass(), PropertyMetadata.of(this), idFactory);
+      // default
+      Id<?> id = LongVersionId.getEmpty().withEntityType(getClass());
+      idProperty = new IdProperty(id, PropertyMetadata.of(this));
     } else {
       assert idProperty.getName().equals(IdProperty.NAME);
     }

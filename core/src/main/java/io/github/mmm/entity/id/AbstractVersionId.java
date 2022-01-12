@@ -17,7 +17,7 @@ public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
   /**
    * The constructor.
    *
-   * @param type - see {@link #getType()}.
+   * @param type - see {@link #getEntityType()}.
    * @param version - see {@link #getVersion()}.
    */
   public AbstractVersionId(Class<E> type, Long version) {
@@ -33,7 +33,19 @@ public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
   }
 
   @Override
-  protected String getMarshalPropertyVersion() {
+  public Class<Long> getVersionType() {
+
+    return Long.class;
+  }
+
+  @Override
+  public Long parseVersion(String versionString) {
+
+    return Long.valueOf(versionString);
+  }
+
+  @Override
+  public String getMarshalPropertyVersion() {
 
     return PROPERTY_LONG_VERSION;
   }

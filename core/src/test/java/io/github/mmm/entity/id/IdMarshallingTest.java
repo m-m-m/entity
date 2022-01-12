@@ -23,51 +23,39 @@ public class IdMarshallingTest extends Assertions {
   @Test
   public void testAllIdTypes() {
 
-    IdMarshalling marshalling = IdMarshalling.get();
-
-    // test latest IDs
-    check(marshalling, new LongLatestId<>(Entity.class, 42L), "42");
-    check(marshalling, new StringLatestId<>(Entity.class, "MyId"), "\"MyId\"");
     UUID uuid = UUID.randomUUID();
-    check(marshalling, new UuidLatestId<>(Entity.class, uuid), "\"" + uuid + "\"");
     // test version IDs
-    check(marshalling, new LongVersionId<>(Entity.class, 42L, 5L), "{\"l\":42,\"v\":5}");
-    check(marshalling, new StringVersionId<>(Entity.class, "MyId", 5L), "{\"s\":\"MyId\",\"v\":5}");
-    check(marshalling, new UuidVersionId<>(Entity.class, uuid, 5L), "{\"u\":\"" + uuid + "\",\"v\":5}");
+    check(new LongVersionId<>(Entity.class, 42L, 5L), "{\"l\":42,\"v\":5}");
+    check(new StringVersionId<>(Entity.class, "MyId", 5L), "{\"s\":\"MyId\",\"v\":5}");
+    check(new UuidVersionId<>(Entity.class, uuid, 5L), "{\"u\":\"" + uuid + "\",\"v\":5}");
     // test timestamp IDs
     Instant ts = Instant.parse("1999-12-31T23:59:59.123456789Z");
-    check(marshalling, new LongInstantId<>(Entity.class, 42L, ts),
-        "{\"l\":42,\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
-    check(marshalling, new StringInstantId<>(Entity.class, "MyId", ts),
-        "{\"s\":\"MyId\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
-    check(marshalling, new UuidInstantId<>(Entity.class, uuid, ts),
+    check(new LongInstantId<>(Entity.class, 42L, ts), "{\"l\":42,\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
+    check(new StringInstantId<>(Entity.class, "MyId", ts), "{\"s\":\"MyId\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
+    check(new UuidInstantId<>(Entity.class, uuid, ts),
         "{\"u\":\"" + uuid + "\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
   }
 
-  public static void check(IdMarshalling marshalling, Id<Entity> id, String json) {
+  public static void check(GenericId<Entity, ?, ?> id, String json) {
 
-    assertThat(id.getType()).isSameAs(Entity.class);
-    assertThat(writeJson(marshalling, id)).isEqualTo(json);
-    assertThat(readJson(marshalling, json)).isEqualTo(id);
+    assertThat(id.getEntityType()).isSameAs(Entity.class);
+    assertThat(writeJson(id)).isEqualTo(json);
+    assertThat(readJson(id.withIdAndVersion(null, null), json)).isEqualTo(id);
   }
 
-  public static String writeJson(IdMarshalling marshalling, Id<?> id) {
+  public static String writeJson(GenericId<?, ?, ?> id) {
 
     StringBuilder sb = new StringBuilder();
-    marshalling.writeObject(JsonFormat.of(MarshallingConfig.NO_INDENTATION).writer(sb), id);
+    id.write(JsonFormat.of(MarshallingConfig.NO_INDENTATION).writer(sb));
     return sb.toString();
   }
 
-  public static Id<Entity> readJson(IdMarshalling marshalling, String json) {
-
-    Id<Entity> id = readJson(marshalling, json, Entity.class);
-    assertThat(id.getType()).isSameAs(Entity.class);
-    return id;
-  }
-
-  public static <E> Id<E> readJson(IdMarshalling marshalling, String json, Class<E> entity) {
+  public static GenericId<Entity, ?, ?> readJson(GenericId<Entity, ?, ?> id, String json) {
 
     StructuredReader reader = JsonFormat.of().reader(json);
-    return marshalling.readObject(reader, entity);
+    GenericId<Entity, ?, ?> newId = id.readObject(reader);
+    assertThat(newId.getEntityType()).isSameAs(Entity.class);
+    return newId;
   }
+
 }

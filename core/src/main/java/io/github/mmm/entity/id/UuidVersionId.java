@@ -2,42 +2,31 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Implementation of {@link AbstractVersionId} using {@link UUID} as {@link #get() primary key}. Can be used in two
- * scenarios:
- * <ul>
- * <li>Your data store uses {@link UUID}s natively as <em>primary key</em> (e.g. apache cassandra supports this). In
- * such case you will always directly use a {@link UUID} as the actual <em>primary key</em>.</li>
- * <li>You may need to express a link to a transient entity. Then you can temporary assign a {@link UUID} to the entity
- * on the client and link it via such ID. On the server-side the actual {@link UuidVersionId} will then be replaced with
- * the actual {@link #get() ID} while persisting the data.</li>
- * </ul>
+ * Implementation of {@link AbstractVersionId} as {@link UuidId}.
  *
- * @param <E> the generic type of the identified entity.
- *
+ * @param <E> type of the identified entity.
  * @since 1.0.0
  */
-public class UuidVersionId<E> extends AbstractVersionId<E, UUID> implements UuidId<E> {
+public final class UuidVersionId<E> extends AbstractVersionId<E, UUID> implements UuidId<E, Long> {
 
-  /** @see #getFactory() */
-  public static final Factory FACTORY = new Factory();
+  @SuppressWarnings("rawtypes")
+  private static final UuidVersionId EMPTY = new UuidVersionId<>(null, null, null);
 
   private final UUID id;
 
   /**
    * The constructor.
    *
-   * @param type the {@link #getType() type}.
+   * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
    * @param version the {@link #getVersion() version}.
    */
   public UuidVersionId(Class<E> type, UUID id, Long version) {
 
     super(type, version);
-    Objects.requireNonNull(id, "id");
     this.id = id;
   }
 
@@ -48,38 +37,28 @@ public class UuidVersionId<E> extends AbstractVersionId<E, UUID> implements Uuid
   }
 
   @Override
-  protected String getMarshalPropertyId() {
+  public <T> UuidVersionId<T> create(Class<T> newEntityType, UUID newId, Long newVersion) {
 
-    return PROPERTY_UUID;
-  }
-
-  @Override
-  public Factory getFactory() {
-
-    return FACTORY;
+    return new UuidVersionId<>(newEntityType, newId, newVersion);
   }
 
   /**
-   * {@link IdFactory} implementation.
+   * @param <E> type of the identified entity.
+   * @return the {@link #isEmpty() empty} template of this class.
    */
-  public static class Factory extends UuidIdFactory<Long> {
+  public static <E> UuidVersionId<E> getEmpty() {
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public Class<? extends Id<?>> getIdClass() {
-
-      return (Class) UuidVersionId.class;
-    }
-
-    @Override
-    public <E> UuidId<E> parse(Class<E> type, String id, String version) {
-
-      Long longVersion = null;
-      if (version != null) {
-        longVersion = Long.valueOf(version);
-      }
-      return create(type, UUID.fromString(id), longVersion);
-    }
+    return EMPTY;
   }
 
+  /**
+   * @param <E> type of the identified entity.
+   * @param entityType the {@link #getEntityType() entity type}.
+   * @return the {@link #isEmpty() empty} template of this class.
+   */
+  @SuppressWarnings("unchecked")
+  public static <E> UuidVersionId<E> getEmpty(Class<E> entityType) {
+
+    return (UuidVersionId<E>) getEmpty().withEntityType(entityType);
+  }
 }

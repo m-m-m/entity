@@ -19,7 +19,7 @@ public abstract class AbstractInstantId<E, I> extends AbstractId<E, I, Instant> 
   /**
    * The constructor.
    *
-   * @param type - see {@link #getType()}.
+   * @param type - see {@link #getEntityType()}.
    * @param version - see {@link #getVersion()}.
    */
   public AbstractInstantId(Class<E> type, Instant version) {
@@ -35,7 +35,19 @@ public abstract class AbstractInstantId<E, I> extends AbstractId<E, I, Instant> 
   }
 
   @Override
-  protected String getMarshalPropertyVersion() {
+  public Class<Instant> getVersionType() {
+
+    return Instant.class;
+  }
+
+  @Override
+  public Instant parseVersion(String versionString) {
+
+    return Instant.parse(versionString);
+  }
+
+  @Override
+  public String getMarshalPropertyVersion() {
 
     return PROPERTY_INSTANT_VERSION;
   }

@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.github.mmm.entity.bean.Person;
-import io.github.mmm.entity.id.LongLatestId;
+import io.github.mmm.entity.id.LongId;
 
 /**
  * Test of {@link Insert} and {@link InsertStatement}.
@@ -32,7 +32,7 @@ public class InsertTest extends Assertions {
     Person p = Person.of();
     p.Name().set("John Doe");
     p.Single().setValue(true);
-    p.Id().set(LongLatestId.of(4711L));
+    p.Id().set(LongId.of(4711L));
     // when
     InsertStatement<Person> insertStatement = new Insert().into(p).values().get();
     // then

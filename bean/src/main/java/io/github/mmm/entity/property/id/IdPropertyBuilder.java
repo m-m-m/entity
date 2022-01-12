@@ -3,7 +3,6 @@
 package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.property.AttributeReadOnly;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
@@ -17,9 +16,7 @@ import io.github.mmm.validation.main.ValidatorBuilderObject;
 public final class IdPropertyBuilder
     extends PropertyBuilder<Id<?>, IdProperty, ValidatorBuilderObject<Id<?>, IdPropertyBuilder>, IdPropertyBuilder> {
 
-  private IdFactory<?, ?> idFactory;
-
-  private Class<?> entityClass;
+  private Id<?> id;
 
   /**
    * The constructor.
@@ -35,32 +32,12 @@ public final class IdPropertyBuilder
    * The constructor.
    *
    * @param lock the {@link #getLock() lock}.
-   * @param entityClass the {@link Class} reflecting the entity.
+   * @param idTemplate the {@link Class} reflecting the entity.
    */
-  public IdPropertyBuilder(AttributeReadOnly lock, Class<?> entityClass) {
+  public IdPropertyBuilder(AttributeReadOnly lock, Id<?> idTemplate) {
 
     super(lock);
-    this.entityClass = entityClass;
-  }
-
-  /**
-   * @param factory the {@link IdFactory} to marshal data.
-   * @return this builder itself ({@code this}) for fluent API calls.
-   */
-  public IdPropertyBuilder idFactory(IdFactory<?, ?> factory) {
-
-    this.idFactory = factory;
-    return this;
-  }
-
-  /**
-   * @param entityType the {@link Class} reflecting the entity.
-   * @return this builder itself ({@code this}) for fluent API calls.
-   */
-  public IdPropertyBuilder entityClass(Class<?> entityType) {
-
-    this.entityClass = entityType;
-    return this;
+    this.id = idTemplate;
   }
 
   @Override
@@ -72,7 +49,7 @@ public final class IdPropertyBuilder
   @Override
   protected IdProperty build(String name, PropertyMetadata<Id<?>> metadata) {
 
-    return new IdProperty(name, this.entityClass, metadata, this.idFactory);
+    return new IdProperty(name, this.id, metadata);
   }
 
 }

@@ -2,9 +2,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-import java.util.Objects;
-import java.util.UUID;
-
 import io.github.mmm.base.exception.DuplicateObjectException;
 import io.github.mmm.base.uuid.UuidParser;
 import io.github.mmm.marshall.Marshalling;
@@ -25,23 +22,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
       writer.writeValueAsNull();
       return;
     }
-    Object version = id.getVersion();
-    if (version == null) {
-      writer.writeValue(id.get());
-    } else {
-      AbstractId<?, ?, ?> abstractId = (AbstractId<?, ?, ?>) id;
-      writer.writeStartObject();
-      writer.writeName(abstractId.getMarshalPropertyId());
-      writer.writeValue(id.get());
-      String versionProperty = abstractId.getMarshalPropertyVersion();
-      if (versionProperty == null) {
-        Objects.requireNonNull(version);
-      } else {
-        writer.writeName(versionProperty);
-        writer.writeValue(version);
-      }
-      writer.writeEnd();
-    }
+    ((GenericId<?, ?, ?>) id).write(writer);
   }
 
   @Override
@@ -53,10 +34,25 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
   /**
    * @param <E> type of the identified entity.
    * @param reader the {@link StructuredReader}.
-   * @param type the {@link Id#getType() entity type}.
+   * @param type the {@link Id#getEntityType() entity type}.
    * @return the unmarshalled {@link Id}.
    */
   default <E> Id<E> readObject(StructuredReader reader, Class<E> type) {
+
+    return readObject(reader, IdFactory.get(), type);
+  }
+
+  /**
+   * @param <E> type of the identified entity.
+   * @param <I> type of the {@link GenericId#get() ID}.
+   * @param <V> type of the {@link GenericId#getVersion() version}.
+   * @param reader the {@link StructuredReader} to read from.
+   * @param factory the {@link IdFactory} to create {@link Id} instances.
+   * @param entityType the {@link GenericId#getEntityType() entity type}.
+   * @return the unmarshalled {@link GenericId}.
+   */
+  static <E, I, V extends Comparable<?>> GenericId<E, I, V> readObject(StructuredReader reader, IdFactory<I, V> factory,
+      Class<E> entityType) {
 
     Object id = null;
     Object version = null;
@@ -64,15 +60,15 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
       if (reader.readStartObject()) {
         while (!reader.readEnd()) {
           String name = reader.readName();
-          if (AbstractId.PROPERTY_LONG_ID.equals(name)) {
+          if (GenericId.PROPERTY_LONG_ID.equals(name)) {
             id = update(id, reader.readValueAsLong(), Id.PROPERTY_ID);
-          } else if (AbstractId.PROPERTY_UUID.equals(name)) {
+          } else if (GenericId.PROPERTY_UUID.equals(name)) {
             id = update(id, UuidParser.get().parse(reader.readValueAsString()), Id.PROPERTY_ID);
-          } else if (AbstractId.PROPERTY_STRING_ID.equals(name)) {
+          } else if (GenericId.PROPERTY_STRING_ID.equals(name)) {
             id = update(id, reader.readValueAsString(), Id.PROPERTY_ID);
-          } else if (AbstractId.PROPERTY_LONG_VERSION.equals(name)) {
+          } else if (GenericId.PROPERTY_LONG_VERSION.equals(name)) {
             version = update(version, reader.readValueAsLong(), Id.PROPERTY_VERSION);
-          } else if (AbstractId.PROPERTY_INSTANT_VERSION.equals(name)) {
+          } else if (GenericId.PROPERTY_INSTANT_VERSION.equals(name)) {
             version = update(version, reader.readValueAsInstant(), Id.PROPERTY_VERSION);
           } else {
             // ignore unknown property for compatibility and future extensions...
@@ -80,29 +76,11 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
         }
       } else {
         id = reader.readValue();
-        if (id instanceof String) {
-          UUID uuid = UuidParser.get().parse((String) id);
-          if (uuid != null) {
-            id = uuid;
-          }
-        }
       }
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to parse Id.", e);
     }
-    return create(type, id, version);
-  }
-
-  /**
-   * @param <E> type of the identified entity.
-   * @param type the {@link Id#getType() entity type}.
-   * @param id the {@link Id#get() id}.
-   * @param version the optional {@link Id#getVersion() version}.
-   * @return the new {@link Id} instance.
-   */
-  default <E> Id<E> create(Class<E> type, Object id, Object version) {
-
-    return Id.of(type, id, version);
+    return factory.createGeneric(entityType, id, version);
   }
 
   private static Object update(Object oldValue, Object newValue, String key) {

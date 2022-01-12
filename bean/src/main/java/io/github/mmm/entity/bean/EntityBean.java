@@ -6,6 +6,7 @@ import io.github.mmm.bean.AbstractInterface;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.property.id.IdProperty;
 
 /**
@@ -22,7 +23,7 @@ public interface EntityBean extends WritableBean, Entity {
    */
   default IdProperty Id() {
 
-    return new IdProperty(getType().getJavaClass());
+    return new IdProperty(LongVersionId.getEmpty().withEntityType(getType().getJavaClass()));
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -5,69 +5,74 @@ package io.github.mmm.entity.id;
 import java.time.Instant;
 
 /**
- * {@link Id} using {@link String} as {@link #get() primary key (ID)}.
+ * {@link GenericId} using {@link String} as {@link #get() primary key (ID)}. {@link String} is obviously the most
+ * generic type of {@link #get() primary key}. However {@link LongId} or {@link UuidId} will be much more efficient.
  *
  * @param <E> type of the identified entity.
- *
+ * @param <V> type of the {@link #getVersion() version}.
  * @since 1.0.0
  */
-public interface StringId<E> extends Id<E> {
+public interface StringId<E, V extends Comparable<?>> extends GenericId<E, String, V> {
 
   @Override
   String get();
 
-  /**
-   * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
-   * @param id the {@link #get() primary key}.
-   * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
-   */
-  static <E> StringId<E> of(Class<E> type, String id) {
+  @Override
+  default Class<String> getIdType() {
 
-    return of(type, id, null);
+    return String.class;
+  }
+
+  @Override
+  default String parseId(String idString) {
+
+    return idString;
+  }
+
+  @Override
+  default String getMarshalPropertyId() {
+
+    return PROPERTY_STRING_ID;
+  }
+
+  /**
+   * @param <E> type of the referenced entity.
+   * @param id the actual {@link #get() primary key}.
+   * @return the new {@link StringId}.
+   */
+  static <E> StringId<E, ?> of(String id) {
+
+    return of(id, null);
+  }
+
+  /**
+   * @param <E> type of the referenced entity.
+   * @param id the actual {@link #get() primary key}.
+   * @param entityType the {@link #getEntityType() entity type}.
+   * @return the new {@link StringId}.
+   */
+  static <E> StringId<E, ?> of(String id, Class<E> entityType) {
+
+    return of(id, entityType, null);
   }
 
   /**
    * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getType() type}.
+   * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
    * @param version the optional {@link #getVersion() version}.
-   * @return the new {@link LongLatestId} or {@code null} if the given {@code id} was {@code null}.
+   * @return the new {@link StringId}.
    */
-  static <E> StringId<E> of(Class<E> type, String id, Object version) {
+  static <E> StringId<E, ?> of(String id, Class<E> type, Object version) {
 
     if (id == null) {
       return null;
     }
-    if (version == null) {
-      return new StringLatestId<>(type, id);
-    } else if (version instanceof Long) {
+    if ((version == null) || (version instanceof Long)) {
       return new StringVersionId<>(type, id, (Long) version);
     } else if (version instanceof Instant) {
       return new StringInstantId<>(type, id, (Instant) version);
     }
     throw new IllegalStateException("Unsupported version type: " + version.getClass().getName());
   }
-
-  /**
-   * Abstract base implementation of {@link IdFactory}.
-   *
-   * @param <V> type of the {@link Id#getVersion() version}.
-   */
-  abstract class StringIdFactory<V extends Comparable<?>> implements IdFactory<String, V> {
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public Class<? extends Id<?>> getIdInterface() {
-
-      return (Class) StringId.class;
-    }
-
-    @Override
-    public <E> StringId<E> create(Class<E> type, String id, V version) {
-
-      return StringId.of(type, id, version);
-    }
-  }
-
 }

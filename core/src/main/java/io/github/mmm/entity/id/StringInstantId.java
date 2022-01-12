@@ -3,34 +3,31 @@
 package io.github.mmm.entity.id;
 
 import java.time.Instant;
-import java.util.Objects;
 
 /**
- * Implementation of {@link AbstractInstantId} using {@link String} as {@link #get() primary key}. This is the most
- * generic type of {@link Id}. However {@link LongVersionId} and {@link UuidVersionId} will be more efficient.
+ * Implementation of {@link AbstractInstantId} as {@link StringId}.
  *
  * @param <E> the generic type of the identified entity.
  *
  * @since 1.0.0
  */
-public class StringInstantId<E> extends AbstractInstantId<E, String> implements StringId<E> {
+public final class StringInstantId<E> extends AbstractInstantId<E, String> implements StringId<E, Instant> {
 
-  /** @see #getFactory() */
-  public static final Factory FACTORY = new Factory();
+  @SuppressWarnings("rawtypes")
+  private static final StringInstantId EMPTY = new StringInstantId<>(null, null, null);
 
   private final String id;
 
   /**
    * The constructor.
    *
-   * @param type the {@link #getType() type}.
+   * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
    * @param version the {@link #getVersion() version}.
    */
   public StringInstantId(Class<E> type, String id, Instant version) {
 
     super(type, version);
-    Objects.requireNonNull(id, "id");
     this.id = id;
   }
 
@@ -41,38 +38,28 @@ public class StringInstantId<E> extends AbstractInstantId<E, String> implements 
   }
 
   @Override
-  protected String getMarshalPropertyId() {
+  public <T> StringInstantId<T> create(Class<T> newEntityType, String newId, Instant newVersion) {
 
-    return PROPERTY_STRING_ID;
-  }
-
-  @Override
-  public Factory getFactory() {
-
-    return FACTORY;
+    return new StringInstantId<>(newEntityType, newId, newVersion);
   }
 
   /**
-   * {@link IdFactory} implementation.
+   * @param <E> type of the identified entity.
+   * @return the {@link #isEmpty() empty} template of this class.
    */
-  public static class Factory extends StringIdFactory<Instant> {
+  public static <E> StringInstantId<E> getEmpty() {
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public Class<? extends Id<?>> getIdClass() {
-
-      return (Class) StringInstantId.class;
-    }
-
-    @Override
-    public <E> StringId<E> parse(Class<E> type, String id, String version) {
-
-      Instant instant = null;
-      if (version != null) {
-        instant = Instant.parse(version);
-      }
-      return create(type, id, instant);
-    }
+    return EMPTY;
   }
 
+  /**
+   * @param <E> type of the identified entity.
+   * @param entityType the {@link #getEntityType() entity type}.
+   * @return the {@link #isEmpty() empty} template of this class.
+   */
+  @SuppressWarnings("unchecked")
+  public static <E> StringInstantId<E> getEmpty(Class<E> entityType) {
+
+    return (StringInstantId<E>) getEmpty().withEntityType(entityType);
+  }
 }
