@@ -6,10 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import io.github.mmm.entity.bean.db.statement.StatementFormatter;
 import io.github.mmm.entity.bean.db.statement.StatementTest;
-import io.github.mmm.entity.bean.db.statement.select.Select;
-import io.github.mmm.entity.bean.db.statement.select.SelectEntity;
-import io.github.mmm.entity.bean.db.statement.select.SelectProjection;
-import io.github.mmm.entity.bean.db.statement.select.SelectStatement;
 import io.github.mmm.entity.bean.example.City;
 import io.github.mmm.entity.bean.example.Person;
 import io.github.mmm.entity.bean.example.Result;

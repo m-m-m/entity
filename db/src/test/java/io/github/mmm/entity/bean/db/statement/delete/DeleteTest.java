@@ -3,8 +3,6 @@ package io.github.mmm.entity.bean.db.statement.delete;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.mmm.entity.bean.db.statement.delete.Delete;
-import io.github.mmm.entity.bean.db.statement.delete.DeleteStatement;
 import io.github.mmm.entity.bean.example.Person;
 
 /**

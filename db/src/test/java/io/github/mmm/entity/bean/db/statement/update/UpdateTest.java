@@ -3,9 +3,6 @@ package io.github.mmm.entity.bean.db.statement.update;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.mmm.entity.bean.db.statement.update.Update;
-import io.github.mmm.entity.bean.db.statement.update.UpdateStatement;
-import io.github.mmm.entity.bean.db.statement.update.UpdateWhere;
 import io.github.mmm.entity.bean.example.Person;
 import io.github.mmm.entity.id.LongId;
 

@@ -4,8 +4,6 @@ package io.github.mmm.entity.bean.db.statement;
 
 import org.assertj.core.api.Assertions;
 
-import io.github.mmm.entity.bean.db.statement.DbStatement;
-import io.github.mmm.entity.bean.db.statement.StatementMarshalling;
 import io.github.mmm.marshall.JsonFormat;
 import io.github.mmm.marshall.MarshallingConfig;
 import io.github.mmm.marshall.StructuredTextFormat;
@@ -27,9 +25,9 @@ public abstract class StatementTest extends Assertions {
   }
 
   /**
-   * Formats the given {@link DbStatement} to SQL and compares with the given SQL, then marshals to JSON and compares with
-   * the given JSON, the unmarshals from that JSON back to {@link DbStatement} and checks that this again results in the
-   * same SQL.
+   * Formats the given {@link DbStatement} to SQL and compares with the given SQL, then marshals to JSON and compares
+   * with the given JSON, the unmarshals from that JSON back to {@link DbStatement} and checks that this again results
+   * in the same SQL.
    *
    * @param statement the {@link DbStatement} to check.
    * @param sql the expected SQL corresponding to the {@link DbStatement}.

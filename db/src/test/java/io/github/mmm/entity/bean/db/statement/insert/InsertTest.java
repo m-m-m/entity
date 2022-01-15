@@ -3,8 +3,6 @@ package io.github.mmm.entity.bean.db.statement.insert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.mmm.entity.bean.db.statement.insert.Insert;
-import io.github.mmm.entity.bean.db.statement.insert.InsertStatement;
 import io.github.mmm.entity.bean.example.Person;
 import io.github.mmm.entity.id.LongId;
 
