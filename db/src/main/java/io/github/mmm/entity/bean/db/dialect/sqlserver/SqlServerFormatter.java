@@ -1,15 +1,15 @@
-package io.github.mmm.entity.bean.db.dialect.postgresql;
+package io.github.mmm.entity.bean.db.dialect.sqlserver;
 
 import io.github.mmm.entity.bean.db.dialect.DbDialectStatementFormatter;
 import io.github.mmm.entity.bean.typemapping.TypeMapping;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 
 /**
- * {@link DbDialectStatementFormatter} for PostgreSQL Database.
+ * {@link DbDialectStatementFormatter} for <a href="https://docs.microsoft.com/en-us/sql/">MS SQL Server</a>.
  *
  * @since 1.0.0
  */
-public class PostgreSqlFormatter extends DbDialectStatementFormatter {
+public class SqlServerFormatter extends DbDialectStatementFormatter {
 
   /**
    * The constructor.
@@ -17,7 +17,7 @@ public class PostgreSqlFormatter extends DbDialectStatementFormatter {
    * @param typeMapping the {@link TypeMapping}.
    * @param criteriaFormatter the {@link CriteriaFormatter} used to format criteria fragments to database syntax (SQL).
    */
-  public PostgreSqlFormatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
+  public SqlServerFormatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
 
     super(typeMapping, criteriaFormatter);
   }
@@ -27,7 +27,7 @@ public class PostgreSqlFormatter extends DbDialectStatementFormatter {
    *
    * @param typeMapping the {@link TypeMapping}.
    */
-  public PostgreSqlFormatter(TypeMapping typeMapping) {
+  public SqlServerFormatter(TypeMapping typeMapping) {
 
     super(typeMapping);
   }

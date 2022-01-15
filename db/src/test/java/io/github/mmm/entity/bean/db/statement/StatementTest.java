@@ -41,7 +41,7 @@ public abstract class StatementTest extends Assertions {
     statement.writeObject(format.writer(sb), statement);
     String actualJson = sb.toString();
     assertThat(actualJson).isEqualTo(json);
-    DbStatement<?> statement2 = StatementMarshalling.get().readObject(format.reader(json));
+    DbStatement<?> statement2 = DbStatementMarshalling.get().readObject(format.reader(json));
     assertThat(statement2).isNotNull().hasToString(sql).isInstanceOf(statement.getClass());
   }
 

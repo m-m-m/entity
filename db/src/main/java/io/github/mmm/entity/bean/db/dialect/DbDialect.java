@@ -1,6 +1,6 @@
 package io.github.mmm.entity.bean.db.dialect;
 
-import io.github.mmm.entity.bean.db.statement.StatementFormatter;
+import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
 import io.github.mmm.entity.bean.db.typemapping.DbTypeMapping;
 import io.github.mmm.entity.bean.typemapping.TypeMapping;
 
@@ -21,8 +21,8 @@ public interface DbDialect {
   DbTypeMapping getTypeMapping();
 
   /**
-   * @return a new {@link StatementFormatter} using this SQL dialect.
+   * @return a new {@link DbStatementFormatter} using this SQL dialect.
    */
-  StatementFormatter createFormatter();
+  DbStatementFormatter createFormatter();
 
 }

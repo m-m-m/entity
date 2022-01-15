@@ -2,7 +2,7 @@ package io.github.mmm.entity.bean.db.dialect.h2;
 
 import io.github.mmm.entity.bean.db.dialect.AbstractDbDialect;
 import io.github.mmm.entity.bean.db.dialect.DbDialect;
-import io.github.mmm.entity.bean.db.statement.StatementFormatter;
+import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
 
 /**
  * Implementation of {@link DbDialect} for H2 database.
@@ -14,7 +14,7 @@ public class H2Dialect extends AbstractDbDialect {
    */
   public H2Dialect() {
 
-    super(new H2TypeMapper());
+    super(new H2TypeMapping());
   }
 
   @Override
@@ -24,9 +24,9 @@ public class H2Dialect extends AbstractDbDialect {
   }
 
   @Override
-  public StatementFormatter createFormatter() {
+  public DbStatementFormatter createFormatter() {
 
-    return new H2SqlFormatter(getTypeMapping());
+    return new H2Formatter(getTypeMapping());
   }
 
 }

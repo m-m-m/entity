@@ -11,7 +11,7 @@ import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.AbstractClause;
 import io.github.mmm.entity.bean.db.statement.StartClause;
-import io.github.mmm.entity.bean.db.statement.StatementMarshalling;
+import io.github.mmm.entity.bean.db.statement.DbStatementMarshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
@@ -26,7 +26,7 @@ import io.github.mmm.value.PropertyPath;
  * {@link Select} to start your query (typing {@code Select.} and starting code completion). However, you are still free
  * to use regular instantiation like for other statements (typing {@code new Select} and starting code completion).
  *
- * <b>ATTENTION:</b> Please note that after {@link StatementMarshalling#readObject(StructuredReader) unmarshalling} or
+ * <b>ATTENTION:</b> Please note that after {@link DbStatementMarshalling#readObject(StructuredReader) unmarshalling} or
  * parsing a {@link SelectStatement} the {@link SelectStatement#getSelect() select} clause may not be of any of the
  * expected sub-classes such as {@link SelectEntity}, {@link SecurityException}, etc. Use {@link #isSelectEntity()}
  *

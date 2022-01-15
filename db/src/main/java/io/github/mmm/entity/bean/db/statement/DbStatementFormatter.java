@@ -40,7 +40,7 @@ import io.github.mmm.value.converter.TypeMapper;
  *
  * @since 1.0.0
  */
-public class StatementFormatter implements DbClauseVisitor {
+public class DbStatementFormatter implements DbClauseVisitor {
 
   private static final CriteriaPredicate PARENT_AND = PredicateOperator.AND.criteria(List.of(BooleanLiteral.TRUE));
 
@@ -48,7 +48,7 @@ public class StatementFormatter implements DbClauseVisitor {
 
   private final CriteriaFormatter criteriaFormatter;
 
-  StatementFormatter() {
+  DbStatementFormatter() {
 
     this(new CriteriaSqlFormatterInline());
   }
@@ -58,7 +58,7 @@ public class StatementFormatter implements DbClauseVisitor {
    *
    * @param criteriaFormatter the {@link CriteriaFormatter} used to format criteria fragments to SQL.
    */
-  public StatementFormatter(CriteriaFormatter criteriaFormatter) {
+  public DbStatementFormatter(CriteriaFormatter criteriaFormatter) {
 
     this(DbEmptyTypeMapping.get(), criteriaFormatter);
   }
@@ -69,7 +69,7 @@ public class StatementFormatter implements DbClauseVisitor {
    * @param typeMapping the {@link TypeMapping}.
    * @param criteriaFormatter the {@link CriteriaFormatter} used to format criteria fragments to SQL.
    */
-  public StatementFormatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
+  public DbStatementFormatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
 
     super();
     this.typeMapping = typeMapping;
@@ -102,9 +102,9 @@ public class StatementFormatter implements DbClauseVisitor {
 
   /**
    * @param statement the {@link DbStatement} to format as database syntax.
-   * @return this {@link StatementFormatter} for fluent API calls.
+   * @return this {@link DbStatementFormatter} for fluent API calls.
    */
-  public StatementFormatter onStatement(DbStatement<?> statement) {
+  public DbStatementFormatter onStatement(DbStatement<?> statement) {
 
     for (DbClause clause : statement.getClauses()) {
       onClause(clause);
@@ -113,7 +113,7 @@ public class StatementFormatter implements DbClauseVisitor {
   }
 
   @Override
-  public StatementFormatter onClause(DbClause clause) {
+  public DbStatementFormatter onClause(DbClause clause) {
 
     if (!clause.isOmit()) {
       DbClauseVisitor.super.onClause(clause);

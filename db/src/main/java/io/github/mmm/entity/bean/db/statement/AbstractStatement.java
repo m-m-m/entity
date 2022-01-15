@@ -65,7 +65,7 @@ public abstract class AbstractStatement<E> extends AbstractMarshallingObject imp
   @Override
   public String toString() {
 
-    return new StatementFormatter().onStatement(this).toString();
+    return new DbStatementFormatter().onStatement(this).toString();
   }
 
 }

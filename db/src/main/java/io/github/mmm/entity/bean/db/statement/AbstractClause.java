@@ -42,6 +42,6 @@ public abstract class AbstractClause extends AbstractMarshallingObject implement
   @Override
   public String toString() {
 
-    return new StatementFormatter().onClause(this).toString();
+    return new DbStatementFormatter().onClause(this).toString();
   }
 }

@@ -16,13 +16,14 @@ import io.github.mmm.entity.bean.db.typemapping.DbTypeMapping;
 /**
  * {@link DbTypeMapping} for <a href="http://www.h2database.com/html/datatypes.html">H2 database</a>.
  *
+ * @since 1.0.0
  */
-public class H2TypeMapper extends DbTypeMapping {
+public class H2TypeMapping extends DbTypeMapping {
 
   /**
    * The constructor.
    */
-  public H2TypeMapper() {
+  public H2TypeMapping() {
 
     super();
     add(Long.class, "BIGINT");

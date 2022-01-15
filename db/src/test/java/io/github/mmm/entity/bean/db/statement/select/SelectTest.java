@@ -4,7 +4,7 @@ package io.github.mmm.entity.bean.db.statement.select;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.mmm.entity.bean.db.statement.StatementFormatter;
+import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
 import io.github.mmm.entity.bean.db.statement.StatementTest;
 import io.github.mmm.entity.bean.example.City;
 import io.github.mmm.entity.bean.example.Person;
@@ -36,7 +36,7 @@ public class SelectTest extends StatementTest {
     // then
     check(query, sql, json);
     // and when
-    StatementFormatter sqlFormatter = new StatementFormatter(CriteriaFormatter.ofNamedParameters(null)) {
+    DbStatementFormatter sqlFormatter = new DbStatementFormatter(CriteriaFormatter.ofNamedParameters(null)) {
       @Override
       public boolean isUseAsBeforeAlias() {
 

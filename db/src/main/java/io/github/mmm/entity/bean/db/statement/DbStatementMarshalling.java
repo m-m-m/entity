@@ -22,14 +22,14 @@ import io.github.mmm.property.criteria.PropertyAssignment;
  *
  * @since 1.0.0
  */
-public class StatementMarshalling implements Marshalling<DbStatement<?>> {
+public class DbStatementMarshalling implements Marshalling<DbStatement<?>> {
 
-  private static final StatementMarshalling INSTANCE = new StatementMarshalling();
+  private static final DbStatementMarshalling INSTANCE = new DbStatementMarshalling();
 
   /**
    * The constructor.
    */
-  protected StatementMarshalling() {
+  protected DbStatementMarshalling() {
 
     super();
   }
@@ -83,9 +83,9 @@ public class StatementMarshalling implements Marshalling<DbStatement<?>> {
   }
 
   /**
-   * @return the singleton instance of this {@link StatementMarshalling}.
+   * @return the singleton instance of this {@link DbStatementMarshalling}.
    */
-  public static StatementMarshalling get() {
+  public static DbStatementMarshalling get() {
 
     return INSTANCE;
   }
