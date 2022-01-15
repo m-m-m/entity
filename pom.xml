@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.m-m-m</groupId>
     <artifactId>mmm</artifactId>
-    <version>12</version>
+    <version>14</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
   <artifactId>mmm-entity-parent</artifactId>
@@ -16,6 +16,7 @@
   <modules>
     <module>core</module>
     <module>bean</module>
+    <module>db</module>
   </modules>
 
   <properties>
@@ -58,7 +59,7 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mmm-entity-dao</artifactId>
+        <artifactId>mmm-entity-db</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

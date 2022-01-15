@@ -1,5 +1,6 @@
 package io.github.mmm.entity.bean.typemapping;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class ComposedTypeMapping implements TypeMapping {
 
   private static final Logger LOG = LoggerFactory.getLogger(ComposedTypeMapping.class);
 
-  private final Map<Class<?>, SingleTypeMapping<?>> typeMap;
+  private Map<Class<?>, SingleTypeMapping<?>> typeMap;
 
   private final Map<Class<?>, Class<?>> classMap;
 
@@ -110,6 +111,14 @@ public class ComposedTypeMapping implements TypeMapping {
       singleMapping = (SingleTypeMapping) this.typeMap.get(remappedClass);
     }
     return singleMapping;
+  }
+
+  /**
+   * Secures this class to avoid further undesired manipulations.
+   */
+  public void secure() {
+
+    this.typeMap = Collections.unmodifiableMap(this.typeMap);
   }
 
 }
