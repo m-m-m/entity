@@ -10,14 +10,16 @@ import io.github.mmm.property.criteria.PropertyAssignment;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * A {@link IntoClause}-{@link DbClause} of an SQL {@link DbStatement} such as {@link io.github.mmm.entity.bean.db.statement.insert.Insert}
- * or {@link io.github.mmm.entity.bean.db.statement.upsert.Upsert}.
+ * An {@code INTO}-{@link DbClause clause} of a {@link DbStatement} such as
+ * {@link io.github.mmm.entity.bean.db.statement.insert.InsertStatement INSERT} or
+ * {@link io.github.mmm.entity.bean.db.statement.upsert.UpsertStatement UPSERT}.
  *
  * @param <E> type of the {@link #getEntity() entity}.
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class IntoClause<E extends EntityBean, SELF extends IntoClause<E, SELF>> extends AbstractEntityClause<E, E, SELF> {
+public abstract class IntoClause<E extends EntityBean, SELF extends IntoClause<E, SELF>>
+    extends AbstractEntityClause<E, E, SELF> {
 
   /** Name of {@link IntoClause} for marshaling. */
   public static final String NAME_INTO = "into";

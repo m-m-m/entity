@@ -1,7 +1,7 @@
 package io.github.mmm.entity.bean.db.dialect;
 
 import io.github.mmm.base.exception.ObjectNotFoundException;
-import io.github.mmm.entity.db.impl.SqlDialectProviderImpl;
+import io.github.mmm.entity.db.impl.DbDialectProviderImpl;
 
 /**
  * Provider for {@link DbDialect}s.
@@ -29,7 +29,7 @@ public interface DbDialectProvider {
    */
   static DbDialectProvider get() {
 
-    return SqlDialectProviderImpl.INSTANCE;
+    return DbDialectProviderImpl.INSTANCE;
   }
 
 }

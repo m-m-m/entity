@@ -3,7 +3,6 @@
 package io.github.mmm.entity.bean.db.statement;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.github.mmm.base.exception.ObjectNotFoundException;
@@ -32,6 +31,7 @@ import io.github.mmm.property.criteria.CriteriaOrdering;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 import io.github.mmm.property.criteria.PredicateOperator;
 import io.github.mmm.property.criteria.PropertyAssignment;
+import io.github.mmm.value.CriteriaSelection;
 import io.github.mmm.value.PropertyPath;
 import io.github.mmm.value.converter.TypeMapper;
 
@@ -42,7 +42,7 @@ import io.github.mmm.value.converter.TypeMapper;
  */
 public class DbStatementFormatter implements DbClauseVisitor {
 
-  private static final CriteriaPredicate PARENT_AND = PredicateOperator.AND.criteria(List.of(BooleanLiteral.TRUE));
+  private static final CriteriaPredicate PARENT_AND = PredicateOperator.AND.expression(List.of(BooleanLiteral.TRUE));
 
   private final TypeMapping typeMapping;
 
@@ -178,13 +178,13 @@ public class DbStatementFormatter implements DbClauseVisitor {
    */
   protected void onSelections(Select<?> select, SelectFrom<?, ?> selectFrom) {
 
-    List<? extends Supplier<?>> selections = select.getSelections();
+    List<? extends CriteriaSelection<?>> selections = select.getSelections();
     if (selections.isEmpty()) {
       onSelectAll(selectFrom);
     } else {
       String s = " (";
       int i = 0;
-      for (Supplier<?> selection : selections) {
+      for (CriteriaSelection<?> selection : selections) {
         write(s);
         this.criteriaFormatter.onArg(selection, i++, null);
         s = ", ";
@@ -392,7 +392,7 @@ public class DbStatementFormatter implements DbClauseVisitor {
     TypeMapper<?, ?> sqlType = this.typeMapping.getTypeMapper(column);
     String columnName = column.path();
     if (sqlType == null) {
-      throw new ObjectNotFoundException("SqlType", column.getValueClass());
+      throw new ObjectNotFoundException("TypeMapper", column.getValueClass());
     }
     do {
       write(sqlType.mapName(columnName));

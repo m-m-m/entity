@@ -3,7 +3,7 @@
 package io.github.mmm.entity.bean.db.statement.create;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.db.statement.AbstractClause;
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.FromClause;
 import io.github.mmm.entity.bean.db.statement.StartClause;
@@ -14,7 +14,7 @@ import io.github.mmm.entity.bean.db.statement.delete.DeleteStatement;
  *
  * @since 1.0.0
  */
-public class CreateIndex extends AbstractClause implements StartClause {
+public class CreateIndex extends AbstractDbClause implements StartClause {
 
   /** Name of {@link CreateIndex} for marshaling. */
   public static final String NAME_CREATE_INDEX = "createIndex";

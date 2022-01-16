@@ -5,7 +5,7 @@ package io.github.mmm.entity.bean.db.statement.update;
 import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.db.statement.AbstractStatement;
+import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
 import io.github.mmm.entity.bean.db.statement.insert.Insert;
@@ -17,7 +17,7 @@ import io.github.mmm.entity.bean.db.statement.insert.InsertInto;
  * @param <E> type of the {@link InsertInto#getEntity() entity}.
  * @since 1.0.0
  */
-public class UpdateStatement<E extends EntityBean> extends AbstractStatement<E> {
+public class UpdateStatement<E extends EntityBean> extends AbstractDbStatement<E> {
 
   private final Update<E> update;
 

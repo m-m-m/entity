@@ -4,12 +4,11 @@ package io.github.mmm.entity.bean.db.statement.select;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
-import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.FromClause;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 
 /**
- * A {@link FromClause}-{@link DbClause} of an SQL {@link SelectStatement}.
+ * A {@link FromClause} of a {@link SelectStatement}.
  *
  * @param <R> type of the result of the selection.
  * @param <E> type of the {@link #getEntity() entity}.

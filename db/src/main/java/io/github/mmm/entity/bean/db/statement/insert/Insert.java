@@ -3,7 +3,7 @@
 package io.github.mmm.entity.bean.db.statement.insert;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.db.statement.AbstractClause;
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.StartClause;
 
 /**
@@ -11,7 +11,7 @@ import io.github.mmm.entity.bean.db.statement.StartClause;
  *
  * @since 1.0.0
  */
-public final class Insert extends AbstractClause implements StartClause {
+public final class Insert extends AbstractDbClause implements StartClause {
 
   /** Name of {@link Insert} for marshaling. */
   public static final String NAME_INSERT = "insert";

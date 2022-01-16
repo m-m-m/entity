@@ -48,7 +48,7 @@ public class DbStatementMarshalling implements Marshalling<DbStatement<?>> {
   public DbStatement<?> readObject(StructuredReader reader) {
 
     reader.require(State.START_OBJECT, true);
-    AbstractStatement<?> statement = null;
+    AbstractDbStatement<?> statement = null;
     while (!reader.readEnd()) {
       String name = reader.readName();
       if (statement == null) {
@@ -62,10 +62,10 @@ public class DbStatementMarshalling implements Marshalling<DbStatement<?>> {
   /**
    * @param name the name of the first property of the statement. This should always correspond to the
    *        {@link StartClause} and therefore identify the {@link DbStatement}.
-   * @return the new {@link AbstractStatement} with the given {@code name}.
+   * @return the new {@link AbstractDbStatement} with the given {@code name}.
    */
   @SuppressWarnings("unchecked")
-  protected AbstractStatement<?> createStatement(String name) {
+  protected AbstractDbStatement<?> createStatement(String name) {
 
     if (Select.NAME_SELECT.equals(name)) {
       return new SelectFrom<>(new GenericSelect<>(), null).get();

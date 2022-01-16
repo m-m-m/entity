@@ -16,19 +16,19 @@ import io.github.mmm.entity.bean.db.dialect.DbDialectProvider;
  *
  * @since 1.0.0
  */
-public class SqlDialectProviderImpl implements DbDialectProvider {
+public class DbDialectProviderImpl implements DbDialectProvider {
 
   /** The singleton instance. */
-  public static final DbDialectProvider INSTANCE = new SqlDialectProviderImpl();
+  public static final DbDialectProvider INSTANCE = new DbDialectProviderImpl();
 
-  private static final Logger LOG = LoggerFactory.getLogger(SqlDialectProviderImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DbDialectProviderImpl.class);
 
   private final Map<String, DbDialect> dialects;
 
   /**
    * The constructor.
    */
-  public SqlDialectProviderImpl() {
+  public DbDialectProviderImpl() {
 
     super();
     this.dialects = new HashMap<>();
@@ -47,7 +47,7 @@ public class SqlDialectProviderImpl implements DbDialectProvider {
 
     DbDialect dialect = this.dialects.get(name);
     if (dialect == null) {
-      throw new ObjectNotFoundException("SqlDialect", name);
+      throw new ObjectNotFoundException("DbDialect", name);
     }
     return dialect;
   }

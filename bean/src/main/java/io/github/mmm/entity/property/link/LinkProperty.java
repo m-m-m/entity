@@ -110,8 +110,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   public TypeMapper<Link<E>, Id<E>> getTypeMapper() {
 
     if (this.valueMapper == null) {
-      Class<? extends Id> idClass = Id.class;
-      this.valueMapper = new LinkMapper(idClass, this.resolver);
+      this.valueMapper = new LinkMapper(this.resolver);
     }
     return (TypeMapper) this.valueMapper;
   }

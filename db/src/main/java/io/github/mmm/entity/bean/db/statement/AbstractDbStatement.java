@@ -16,7 +16,7 @@ import io.github.mmm.marshall.StructuredWriter;
  * @param <E> type of the {@link AbstractEntityClause#getEntity() entity}.
  * @since 1.0.0
  */
-public abstract class AbstractStatement<E> extends AbstractMarshallingObject implements DbStatement<E> {
+public abstract class AbstractDbStatement<E> extends AbstractMarshallingObject implements DbStatement<E> {
 
   private List<DbClause> clauses;
 
@@ -42,7 +42,7 @@ public abstract class AbstractStatement<E> extends AbstractMarshallingObject imp
 
     for (DbClause clause : getClauses()) {
       if (!clause.isOmit()) {
-        String name = ((AbstractClause) clause).getMarshallingName();
+        String name = ((AbstractDbClause) clause).getMarshallingName();
         writer.writeName(name);
         clause.write(writer);
       }
@@ -53,7 +53,7 @@ public abstract class AbstractStatement<E> extends AbstractMarshallingObject imp
   protected void readProperty(StructuredReader reader, String name) {
 
     for (DbClause clause : getClauses()) {
-      String clauseName = ((AbstractClause) clause).getMarshallingName();
+      String clauseName = ((AbstractDbClause) clause).getMarshallingName();
       if (clauseName.equals(name)) {
         clause.read(reader);
         return;

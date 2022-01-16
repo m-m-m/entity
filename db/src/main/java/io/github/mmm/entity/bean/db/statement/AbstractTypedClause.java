@@ -9,7 +9,7 @@ package io.github.mmm.entity.bean.db.statement;
  * @param <SELF> type of this class itself.
  * @since 1.0.0
  */
-public abstract class AbstractTypedClause<E, SELF extends AbstractTypedClause<E, SELF>> extends AbstractClause
+public abstract class AbstractTypedClause<E, SELF extends AbstractTypedClause<E, SELF>> extends AbstractDbClause
     implements TypedClause<E> {
 
   /**

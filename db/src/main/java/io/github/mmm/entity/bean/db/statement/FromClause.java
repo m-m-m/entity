@@ -5,8 +5,9 @@ package io.github.mmm.entity.bean.db.statement;
 import io.github.mmm.entity.bean.EntityBean;
 
 /**
- * A {@link FromClause}-{@link DbClause} of an SQL {@link DbStatement} such as {@link io.github.mmm.entity.bean.db.statement.select.Select}
- * or {@link io.github.mmm.entity.bean.db.statement.delete.Delete}.
+ * A {@code FROM}-{@link DbClause clause} of a {@link DbStatement} such as
+ * {@link io.github.mmm.entity.bean.db.statement.select.Select} or
+ * {@link io.github.mmm.entity.bean.db.statement.delete.Delete}.
  *
  * @param <R> type of the result. Only different from {@literal <E>} for complex selects.
  * @param <E> type of the {@link #getEntity() entity}.

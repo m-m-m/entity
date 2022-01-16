@@ -4,7 +4,7 @@ package io.github.mmm.entity.bean.db.statement.select;
 
 import java.util.List;
 
-import io.github.mmm.entity.bean.db.statement.AbstractStatement;
+import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
 
@@ -14,7 +14,7 @@ import io.github.mmm.entity.bean.db.statement.DbStatement;
  * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public class SelectStatement<R> extends AbstractStatement<R> {
+public class SelectStatement<R> extends AbstractDbStatement<R> {
 
   private final Select<R> select;
 

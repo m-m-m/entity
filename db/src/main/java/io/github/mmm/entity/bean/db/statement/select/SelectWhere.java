@@ -6,12 +6,13 @@ import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.WhereClause;
 
 /**
- * A {@link WhereClause}-{@link DbClause} of an SQL {@link SelectStatement}.
+ * A {@link WhereClause WHERE}-{@link DbClause clause} of an {@link SelectStatement}.
  *
  * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public class SelectWhere<R> extends WhereClause<R, SelectWhere<R>> implements ClauseWithGroupBy<R>, ClauseWithOrderBy<R> {
+public class SelectWhere<R> extends WhereClause<R, SelectWhere<R>>
+    implements ClauseWithGroupBy<R>, ClauseWithOrderBy<R> {
 
   /** @see #get() */
   private final SelectStatement<R> statement;

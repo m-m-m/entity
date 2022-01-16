@@ -15,27 +15,29 @@ import io.github.mmm.value.converter.ValueMapper;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class LinkMapper extends AtomicTypeMapper<Link, Id> {
 
-  private final Class<? extends Id> targetType;
-
   private final Function resolver;
 
   /**
    * The constructor.
    *
-   * @param targetType the {@link #getTargetType() target type}.
    * @param resolver the {@link IdLink#IdLink(Id, Function) resolver} {@link Function}.
    */
-  public LinkMapper(Class<? extends Id> targetType, Function<? extends Id, ? extends Entity> resolver) {
+  public LinkMapper(Function<? extends Id, ? extends Entity> resolver) {
 
-    super(Link.class, "");
-    this.targetType = targetType;
+    super();
     this.resolver = resolver;
+  }
+
+  @Override
+  public Class<? extends Link> getSourceType() {
+
+    return Link.class;
   }
 
   @Override
   public Class<? extends Id> getTargetType() {
 
-    return this.targetType;
+    return Id.class;
   }
 
   @Override

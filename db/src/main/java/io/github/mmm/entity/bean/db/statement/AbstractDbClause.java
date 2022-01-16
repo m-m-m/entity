@@ -11,12 +11,12 @@ import io.github.mmm.marshall.StructuredWriter;
  *
  * @since 1.0.0
  */
-public abstract class AbstractClause extends AbstractMarshallingObject implements DbClause {
+public abstract class AbstractDbClause extends AbstractMarshallingObject implements DbClause {
 
   /**
    * The constructor.
    */
-  public AbstractClause() {
+  public AbstractDbClause() {
 
     super();
   }

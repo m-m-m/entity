@@ -2,7 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.db.statement.merge;
 
-import io.github.mmm.entity.bean.db.statement.AbstractClause;
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.StartClause;
 
@@ -11,7 +11,7 @@ import io.github.mmm.entity.bean.db.statement.StartClause;
  *
  * @since 1.0.0
  */
-public final class Merge extends AbstractClause implements StartClause {
+public final class Merge extends AbstractDbClause implements StartClause {
 
   /** Name of {@link Merge} for marshaling. */
   public static final String NAME_MERGE = "merge";

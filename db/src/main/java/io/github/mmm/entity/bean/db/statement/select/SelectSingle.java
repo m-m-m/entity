@@ -2,9 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.db.statement.select;
 
-import java.util.function.Supplier;
-
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.value.CriteriaSelection;
 
 /**
  * {@link Select} to query a single {@link #getSelection() selection}.
@@ -26,7 +25,7 @@ public abstract class SelectSingle<R> extends Select<R> {
   /**
    * @return the single selection to select.
    */
-  public abstract Supplier<R> getSelection();
+  public abstract CriteriaSelection<R> getSelection();
 
   @Override
   public <E extends EntityBean> SelectFrom<R, E> from(E entity) {

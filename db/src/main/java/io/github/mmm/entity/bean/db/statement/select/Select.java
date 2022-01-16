@@ -5,18 +5,18 @@ package io.github.mmm.entity.bean.db.statement.select;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.db.statement.AbstractClause;
-import io.github.mmm.entity.bean.db.statement.StartClause;
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatementMarshalling;
+import io.github.mmm.entity.bean.db.statement.StartClause;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.CriteriaExpression;
 import io.github.mmm.property.criteria.CriteriaMarshalling;
+import io.github.mmm.value.CriteriaSelection;
 import io.github.mmm.value.PropertyPath;
 
 /**
@@ -33,7 +33,7 @@ import io.github.mmm.value.PropertyPath;
  * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public abstract class Select<R> extends AbstractClause implements StartClause {
+public abstract class Select<R> extends AbstractDbClause implements StartClause {
 
   /** Name of {@link Select} for marshaling. */
   public static final String NAME_SELECT = "select";
@@ -58,7 +58,7 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
 
   private SelectStatement<R> statement;
 
-  private final List<? extends Supplier<?>> selections;
+  private final List<? extends CriteriaSelection<?>> selections;
 
   private transient R resultBean;
 
@@ -95,7 +95,7 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
   /**
    * @return the {@link List} of selections. Only use for generic code. To build queries use fluent API methods.
    */
-  public List<? extends Supplier<?>> getSelections() {
+  public List<? extends CriteriaSelection<?>> getSelections() {
 
     return this.selections;
   }
@@ -196,7 +196,7 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  void add(Supplier<?> selection) {
+  void add(CriteriaSelection<?> selection) {
 
     ((List) this.selections).add(selection);
   }
@@ -270,7 +270,7 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
       writer.writeName(NAME_SELECTIONS);
       writer.writeStartArray();
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
-      for (Supplier<?> selection : this.selections) {
+      for (CriteriaSelection<?> selection : this.selections) {
         marshalling.writeArg(writer, selection);
       }
       writer.writeEnd();
@@ -289,7 +289,7 @@ public abstract class Select<R> extends AbstractClause implements StartClause {
       reader.require(State.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
-        Supplier<?> selection = marshalling.readArg(reader);
+        CriteriaSelection<?> selection = marshalling.readArg(reader);
         add(selection);
       }
     } else {

@@ -6,7 +6,7 @@ import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.AbstractEntityClause;
-import io.github.mmm.entity.bean.db.statement.AbstractStatement;
+import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.StartClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
@@ -18,7 +18,7 @@ import io.github.mmm.entity.bean.db.statement.delete.Delete;
  * @param <E> type of the {@link AbstractEntityClause#getEntity() entity}.
  * @since 1.0.0
  */
-public class CreateIndexStatement<E extends EntityBean> extends AbstractStatement<E> {
+public class CreateIndexStatement<E extends EntityBean> extends AbstractDbStatement<E> {
 
   private final CreateIndex createIndex;
 

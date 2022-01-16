@@ -1,9 +1,8 @@
 package io.github.mmm.entity.bean.db.constraint;
 
-import java.util.function.Supplier;
-
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.property.criteria.CriteriaPredicate;
+import io.github.mmm.value.CriteriaSelection;
 
 /**
  * Foreign key {@link Constraint} uniquely identifying a different {@link io.github.mmm.entity.bean.EntityBean entity}
@@ -51,7 +50,7 @@ public final class CheckConstraint extends Constraint {
 
   private static ReadableProperty<?> getColumn(CriteriaPredicate predicate) {
 
-    Supplier<?> arg = predicate.getFirstArg();
+    CriteriaSelection<?> arg = predicate.getFirstArg();
     if (arg instanceof ReadableProperty) {
       return (ReadableProperty<?>) arg;
     } else if (arg instanceof CriteriaPredicate) {
