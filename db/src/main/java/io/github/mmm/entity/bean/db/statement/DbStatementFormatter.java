@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import io.github.mmm.base.exception.ObjectNotFoundException;
 import io.github.mmm.base.io.AppendableWriter;
-import io.github.mmm.bean.mapping.DatatypeMapper;
+import io.github.mmm.bean.mapping.ClassNameMapper;
 import io.github.mmm.entity.bean.db.constraint.Constraint;
 import io.github.mmm.entity.bean.db.statement.create.CreateIndexColumns;
 import io.github.mmm.entity.bean.db.statement.create.CreateTable;
@@ -401,7 +401,7 @@ public class DbStatementFormatter implements DbClauseVisitor {
         write(sqlType.getDeclaration());
       } else {
         Class<?> valueClass = column.getValueClass();
-        String name = DatatypeMapper.get().getName(valueClass);
+        String name = ClassNameMapper.get().getName(valueClass);
         write(name);
       }
       sqlType = sqlType.next();
