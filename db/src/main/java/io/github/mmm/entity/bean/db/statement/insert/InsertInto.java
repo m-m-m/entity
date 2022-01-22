@@ -44,16 +44,15 @@ public class InsertInto<E extends EntityBean> extends IntoClause<E, InsertInto<E
   }
 
   @Override
-  public <V> InsertValues<E> values(PropertyAssignment<V> assignment) {
+  public InsertValues<E> values(PropertyAssignment<?> assignment) {
 
     InsertValues<E> values = this.statement.getValues();
     values.and(assignment);
     return values;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public <V> InsertValues<E> values(PropertyAssignment<V>... assignments) {
+  public InsertValues<E> values(PropertyAssignment<?>... assignments) {
 
     InsertValues<E> values = this.statement.getValues();
     values.and(assignments);

@@ -43,16 +43,15 @@ public class MergeInto<E extends EntityBean> extends IntoClause<E, MergeInto<E>>
   }
 
   @Override
-  public <V> MergeValues<E> values(PropertyAssignment<V> assignment) {
+  public MergeValues<E> values(PropertyAssignment<?> assignment) {
 
     MergeValues<E> values = this.statement.getValues();
     values.and(assignment);
     return values;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public <V> MergeValues<E> values(PropertyAssignment<V>... assignments) {
+  public MergeValues<E> values(PropertyAssignment<?>... assignments) {
 
     MergeValues<E> values = this.statement.getValues();
     values.and(assignments);

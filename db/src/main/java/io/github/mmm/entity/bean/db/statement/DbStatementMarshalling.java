@@ -64,7 +64,6 @@ public class DbStatementMarshalling implements Marshalling<DbStatement<?>> {
    *        {@link StartClause} and therefore identify the {@link DbStatement}.
    * @return the new {@link AbstractDbStatement} with the given {@code name}.
    */
-  @SuppressWarnings("unchecked")
   protected AbstractDbStatement<?> createStatement(String name) {
 
     if (Select.NAME_SELECT.equals(name)) {
@@ -72,7 +71,7 @@ public class DbStatementMarshalling implements Marshalling<DbStatement<?>> {
     } else if (Update.NAME_UPDATE.equals(name)) {
       return new Update<>(null).get();
     } else if (Insert.NAME_INSERT.equals(name)) {
-      return new InsertInto<>(new Insert(), null).values((PropertyAssignment[]) PropertyAssignment.EMPTY_ARRAY).get();
+      return new InsertInto<>(new Insert(), null).values(PropertyAssignment.EMPTY_ARRAY).get();
     } else if (Delete.NAME_DELETE.equals(name)) {
       return new DeleteFrom<>(new Delete(), null).get();
     } else if (Merge.NAME_MERGE.equals(name)) {

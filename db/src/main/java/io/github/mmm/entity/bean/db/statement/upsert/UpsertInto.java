@@ -43,16 +43,15 @@ public class UpsertInto<E extends EntityBean> extends IntoClause<E, UpsertInto<E
   }
 
   @Override
-  public <V> UpsertValues<E> values(PropertyAssignment<V> assignment) {
+  public UpsertValues<E> values(PropertyAssignment<?> assignment) {
 
     UpsertValues<E> values = this.statement.getValues();
     values.and(assignment);
     return values;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public <V> UpsertValues<E> values(PropertyAssignment<V>... assignments) {
+  public UpsertValues<E> values(PropertyAssignment<?>... assignments) {
 
     UpsertValues<E> values = this.statement.getValues();
     values.and(assignments);

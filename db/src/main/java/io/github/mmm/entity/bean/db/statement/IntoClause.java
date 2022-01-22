@@ -43,19 +43,16 @@ public abstract class IntoClause<E extends EntityBean, SELF extends IntoClause<E
   }
 
   /**
-   * @param <V> type of the {@link PropertyPath#get() value}.
    * @param assignment the {@link PropertyAssignment} to set.
    * @return the {@link ValuesClause} for fluent API.
    */
-  public abstract <V> ValuesClause<E, ?> values(PropertyAssignment<V> assignment);
+  public abstract ValuesClause<E, ?> values(PropertyAssignment<?> assignment);
 
   /**
-   * @param <V> type of the {@link PropertyPath#get() value}.
    * @param assignments the {@link PropertyAssignment}s to set.
    * @return the {@link ValuesClause} for fluent API.
    */
-  @SuppressWarnings("unchecked")
-  public abstract <V> ValuesClause<E, ?> values(PropertyAssignment<V>... assignments);
+  public abstract ValuesClause<E, ?> values(PropertyAssignment<?>... assignments);
 
   /**
    * Convenience method for
