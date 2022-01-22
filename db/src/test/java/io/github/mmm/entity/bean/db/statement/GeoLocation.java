@@ -1,4 +1,4 @@
-package io.github.mmm.entity.bean.example;
+package io.github.mmm.entity.bean.db.statement;
 
 import io.github.mmm.bean.BeanFactory;
 import io.github.mmm.bean.WritableBean;

@@ -4,12 +4,12 @@ import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * Foreign key {@link Constraint} uniquely identifying a different {@link io.github.mmm.entity.bean.EntityBean entity}
+ * Foreign key {@link DbConstraint} uniquely identifying a different {@link io.github.mmm.entity.bean.EntityBean entity}
  * (row from another table).
  *
  * @since 1.0.0
  */
-public final class PrimaryKeyConstraint extends Constraint {
+public final class PrimaryKeyConstraint extends DbConstraint {
 
   /** {@link #getType() Type} {@value}. */
   public static final String TYPE = "PRIMARY KEY";

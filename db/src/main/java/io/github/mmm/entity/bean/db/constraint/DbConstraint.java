@@ -9,11 +9,11 @@ import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * A {@link Constraint} on one or multiple columns.
+ * A {@link DbConstraint} on one or multiple columns.
  *
  * @since 1.0.0
  */
-public abstract class Constraint {
+public abstract class DbConstraint {
 
   private final String name;
 
@@ -25,7 +25,7 @@ public abstract class Constraint {
    * @param name the {@link #getName() name}.
    * @param column the (first) {@link #getColumns() column}.
    */
-  public Constraint(String name, PropertyPath<?> column) {
+  public DbConstraint(String name, PropertyPath<?> column) {
 
     super();
     this.name = name;
@@ -44,17 +44,25 @@ public abstract class Constraint {
   }
 
   /**
-   * @return the type of this {@link Constraint} (e.g. "CHECK" or "FOREIGN KEY").
+   * @return the type of this {@link DbConstraint} (e.g. "CHECK" or "FOREIGN KEY").
    */
   public abstract String getType();
 
   /**
-   * @return the {@link List} with the {@link PropertyPath properties} representing the columns this {@link Constraint}
-   *         applies to.
+   * @return the {@link List} with the {@link PropertyPath properties} representing the columns this
+   *         {@link DbConstraint} applies to.
    */
-  public List<PropertyPath<?>> getColumns() {
+  public List<? extends PropertyPath<?>> getColumns() {
 
     return this.columns;
+  }
+
+  /**
+   * @param column the {@link PropertyPath property} to add.
+   */
+  protected void add(PropertyPath<?> column) {
+
+    this.columns.add(column);
   }
 
   @Override
@@ -98,7 +106,7 @@ public abstract class Constraint {
   /**
    * @param prefix the constraint prefix (XX_).
    * @param property the {@link ReadableProperty} representing the column.
-   * @return the {@link Constraint} {@link #getName() name}.
+   * @return the {@link DbConstraint} {@link #getName() name}.
    */
   protected static final String createName(String prefix, ReadableProperty<?> property) {
 
@@ -110,7 +118,7 @@ public abstract class Constraint {
    * @param property the {@link ReadableProperty} representing the column.
    * @param addProperty - {@code true} to add the {@link ReadableProperty#path() property path}, {@code false}
    *        otherwise.
-   * @return the {@link Constraint} {@link #getName() name}.
+   * @return the {@link DbConstraint} {@link #getName() name}.
    */
   protected static final String createName(String prefix, ReadableProperty<?> property, boolean addProperty) {
 

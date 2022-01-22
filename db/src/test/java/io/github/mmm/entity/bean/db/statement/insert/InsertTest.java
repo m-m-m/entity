@@ -1,15 +1,15 @@
 package io.github.mmm.entity.bean.db.statement.insert;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.mmm.entity.bean.example.Person;
+import io.github.mmm.entity.bean.db.statement.DbStatementTest;
+import io.github.mmm.entity.bean.db.statement.Person;
 import io.github.mmm.entity.id.LongId;
 
 /**
  * Test of {@link Insert} and {@link InsertStatement}.
  */
-public class InsertTest extends Assertions {
+public class InsertTest extends DbStatementTest {
 
   /** Test {@link Insert} with simple literal values. */
   @Test
@@ -21,7 +21,7 @@ public class InsertTest extends Assertions {
     InsertStatement<Person> insertStatement = new Insert().into(p).values(p.Name(), "John Doe").and(p.Single(), true)
         .andId(4711).get();
     // then
-    assertThat(insertStatement).hasToString("INSERT INTO Person(Name, Single, Id) VALUES ('John Doe', TRUE, 4711)");
+    check(insertStatement, "INSERT INTO Person(Name, Single, Id) VALUES ('John Doe', TRUE, 4711)");
   }
 
   /** Test {@link Insert} with simple literal values. */
@@ -36,7 +36,7 @@ public class InsertTest extends Assertions {
     // when
     InsertStatement<Person> insertStatement = new Insert().into(p).values().get();
     // then
-    assertThat(insertStatement).hasToString("INSERT INTO Person(Single, Id, Name) VALUES (TRUE, 4711, 'John Doe')");
+    check(insertStatement, "INSERT INTO Person(Single, Id, Name) VALUES (TRUE, 4711, 'John Doe')");
   }
 
 }

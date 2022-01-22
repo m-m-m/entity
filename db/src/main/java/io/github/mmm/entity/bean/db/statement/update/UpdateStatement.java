@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
+import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
 import io.github.mmm.entity.bean.db.statement.insert.Insert;
@@ -78,6 +79,12 @@ public class UpdateStatement<E extends EntityBean> extends AbstractDbStatement<E
     list.add(this.update);
     list.add(this.set);
     list.add(this.where);
+  }
+
+  @Override
+  protected AliasMap getAliasMap() {
+
+    return this.update.getAliasMap();
   }
 
 }

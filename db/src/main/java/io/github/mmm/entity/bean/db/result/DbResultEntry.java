@@ -2,7 +2,7 @@ package io.github.mmm.entity.bean.db.result;
 
 import java.util.function.Supplier;
 
-import io.github.mmm.value.CriteriaSelection;
+import io.github.mmm.value.CriteriaObject;
 import io.github.mmm.value.converter.TypeMapper;
 
 /**
@@ -16,7 +16,7 @@ public interface DbResultEntry<V> {
    * @return the {@link Supplier} with the selection from the
    *         {@link io.github.mmm.entity.bean.db.statement.DbStatement}.
    */
-  CriteriaSelection<?> getSelection();
+  CriteriaObject<?> getSelection();
 
   /**
    * @return the database name of this entry. That is the name of the column, the explicit alias of the

@@ -5,6 +5,7 @@ package io.github.mmm.entity.bean.db.statement.select;
 import java.util.List;
 
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
+import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
 
@@ -113,6 +114,12 @@ public class SelectStatement<R> extends AbstractDbStatement<R> {
     list.add(this.groupBy);
     list.add(this.having);
     list.add(this.orderBy);
+  }
+
+  @Override
+  protected AliasMap getAliasMap() {
+
+    return this.from.getAliasMap();
   }
 
 }

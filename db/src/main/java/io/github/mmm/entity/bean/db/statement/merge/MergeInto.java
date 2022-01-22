@@ -1,6 +1,6 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.mmm.entity.bean.db.statement.upsert;
+package io.github.mmm.entity.bean.db.statement.merge;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
@@ -9,67 +9,67 @@ import io.github.mmm.property.criteria.PropertyAssignment;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * A {@link IntoClause} of an {@link UpsertStatement}.
+ * A {@link IntoClause} of an {@link MergeStatement}.
  *
  * @param <E> type of the {@link #getEntity() entity}.
  * @since 1.0.0
  */
-public class UpsertInto<E extends EntityBean> extends IntoClause<E, UpsertInto<E>> {
+public class MergeInto<E extends EntityBean> extends IntoClause<E, MergeInto<E>> {
 
-  private final UpsertStatement<E> statement;
+  private final MergeStatement<E> statement;
 
   /**
    * The constructor.
    *
-   * @param upset the opening {@link Upsert}.
+   * @param merge the opening {@link Merge}.
    * @param entity the {@link #getEntity() entity} to operate on.
    */
-  public UpsertInto(Upsert upset, E entity) {
+  public MergeInto(Merge merge, E entity) {
 
-    this(upset, entity, null);
+    this(merge, entity, null);
   }
 
   /**
    * The constructor.
    *
-   * @param upsert the opening {@link Upsert}.
+   * @param merge the opening {@link Merge}.
    * @param entity the {@link #getEntity() entity} to operate on.
    * @param entityName the {@link #getEntityName() entity name}.
    */
-  public UpsertInto(Upsert upsert, E entity, String entityName) {
+  public MergeInto(Merge merge, E entity, String entityName) {
 
     super(new AliasMap(), entity, entityName);
-    this.statement = new UpsertStatement<>(upsert, this);
+    this.statement = new MergeStatement<>(merge, this);
   }
 
   @Override
-  public <V> UpsertValues<E> values(PropertyAssignment<V> assignment) {
+  public <V> MergeValues<E> values(PropertyAssignment<V> assignment) {
 
-    UpsertValues<E> values = this.statement.getValues();
+    MergeValues<E> values = this.statement.getValues();
     values.and(assignment);
     return values;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <V> UpsertValues<E> values(PropertyAssignment<V>... assignments) {
+  public <V> MergeValues<E> values(PropertyAssignment<V>... assignments) {
 
-    UpsertValues<E> values = this.statement.getValues();
+    MergeValues<E> values = this.statement.getValues();
     values.and(assignments);
     return values;
   }
 
   @Override
-  public <V> UpsertValues<E> values(PropertyPath<V> property, V value) {
+  public <V> MergeValues<E> values(PropertyPath<V> property, V value) {
 
     return values(PropertyAssignment.of(property, value));
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public UpsertValues<E> values() {
+  public MergeValues<E> values() {
 
-    return (UpsertValues<E>) super.values();
+    return (MergeValues<E>) super.values();
   }
 
   @Override

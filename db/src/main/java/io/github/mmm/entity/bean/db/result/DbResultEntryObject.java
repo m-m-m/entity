@@ -1,7 +1,7 @@
 package io.github.mmm.entity.bean.db.result;
 
 import io.github.mmm.property.criteria.CriteriaExpression;
-import io.github.mmm.value.CriteriaSelection;
+import io.github.mmm.value.CriteriaObject;
 import io.github.mmm.value.PropertyPath;
 
 /**
@@ -13,7 +13,7 @@ import io.github.mmm.value.PropertyPath;
 public class DbResultEntryObject<V> implements DbResultEntry<V> {
 
   /** @see #getSelection() */
-  protected final CriteriaSelection<?> selection;
+  protected final CriteriaObject<?> selection;
 
   /** @see #getDbName() */
   protected final String dbName;
@@ -26,7 +26,7 @@ public class DbResultEntryObject<V> implements DbResultEntry<V> {
    * @param selection the {@link #getSelection() selection}.
    * @param value the result {@link #getValue() value} from the DB.
    */
-  public DbResultEntryObject(CriteriaSelection<?> selection, V value) {
+  public DbResultEntryObject(CriteriaObject<?> selection, V value) {
 
     this(selection, value, computeDbName(selection));
   }
@@ -38,7 +38,7 @@ public class DbResultEntryObject<V> implements DbResultEntry<V> {
    * @param value the result {@link #getValue() value} from the DB.
    * @param dbName the {@link #getDbName() database name}.
    */
-  public DbResultEntryObject(CriteriaSelection<?> selection, V value, String dbName) {
+  public DbResultEntryObject(CriteriaObject<?> selection, V value, String dbName) {
 
     super();
     this.selection = selection;
@@ -47,7 +47,7 @@ public class DbResultEntryObject<V> implements DbResultEntry<V> {
   }
 
   @Override
-  public CriteriaSelection<?> getSelection() {
+  public CriteriaObject<?> getSelection() {
 
     return this.selection;
   }
@@ -58,14 +58,14 @@ public class DbResultEntryObject<V> implements DbResultEntry<V> {
     return this.dbName;
   }
 
-  private static String computeDbName(CriteriaSelection<?> selection) {
+  private static String computeDbName(CriteriaObject<?> selection) {
 
     StringBuilder sb = new StringBuilder();
     computeDbName(selection, sb);
     return sb.toString();
   }
 
-  private static void computeDbName(CriteriaSelection<?> selection, StringBuilder sb) {
+  private static void computeDbName(CriteriaObject<?> selection, StringBuilder sb) {
 
     if (selection instanceof PropertyPath) {
       sb.append(((PropertyPath<?>) selection).getName());
@@ -81,7 +81,7 @@ public class DbResultEntryObject<V> implements DbResultEntry<V> {
         computeDbName(expression.getFirstArg(), sb);
       } else {
         String infix = "";
-        for (CriteriaSelection<?> arg : expression.getArgs()) {
+        for (CriteriaObject<?> arg : expression.getArgs()) {
           sb.append(infix);
           computeDbName(arg, sb);
           if (infix.isEmpty()) {

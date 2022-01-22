@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.github.mmm.bean.mapping.ClassNameMapper;
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.db.constraint.Constraint;
+import io.github.mmm.entity.bean.db.constraint.DbConstraint;
 import io.github.mmm.entity.bean.db.constraint.ForeignKeyConstraint;
 import io.github.mmm.entity.bean.db.constraint.NotNullConstraint;
 import io.github.mmm.entity.bean.db.constraint.PrimaryKeyConstraint;
 import io.github.mmm.entity.bean.db.constraint.UniqueConstraint;
 import io.github.mmm.entity.bean.db.statement.DbClause;
-import io.github.mmm.entity.bean.db.statement.MainClause;
+import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.entity.bean.db.statement.PropertyClause;
 import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.link.LinkProperty;
@@ -26,14 +27,14 @@ import io.github.mmm.value.PropertyPath;
  * @since 1.0.0
  */
 public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, CreateTableColumns<E>>
-    implements MainClause<E> {
+    implements MainDbClause<E> {
 
   /** Name of {@link CreateTableColumns} for marshaling. */
   public static final String NAME_COLUMNS = "cols";
 
   private final CreateTableStatement<E> statement;
 
-  private final List<Constraint> constraints;
+  private final List<DbConstraint> constraints;
 
   /**
    * The constructor.
@@ -54,9 +55,9 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
   }
 
   /**
-   * @return the {@link List} of {@link Constraint}s.
+   * @return the {@link List} of {@link DbConstraint}s.
    */
-  public List<Constraint> getConstraints() {
+  public List<DbConstraint> getConstraints() {
 
     return this.constraints;
   }
@@ -96,10 +97,10 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
   }
 
   /**
-   * @param constraint the {@link Constraint} to add.
+   * @param constraint the {@link DbConstraint} to add.
    * @return this {@link CreateTableColumns} for fluent API calls.
    */
-  public CreateTableColumns<E> constraint(Constraint constraint) {
+  public CreateTableColumns<E> constraint(DbConstraint constraint) {
 
     this.constraints.add(constraint);
     return this;
@@ -147,10 +148,16 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
     return andForeignKey(property, property.getEntityClass());
   }
 
-  private CreateTableColumns<E> andForeignKey(Property<?> property, Class<?> entityClass) {
+  private CreateTableColumns<E> andForeignKey(Property<?> property, Class<?> referencedEntity) {
 
-    String referenceTable = entityClass.getSimpleName();
     String name = constraintName(ForeignKeyConstraint.PREFIX, property);
+    String referenceTable;
+    if (referencedEntity != null) {
+      referenceTable = ClassNameMapper.get().getName(referencedEntity);
+    } else {
+      // TODO how to handle? Skip constraint? Exception?
+      referenceTable = "UNDEFINED";
+    }
     this.constraints.add(new ForeignKeyConstraint(name, property, referenceTable));
     return this;
   }

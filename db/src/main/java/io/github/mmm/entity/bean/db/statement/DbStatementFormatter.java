@@ -5,10 +5,13 @@ package io.github.mmm.entity.bean.db.statement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.mmm.base.exception.ObjectNotFoundException;
 import io.github.mmm.base.io.AppendableWriter;
 import io.github.mmm.bean.mapping.ClassNameMapper;
-import io.github.mmm.entity.bean.db.constraint.Constraint;
+import io.github.mmm.entity.bean.db.constraint.DbConstraint;
 import io.github.mmm.entity.bean.db.statement.create.CreateIndexColumns;
 import io.github.mmm.entity.bean.db.statement.create.CreateTable;
 import io.github.mmm.entity.bean.db.statement.create.CreateTableColumns;
@@ -31,7 +34,7 @@ import io.github.mmm.property.criteria.CriteriaOrdering;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 import io.github.mmm.property.criteria.PredicateOperator;
 import io.github.mmm.property.criteria.PropertyAssignment;
-import io.github.mmm.value.CriteriaSelection;
+import io.github.mmm.value.CriteriaObject;
 import io.github.mmm.value.PropertyPath;
 import io.github.mmm.value.converter.TypeMapper;
 
@@ -41,6 +44,8 @@ import io.github.mmm.value.converter.TypeMapper;
  * @since 1.0.0
  */
 public class DbStatementFormatter implements DbClauseVisitor {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DbStatementFormatter.class);
 
   private static final CriteriaPredicate PARENT_AND = PredicateOperator.AND.expression(List.of(BooleanLiteral.TRUE));
 
@@ -178,13 +183,23 @@ public class DbStatementFormatter implements DbClauseVisitor {
    */
   protected void onSelections(Select<?> select, SelectFrom<?, ?> selectFrom) {
 
-    List<? extends CriteriaSelection<?>> selections = select.getSelections();
+    List<? extends CriteriaObject<?>> selections = select.getSelections();
     if (selections.isEmpty()) {
+      if (!select.isSelectEntity()) {
+        LOG.info("Formatting invalid select statement.");
+      }
       onSelectAll(selectFrom);
     } else {
-      String s = " (";
+      String s;
+      if (select.isSelectResult()) {
+        s = " new (";
+      } else if (select.isSelectEntity() || select.isSelectSingle()) {
+        s = " (";
+      } else {
+        s = " new " + select.getResultName() + "(";
+      }
       int i = 0;
-      for (CriteriaSelection<?> selection : selections) {
+      for (CriteriaObject<?> selection : selections) {
         write(s);
         this.criteriaFormatter.onArg(selection, i++, null);
         s = ", ";
@@ -372,9 +387,9 @@ public class DbStatementFormatter implements DbClauseVisitor {
       onCreateColumn((ReadableProperty<?>) property);
       s = ",\n  ";
     }
-    List<Constraint> constraints = columns.getConstraints().stream()
+    List<DbConstraint> constraints = columns.getConstraints().stream()
         .sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).collect(Collectors.toList());
-    for (Constraint constraint : constraints) {
+    for (DbConstraint constraint : constraints) {
       write(s);
       write(constraint.toString());
       s = ",\n  ";

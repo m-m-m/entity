@@ -64,4 +64,11 @@ public class DeleteFrom<E extends EntityBean> extends FromClause<E, E, DeleteFro
     return this.statement;
   }
 
+  @Override
+  // make visible
+  protected AliasMap getAliasMap() {
+
+    return super.getAliasMap();
+  }
+
 }

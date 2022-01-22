@@ -5,11 +5,12 @@ package io.github.mmm.entity.bean.db.statement.delete;
 import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.db.statement.AbstractEntityClause;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
+import io.github.mmm.entity.bean.db.statement.AbstractEntityClause;
+import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
-import io.github.mmm.entity.bean.db.statement.StartClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
+import io.github.mmm.entity.bean.db.statement.StartClause;
 
 /**
  * {@link DbStatement} to {@link Delete}
@@ -79,6 +80,12 @@ public class DeleteStatement<E extends EntityBean> extends AbstractDbStatement<E
     list.add(this.delete);
     list.add(this.from);
     list.add(this.where);
+  }
+
+  @Override
+  protected AliasMap getAliasMap() {
+
+    return this.from.getAliasMap();
   }
 
 }

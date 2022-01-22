@@ -79,7 +79,9 @@ public abstract class IntoClause<E extends EntityBean, SELF extends IntoClause<E
     Objects.requireNonNull(this.entity);
     ValuesClause<E, ?> values = null;
     for (WritableProperty<?> property : this.entity.getProperties()) {
-      values = addValues(values, property);
+      if (!property.isReadOnly()) {
+        values = addValues(values, property);
+      }
     }
     if (values == null) {
       throw new IllegalStateException("Entity must not be empty!");

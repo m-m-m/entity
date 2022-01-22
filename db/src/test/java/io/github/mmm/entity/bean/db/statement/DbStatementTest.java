@@ -11,7 +11,7 @@ import io.github.mmm.marshall.StructuredTextFormat;
 /**
  * Abstract base class for tests of {@link DbStatement}s.
  */
-public abstract class StatementTest extends Assertions {
+public abstract class DbStatementTest extends Assertions {
 
   /**
    * Formats the given {@link DbStatement} to SQL and compares with the given SQL.
@@ -22,6 +22,8 @@ public abstract class StatementTest extends Assertions {
   protected void check(DbStatement<?> statement, String sql) {
 
     assertThat(statement).isNotNull().hasToString(sql);
+    DbStatement<?> copy = DbStatementParser.get().parse(sql);
+    assertThat(copy).isNotNull().hasToString(sql);
   }
 
   /**

@@ -1,6 +1,6 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.mmm.entity.bean.db.statement.upsert;
+package io.github.mmm.entity.bean.db.statement.merge;
 
 import java.util.List;
 
@@ -9,57 +9,59 @@ import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
+import io.github.mmm.entity.bean.db.statement.upsert.UpsertInto;
+import io.github.mmm.entity.bean.db.statement.upsert.UpsertValues;
 
 /**
- * {@link DbStatement} to {@link Upsert} data into the database.
+ * {@link DbStatement} to {@link Merge} data into the database.
  *
  * @param <E> type of the {@link UpsertInto#getEntity() entity}.
  * @since 1.0.0
  */
-public class UpsertStatement<E extends EntityBean> extends AbstractDbStatement<E> {
+public class MergeStatement<E extends EntityBean> extends AbstractDbStatement<E> {
 
-  private final Upsert upsert;
+  private final Merge merge;
 
-  private final UpsertInto<E> into;
+  private final MergeInto<E> into;
 
-  private final UpsertValues<E> values;
+  private final MergeValues<E> values;
 
   /**
    * The constructor.
    *
-   * @param upsert the {@link #getUpsert() upsert}.
-   * @param into the #getInto
+   * @param merge the {@link #getMerge() MERGE}.
+   * @param into the {@link #getInto() INTO}.
    */
-  public UpsertStatement(Upsert upsert, UpsertInto<E> into) {
+  public MergeStatement(Merge merge, MergeInto<E> into) {
 
     super();
-    this.upsert = upsert;
+    this.merge = merge;
     this.into = into;
-    this.values = new UpsertValues<>(this);
+    this.values = new MergeValues<>(this);
   }
 
   /**
-   * @deprecated use {@link #getUpsert()} to make it more explicit.
+   * @deprecated use {@link #getMerge()} to make it more explicit.
    */
   @Deprecated
   @Override
-  public Upsert getStart() {
+  public Merge getStart() {
 
-    return this.upsert;
+    return this.merge;
   }
 
   /**
-   * @return the opening {@link Upsert}-{@link DbClause clause}.
+   * @return the opening {@link Merge}-{@link DbClause clause}.
    */
-  public Upsert getUpsert() {
+  public Merge getMerge() {
 
-    return this.upsert;
+    return this.merge;
   }
 
   /**
-   * @return the {@link UpsertInto INTO}-{@link DbClause clause}.
+   * @return the {@link MergeInto INTO}-{@link DbClause clause}.
    */
-  public UpsertInto<E> getInto() {
+  public MergeInto<E> getInto() {
 
     return this.into;
   }
@@ -67,7 +69,7 @@ public class UpsertStatement<E extends EntityBean> extends AbstractDbStatement<E
   /**
    * @return the {@link UpsertValues VALUES}-{@link DbClause clause} or {@code null} if none was added.
    */
-  public UpsertValues<E> getValues() {
+  public MergeValues<E> getValues() {
 
     return this.values;
   }
@@ -75,7 +77,7 @@ public class UpsertStatement<E extends EntityBean> extends AbstractDbStatement<E
   @Override
   protected void addClauses(List<DbClause> list) {
 
-    list.add(this.upsert);
+    list.add(this.merge);
     list.add(this.into);
     list.add(this.values);
   }

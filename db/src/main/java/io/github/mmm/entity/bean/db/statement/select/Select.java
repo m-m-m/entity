@@ -16,7 +16,7 @@ import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.CriteriaExpression;
 import io.github.mmm.property.criteria.CriteriaMarshalling;
-import io.github.mmm.value.CriteriaSelection;
+import io.github.mmm.value.CriteriaObject;
 import io.github.mmm.value.PropertyPath;
 
 /**
@@ -28,7 +28,9 @@ import io.github.mmm.value.PropertyPath;
  *
  * <b>ATTENTION:</b> Please note that after {@link DbStatementMarshalling#readObject(StructuredReader) unmarshalling} or
  * parsing a {@link SelectStatement} the {@link SelectStatement#getSelect() select} clause may not be of any of the
- * expected sub-classes such as {@link SelectEntity}, {@link SecurityException}, etc. Use {@link #isSelectEntity()}
+ * expected sub-classes such as {@link SelectEntity}, {@link SelectSingle}, {@link SelectResult}, or
+ * {@link SelectProjection}. Use {@code isSelect*} methods like {@link #isSelectEntity()} to determine the actual
+ * selection type.
  *
  * @param <R> type of the result of the selection.
  * @since 1.0.0
@@ -47,7 +49,7 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
   /** Value of property {@link #NAME_RESULT} for {@link SelectEntity}. */
   public static final String VALUE_RESULT_ENTITY = "entity";
 
-  /** Value of property {@link #NAME_RESULT} for {@link SelectColumn} or {@link SelectExpression}. */
+  /** Value of property {@link #NAME_RESULT} for {@link SelectSingle}. */
   public static final String VALUE_RESULT_SINLGE = "1";
 
   /** Value of property {@link #NAME_RESULT} for {@link SelectResult}. */
@@ -58,7 +60,7 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
 
   private SelectStatement<R> statement;
 
-  private final List<? extends CriteriaSelection<?>> selections;
+  private final List<? extends CriteriaObject<?>> selections;
 
   private transient R resultBean;
 
@@ -95,7 +97,7 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
   /**
    * @return the {@link List} of selections. Only use for generic code. To build queries use fluent API methods.
    */
-  public List<? extends CriteriaSelection<?>> getSelections() {
+  public List<? extends CriteriaObject<?>> getSelections() {
 
     return this.selections;
   }
@@ -164,10 +166,9 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
   }
 
   /**
-   * @return {@code true} if only a single {@link #getSelections() selection} is selected as raw value (in case of
-   *         {@link SelectColumn} or {@link SelectExpression}), {@code false} otherwise.
-   * @see SelectColumn
-   * @see SelectExpression
+   * @return {@code true} if only a {@link SelectSingle single} {@link #getSelections() selection} is selected as raw
+   *         value, {@code false} otherwise.
+   * @see SelectSingle
    */
   public boolean isSelectSingle() {
 
@@ -196,7 +197,7 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  void add(CriteriaSelection<?> selection) {
+  void add(CriteriaObject<?> selection) {
 
     ((List) this.selections).add(selection);
   }
@@ -260,7 +261,15 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
 
     if (!Objects.equals(VALUE_RESULT_ENTITY, this.resultName)) {
       writer.writeName(NAME_RESULT);
-      writer.writeValueAsString(this.resultName);
+      if (isSelectEntity()) {
+        writer.writeValueAsString(VALUE_RESULT_ENTITY);
+      } else if (isSelectSingle()) {
+        writer.writeValueAsString(VALUE_RESULT_SINLGE);
+      } else if (isSelectResult()) {
+        writer.writeValueAsString(VALUE_RESULT_RESULT);
+      } else {
+        writer.writeValueAsString(this.resultName);
+      }
     }
     if (isDistinct()) {
       writer.writeName(NAME_DISTINCT);
@@ -270,7 +279,7 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
       writer.writeName(NAME_SELECTIONS);
       writer.writeStartArray();
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
-      for (CriteriaSelection<?> selection : this.selections) {
+      for (CriteriaObject<?> selection : this.selections) {
         marshalling.writeArg(writer, selection);
       }
       writer.writeEnd();
@@ -289,7 +298,7 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
       reader.require(State.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
-        CriteriaSelection<?> selection = marshalling.readArg(reader);
+        CriteriaObject<?> selection = marshalling.readArg(reader);
         add(selection);
       }
     } else {
@@ -298,27 +307,15 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
   }
 
   /**
-   * Alternative for {@code new SelectColumn(property)}.
+   * Alternative for {@code new SelectSingle(selection)}.
    *
    * @param <R> type of the result of the selection.
-   * @param property the single {@link PropertyPath property} to select.
-   * @return the new {@link SelectColumn} clause.
+   * @param selection the single {@link CriteriaObject} to select.
+   * @return the new {@link SelectSingle} clause.
    */
-  public static <R> SelectColumn<R> column(PropertyPath<R> property) {
+  public static <R> SelectSingle<R> single(CriteriaObject<R> selection) {
 
-    return new SelectColumn<>(property);
-  }
-
-  /**
-   * Alternative for {@code new SelectExpression(expression)}.
-   *
-   * @param <R> type of the result of the selection.
-   * @param expression the single {@link CriteriaExpression expression} to select.
-   * @return the new {@link SelectExpression} clause.
-   */
-  public static <R> SelectExpression<R> expression(CriteriaExpression<R> expression) {
-
-    return new SelectExpression<>(expression);
+    return new SelectSingle<>(selection);
   }
 
   /**

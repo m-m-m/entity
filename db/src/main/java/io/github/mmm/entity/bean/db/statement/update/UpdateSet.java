@@ -4,7 +4,7 @@ package io.github.mmm.entity.bean.db.statement.update;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.DbClause;
-import io.github.mmm.entity.bean.db.statement.MainClause;
+import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.entity.bean.db.statement.SetClause;
 import io.github.mmm.entity.bean.db.statement.ValuesClause;
 import io.github.mmm.entity.bean.db.statement.insert.InsertInto;
@@ -17,7 +17,7 @@ import io.github.mmm.property.criteria.CriteriaPredicate;
  * @param <E> type of the {@link InsertInto#getEntity() entity}.
  * @since 1.0.0
  */
-public class UpdateSet<E extends EntityBean> extends SetClause<E, UpdateSet<E>> implements MainClause<E> {
+public class UpdateSet<E extends EntityBean> extends SetClause<E, UpdateSet<E>> implements MainDbClause<E> {
 
   private final UpdateStatement<E> statement;
 

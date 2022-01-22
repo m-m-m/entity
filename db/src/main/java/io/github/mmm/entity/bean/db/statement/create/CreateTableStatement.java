@@ -5,11 +5,12 @@ package io.github.mmm.entity.bean.db.statement.create;
 import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.bean.db.statement.AbstractEntityClause;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
+import io.github.mmm.entity.bean.db.statement.AbstractEntityClause;
+import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
-import io.github.mmm.entity.bean.db.statement.StartClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
+import io.github.mmm.entity.bean.db.statement.StartClause;
 import io.github.mmm.entity.bean.db.statement.delete.Delete;
 
 /**
@@ -67,6 +68,12 @@ public class CreateTableStatement<E extends EntityBean> extends AbstractDbStatem
 
     list.add(this.createTable);
     list.add(this.columns);
+  }
+
+  @Override
+  protected AliasMap getAliasMap() {
+
+    return this.createTable.getAliasMap();
   }
 
 }

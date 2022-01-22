@@ -73,4 +73,21 @@ public class InsertInto<E extends EntityBean> extends IntoClause<E, InsertInto<E
     return (InsertValues<E>) super.values();
   }
 
+  /**
+   * @deprecated SQL does not support ALIAS for INSERT therefore also column names shall not be prefixed with alias.
+   */
+  @Override
+  @Deprecated
+  public InsertInto<E> as(String entityAlias) {
+
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  // make visible
+  protected AliasMap getAliasMap() {
+
+    return super.getAliasMap();
+  }
+
 }

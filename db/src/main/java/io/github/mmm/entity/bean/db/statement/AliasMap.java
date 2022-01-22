@@ -5,7 +5,13 @@ import java.util.Map;
 
 import io.github.mmm.base.exception.DuplicateObjectException;
 import io.github.mmm.base.text.CaseHelper;
+import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.property.WritableProperty;
+import io.github.mmm.property.criteria.PropertyPathParser;
+import io.github.mmm.scanner.CharStreamScanner;
+import io.github.mmm.value.PropertyPath;
+import io.github.mmm.value.ReadablePath;
 
 /**
  * Class to {@link Map#get(Object) map} from {@link AbstractEntitiesClause#getAlias() alias} to
@@ -14,7 +20,7 @@ import io.github.mmm.entity.bean.EntityBean;
  *
  * @since 1.0.0
  */
-public class AliasMap {
+public class AliasMap implements PropertyPathParser {
 
   private final Map<String, EntityBean> aliasMap;
 
@@ -52,6 +58,20 @@ public class AliasMap {
   public EntityBean getEntity(String alias) {
 
     return this.aliasMap.get(alias);
+  }
+
+  /**
+   * @param alias the {@link AbstractEntitiesClause#getAlias() alias} to get the mapping for.
+   * @return the mapped {@link EntityBean} that is associated with the given {@code alias}.
+   * @throws IllegalArgumentException if no such {@link EntityBean} could be found.
+   */
+  public EntityBean getRequiredEntity(String alias) {
+
+    EntityBean entity = getEntity(alias);
+    if (entity == null) {
+      throw new IllegalArgumentException("Could not find entity for alias '" + alias + "'.");
+    }
+    return entity;
   }
 
   /**
@@ -97,6 +117,49 @@ public class AliasMap {
       i++;
     }
     throw new IllegalStateException();
+  }
+
+  @Override
+  public PropertyPath<?> parse(CharStreamScanner scanner, String segment) {
+
+    if (segment == null) {
+      segment = PropertyPathParser.parseSegment(scanner);
+      scanner.requireOne('.');
+    }
+    WritableBean bean = getRequiredEntity(segment);
+    WritableProperty<?> property = null;
+    do {
+      segment = PropertyPathParser.parseSegment(scanner);
+      if (property == null) {
+        property = bean.getRequiredProperty(segment);
+      } else {
+        property = EntityPathParser.traverseProperty(property, segment);
+      }
+    } while (scanner.expectOne('.'));
+    assert (property != null);
+    return property;
+  }
+
+  /**
+   * @param path the {@link ReadablePath} to resolve (e.g. "alias.Property.ChildProperty").
+   * @return the {@link WritableProperty} traversed from the given {@link ReadablePath path} from its root segment as
+   *         alias.
+   */
+  public WritableProperty<?> resolvePath(ReadablePath path) {
+
+    ReadablePath parent = path.parentPath();
+    if (parent == null) {
+      return null;
+    } else {
+      String segment = path.pathSegment();
+      WritableProperty<?> property = resolvePath(parent);
+      if (property == null) {
+        EntityBean entity = getRequiredEntity(parent.pathSegment());
+        return entity.getRequiredProperty(segment);
+      } else {
+        return EntityPathParser.traverseProperty(property, segment);
+      }
+    }
   }
 
 }

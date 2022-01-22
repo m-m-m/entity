@@ -2,16 +2,16 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.db.statement.select;
 
-import io.github.mmm.entity.bean.db.statement.MainClause;
+import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 
 /**
- * {@link MainClause} allowing to {@link #having(CriteriaPredicate) begin} a {@link Having}-clause.
+ * {@link MainDbClause} allowing to {@link #having(CriteriaPredicate) begin} a {@link Having}-clause.
  *
  * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public interface ClauseWithHaving<R> extends MainClause<R> {
+public interface ClauseWithHaving<R> extends MainDbClause<R> {
 
   @Override
   SelectStatement<R> get();

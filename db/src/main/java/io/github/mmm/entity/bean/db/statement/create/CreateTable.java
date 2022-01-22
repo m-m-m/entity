@@ -114,4 +114,11 @@ public class CreateTable<E extends EntityBean> extends AbstractEntityClause<E, E
     return columns;
   }
 
+  @Override
+  // make visible
+  protected AliasMap getAliasMap() {
+
+    return super.getAliasMap();
+  }
+
 }

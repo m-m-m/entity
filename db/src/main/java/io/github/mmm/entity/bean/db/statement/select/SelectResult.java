@@ -26,4 +26,21 @@ public class SelectResult extends Select<DbResultObject> {
     return super.from(entity);
   }
 
+  @Override
+  public boolean isSelectEntity() {
+
+    return false;
+  }
+
+  @Override
+  public boolean isSelectResult() {
+
+    return true;
+  }
+
+  @Override
+  public boolean isSelectSingle() {
+
+    return false;
+  }
 }

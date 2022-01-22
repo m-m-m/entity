@@ -4,19 +4,19 @@ package io.github.mmm.entity.bean.db.statement.select;
 
 import org.junit.jupiter.api.Test;
 
+import io.github.mmm.entity.bean.db.statement.City;
 import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
-import io.github.mmm.entity.bean.db.statement.StatementTest;
-import io.github.mmm.entity.bean.example.City;
-import io.github.mmm.entity.bean.example.Person;
-import io.github.mmm.entity.bean.example.Result;
-import io.github.mmm.entity.bean.example.Song;
+import io.github.mmm.entity.bean.db.statement.Person;
+import io.github.mmm.entity.bean.db.statement.Result;
+import io.github.mmm.entity.bean.db.statement.Song;
+import io.github.mmm.entity.bean.db.statement.DbStatementTest;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 import io.github.mmm.property.criteria.CriteriaParametersNamed;
 
 /**
  * Test of {@link Select} and {@link SelectStatement}.
  */
-public class SelectTest extends StatementTest {
+public class SelectTest extends DbStatementTest {
 
   /** Test creation of {@link SelectStatement} and verifying resulting pseudo-SQL. */
   @Test
@@ -91,7 +91,7 @@ public class SelectTest extends StatementTest {
     Person p = Person.of();
     Song s = Song.of();
     Result r = Result.of();
-    String sql = "SELECT (song.Genre, COUNT(song.Id), AVG(song.Duration)) FROM Song song, Person p WHERE song.Composer = p.Id AND song.Duration <= 10800 ORDER BY song.Genre ASC";
+    String sql = "SELECT new Result(song.Genre, COUNT(song.Id) Count, AVG(song.Duration) Duration) FROM Song song, Person p WHERE song.Composer = p.Id AND song.Duration <= 10800 ORDER BY song.Genre ASC";
     // when
     SelectStatement<Result> query = new SelectProjection<>(r, s.Genre(), r.Genre()).and(s.Id().count(), r.Count())
         .and(s.Duration().avg(), r.Duration()) //

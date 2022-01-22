@@ -82,6 +82,18 @@ public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF exten
     return self();
   }
 
+  @Override
+  public SELF as(String entityAlias) {
+
+    if (this.additionalEntities.isEmpty()) {
+      return super.as(entityAlias);
+    } else {
+      EntitySubClause<?, ?> last = this.additionalEntities.get(this.additionalEntities.size() - 1);
+      last.as(entityAlias);
+      return self();
+    }
+  }
+
   /**
    * @return the {@link List} of {@link EntitySubClause}s in addition to the {@link #getEntity() main entity}.
    */

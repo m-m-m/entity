@@ -32,8 +32,8 @@ public interface DbClauseVisitor {
 
     if (clause instanceof StartClause) {
       onStart((StartClause) clause);
-    } else if (clause instanceof MainClause) {
-      onMainClause((MainClause<?>) clause);
+    } else if (clause instanceof MainDbClause) {
+      onMainClause((MainDbClause<?>) clause);
     } else {
       onOtherClause(clause);
     }
@@ -41,7 +41,7 @@ public interface DbClauseVisitor {
   }
 
   /**
-   * @param clause the {@link DbClause} that is neither a {@link StartClause} nor a {@link MainClause}.
+   * @param clause the {@link DbClause} that is neither a {@link StartClause} nor a {@link MainDbClause}.
    * @return this {@link DbClauseVisitor} itself for fluent API calls.
    */
   default DbClauseVisitor onOtherClause(DbClause clause) {
@@ -56,7 +56,7 @@ public interface DbClauseVisitor {
    * @param clause the {@link DbClause} to visit.
    * @return this {@link DbClauseVisitor} itself for fluent API calls.
    */
-  default DbClauseVisitor onMainClause(MainClause<?> clause) {
+  default DbClauseVisitor onMainClause(MainDbClause<?> clause) {
 
     if (clause instanceof FromClause) {
       onFrom((FromClause<?, ?, ?>) clause);

@@ -62,6 +62,11 @@ public abstract class AbstractDbStatement<E> extends AbstractMarshallingObject i
     reader.skipValue();
   }
 
+  /**
+   * @return the {@link AliasMap} of this statement.
+   */
+  protected abstract AliasMap getAliasMap();
+
   @Override
   public String toString() {
 

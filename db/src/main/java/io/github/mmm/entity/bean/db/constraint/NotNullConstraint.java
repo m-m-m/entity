@@ -4,11 +4,11 @@ import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.PropertyPath;
 
 /**
- * Not null {@link Constraint} ensuring that the {@link #getColumns() column} cannot have a {@code null} value.
+ * Not null {@link DbConstraint} ensuring that the {@link #getColumns() column} cannot have a {@code null} value.
  *
  * @since 1.0.0
  */
-public final class NotNullConstraint extends Constraint {
+public final class NotNullConstraint extends DbConstraint {
 
   /** {@link #getType() Type} {@value}. */
   public static final String TYPE = "NOT NULL";

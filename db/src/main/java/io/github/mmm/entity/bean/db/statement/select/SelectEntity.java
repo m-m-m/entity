@@ -3,7 +3,6 @@
 package io.github.mmm.entity.bean.db.statement.select;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.value.PropertyPath;
 
 /**
  * {@link Select} to query the {@link SelectFrom#getEntity() primary entity}.
@@ -26,6 +25,17 @@ public class SelectEntity<R extends EntityBean> extends Select<R> {
   }
 
   /**
+   * The constructor for internal usage.
+   *
+   * @param alias the alias to use as {@link #getResultName() result name}.
+   */
+  public SelectEntity(String alias) {
+
+    super(null);
+    setResultName(alias);
+  }
+
+  /**
    * @return the {@link SelectFrom} for fluent API calls.
    */
   public SelectFrom<R, R> from() {
@@ -34,17 +44,21 @@ public class SelectEntity<R extends EntityBean> extends Select<R> {
   }
 
   @Override
-  public SelectEntity<R> and(PropertyPath<?> property) {
+  public boolean isSelectEntity() {
 
-    super.and(property);
-    return this;
+    return true;
   }
 
   @Override
-  public SelectEntity<R> and(PropertyPath<?>... properties) {
+  public boolean isSelectResult() {
 
-    super.and(properties);
-    return this;
+    return false;
+  }
+
+  @Override
+  public boolean isSelectSingle() {
+
+    return false;
   }
 
 }

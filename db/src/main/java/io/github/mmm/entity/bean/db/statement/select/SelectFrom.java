@@ -65,4 +65,11 @@ public class SelectFrom<R, E extends EntityBean> extends FromClause<R, E, Select
     return this.statement;
   }
 
+  @Override
+  // make visible
+  protected AliasMap getAliasMap() {
+
+    return super.getAliasMap();
+  }
+
 }

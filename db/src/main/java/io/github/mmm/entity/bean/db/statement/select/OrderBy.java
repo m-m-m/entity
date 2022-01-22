@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import io.github.mmm.entity.bean.db.statement.AbstractTypedClause;
 import io.github.mmm.entity.bean.db.statement.DbClause;
-import io.github.mmm.entity.bean.db.statement.MainClause;
+import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
@@ -21,7 +21,7 @@ import io.github.mmm.property.criteria.CriteriaOrdering;
  * @param <R> type of the result of the selection.
  * @since 1.0.0
  */
-public class OrderBy<R> extends AbstractTypedClause<R, OrderBy<R>> implements MainClause<R> {
+public class OrderBy<R> extends AbstractTypedClause<R, OrderBy<R>> implements MainDbClause<R> {
 
   /** Name of {@link OrderBy} for marshaling. */
   public static final String NAME_ORDER_BY = "orderBy";

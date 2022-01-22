@@ -1,27 +1,27 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.mmm.entity.bean.db.statement.upsert;
+package io.github.mmm.entity.bean.db.statement.merge;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.entity.bean.db.statement.ValuesClause;
 
 /**
- * {@link ValuesClause} of an {@link UpsertStatement}.
+ * {@link ValuesClause} of an {@link MergeStatement}.
  *
- * @param <E> type of the {@link UpsertInto#getEntity() entity}.
+ * @param <E> type of the {@link MergeInto#getEntity() entity}.
  * @since 1.0.0
  */
-public class UpsertValues<E extends EntityBean> extends ValuesClause<E, UpsertValues<E>> implements MainDbClause<E> {
+public class MergeValues<E extends EntityBean> extends ValuesClause<E, MergeValues<E>> implements MainDbClause<E> {
 
-  private final UpsertStatement<E> statement;
+  private final MergeStatement<E> statement;
 
   /**
    * The constructor.
    *
-   * @param statement the owning {@link UpsertStatement}.
+   * @param statement the owning {@link MergeStatement}.
    */
-  public UpsertValues(UpsertStatement<E> statement) {
+  public MergeValues(MergeStatement<E> statement) {
 
     super();
     this.statement = statement;
@@ -34,7 +34,7 @@ public class UpsertValues<E extends EntityBean> extends ValuesClause<E, UpsertVa
   }
 
   @Override
-  public UpsertStatement<E> get() {
+  public MergeStatement<E> get() {
 
     return this.statement;
   }

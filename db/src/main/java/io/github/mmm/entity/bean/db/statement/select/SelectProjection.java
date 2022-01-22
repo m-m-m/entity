@@ -143,4 +143,21 @@ public final class SelectProjection<R extends WritableBean> extends Select<R> {
     return super.from(entity);
   }
 
+  @Override
+  public boolean isSelectEntity() {
+
+    return false;
+  }
+
+  @Override
+  public boolean isSelectResult() {
+
+    return false;
+  }
+
+  @Override
+  public boolean isSelectSingle() {
+
+    return false;
+  }
 }

@@ -9,7 +9,7 @@ package io.github.mmm.entity.bean.db.statement;
  * @param <E> type of this {@link DbClause} (typically the {@link AbstractEntityClause#getEntity() entity}).
  * @since 1.0.0
  */
-public interface MainClause<E> extends TypedClause<E> {
+public interface MainDbClause<E> extends TypedClause<E> {
 
   /**
    * @return the actual {@link DbStatement} containing all {@link DbClause}s and representing your entire SQL.

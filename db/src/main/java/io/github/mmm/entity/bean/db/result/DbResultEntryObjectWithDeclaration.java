@@ -1,6 +1,6 @@
 package io.github.mmm.entity.bean.db.result;
 
-import io.github.mmm.value.CriteriaSelection;
+import io.github.mmm.value.CriteriaObject;
 
 /**
  * Extends {@link DbResultEntryObject} with {@link #getDeclaration() declaration}.
@@ -20,7 +20,7 @@ public class DbResultEntryObjectWithDeclaration<V> extends DbResultEntryObject<V
    * @param dbName the {@link #getDbName() database name}.
    * @param declaration the {@link #getDeclaration() declaration}.
    */
-  public DbResultEntryObjectWithDeclaration(CriteriaSelection<?> selection, V value, String dbName,
+  public DbResultEntryObjectWithDeclaration(CriteriaObject<?> selection, V value, String dbName,
       String declaration) {
 
     super(selection, value, dbName);

@@ -2,15 +2,15 @@ package io.github.mmm.entity.bean.db.constraint;
 
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.property.criteria.CriteriaPredicate;
-import io.github.mmm.value.CriteriaSelection;
+import io.github.mmm.value.CriteriaObject;
 
 /**
- * Foreign key {@link Constraint} uniquely identifying a different {@link io.github.mmm.entity.bean.EntityBean entity}
+ * Foreign key {@link DbConstraint} uniquely identifying a different {@link io.github.mmm.entity.bean.EntityBean entity}
  * (row from another table).
  *
  * @since 1.0.0
  */
-public final class CheckConstraint extends Constraint {
+public final class CheckConstraint extends DbConstraint {
 
   /** {@link #getType() Type} {@value}. */
   public static final String TYPE = "CHECK";
@@ -50,7 +50,7 @@ public final class CheckConstraint extends Constraint {
 
   private static ReadableProperty<?> getColumn(CriteriaPredicate predicate) {
 
-    CriteriaSelection<?> arg = predicate.getFirstArg();
+    CriteriaObject<?> arg = predicate.getFirstArg();
     if (arg instanceof ReadableProperty) {
       return (ReadableProperty<?>) arg;
     } else if (arg instanceof CriteriaPredicate) {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
+import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatement;
 
@@ -15,6 +16,12 @@ import io.github.mmm.entity.bean.db.statement.DbStatement;
  * @param <E> type of the {@link InsertInto#getEntity() entity}.
  * @since 1.0.0
  */
+// TODO: support sub-query as alternative to values
+// INSERT INTO table4 ( name, age, sex, city, id, number, nationality)
+// SELECT name, age, sex, city, p.id, number, n.nationality
+// FROM table1 p
+// INNER JOIN table2 c ON c.Id = p.Id
+// INNER JOIN table3 n ON p.Id = n.Id
 public class InsertStatement<E extends EntityBean> extends AbstractDbStatement<E> {
 
   private final Insert insert;
@@ -77,6 +84,12 @@ public class InsertStatement<E extends EntityBean> extends AbstractDbStatement<E
     list.add(this.insert);
     list.add(this.into);
     list.add(this.values);
+  }
+
+  @Override
+  protected AliasMap getAliasMap() {
+
+    return this.into.getAliasMap();
   }
 
 }

@@ -10,8 +10,8 @@ import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 
 /**
- * A {@link AbstractEntityClause} is a {@link DbClause} of an SQL {@link DbStatement} that specifies the {@link #getEntity()
- * entity} and/or {@link #getEntityName() entity name} (table) to operate on.
+ * A {@link AbstractEntityClause} is a {@link DbClause} of an SQL {@link DbStatement} that specifies the
+ * {@link #getEntity() entity} and/or {@link #getEntityName() entity name} (table) to operate on.
  *
  * @param <R> type of the result. Only different from {@literal <E>} for complex selects.
  * @param <E> type of the {@link #getEntity() entity}.
@@ -30,7 +30,7 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
   private final AliasMap aliasMap;
 
   /** @see #getEntityName() */
-  protected final transient E entity;
+  protected transient E entity;
 
   private String entityName;
 
@@ -48,10 +48,7 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
     super();
     Objects.requireNonNull(aliasMap);
     this.aliasMap = aliasMap;
-    if ((entityName == null) && (entity != null)) {
-      this.entityName = entity.getType().getStableName();
-    }
-    this.entity = entity;
+    setEntity(entity, entityName);
   }
 
   /**
@@ -59,7 +56,7 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
    *         entity}. A single {@link Map} instance is used per {@link DbStatement} to ensure unique {@link #getAlias()
    *         aliases}.
    */
-  protected final AliasMap getAliasMap() {
+  protected AliasMap getAliasMap() {
 
     return this.aliasMap;
   }
@@ -70,6 +67,19 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
   public E getEntity() {
 
     return this.entity;
+  }
+
+  void setEntity(E entity) {
+
+    setEntity(entity, null);
+  }
+
+  void setEntity(E entity, String entityName) {
+
+    if ((entityName == null) && (entity != null)) {
+      this.entityName = entity.getType().getStableName();
+    }
+    this.entity = entity;
   }
 
   /**
@@ -95,7 +105,7 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
   public String getAlias() {
 
     if (this.alias == null) {
-      as(this.aliasMap.createAlias(this));
+      setAlias(this.aliasMap.createAlias(this));
     }
     return this.alias;
   }
@@ -106,6 +116,12 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
    * @see #getAlias()
    */
   public SELF as(String entityAlias) {
+
+    setAlias(entityAlias);
+    return self();
+  }
+
+  private void setAlias(String entityAlias) {
 
     if (this.alias != null) {
       EntityBean old = this.aliasMap.remove(this.alias);
@@ -118,7 +134,6 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
     if (this.entity != null) {
       this.entity.pathSegment(entityAlias);
     }
-    return self();
   }
 
   @Override

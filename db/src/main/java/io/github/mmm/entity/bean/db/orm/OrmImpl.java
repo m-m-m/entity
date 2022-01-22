@@ -6,7 +6,7 @@ import io.github.mmm.entity.bean.db.result.DbResultEntryObjectWithDeclaration;
 import io.github.mmm.entity.bean.typemapping.TypeMapping;
 import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.criteria.ProjectionProperty;
-import io.github.mmm.value.CriteriaSelection;
+import io.github.mmm.value.CriteriaObject;
 import io.github.mmm.value.ReadablePath;
 import io.github.mmm.value.converter.TypeMapper;
 
@@ -80,7 +80,7 @@ public class OrmImpl implements Orm {
     return createSegmentMapper(property, columnName, property.getValueClass());
   }
 
-  private <V> DbSegmentMapper<V, ?> createSegmentMapper(CriteriaSelection<?> selection, String columnName,
+  private <V> DbSegmentMapper<V, ?> createSegmentMapper(CriteriaObject<?> selection, String columnName,
       Class<V> valueClass) {
 
     TypeMapper<V, ?> typeMapper = this.typeMapping.getTypeMapper(valueClass);
@@ -92,7 +92,7 @@ public class OrmImpl implements Orm {
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  private <V> DbSegmentMapper<V, ?> createSegmentMapper(CriteriaSelection<?> selection, String columnName,
+  private <V> DbSegmentMapper<V, ?> createSegmentMapper(CriteriaObject<?> selection, String columnName,
       TypeMapper<V, ?> typeMapper) {
 
     DbSegmentMapper<V, ?> nextSegment = null;

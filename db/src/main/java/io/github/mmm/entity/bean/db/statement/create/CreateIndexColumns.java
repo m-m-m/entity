@@ -2,7 +2,7 @@ package io.github.mmm.entity.bean.db.statement.create;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.DbClause;
-import io.github.mmm.entity.bean.db.statement.MainClause;
+import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.entity.bean.db.statement.PropertyClause;
 
 /**
@@ -12,7 +12,7 @@ import io.github.mmm.entity.bean.db.statement.PropertyClause;
  * @since 1.0.0
  */
 public class CreateIndexColumns<E extends EntityBean> extends PropertyClause<E, CreateIndexColumns<E>>
-    implements MainClause<E> {
+    implements MainDbClause<E> {
 
   /** Name of {@link CreateIndexColumns} for marshaling. */
   public static final String NAME_ON = "on";

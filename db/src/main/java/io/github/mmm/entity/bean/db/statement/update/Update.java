@@ -5,7 +5,7 @@ package io.github.mmm.entity.bean.db.statement.update;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.statement.AbstractEntityClause;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
-import io.github.mmm.entity.bean.db.statement.MainClause;
+import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.entity.bean.db.statement.StartClause;
 import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.criteria.PropertyAssignment;
@@ -18,7 +18,7 @@ import io.github.mmm.value.PropertyPath;
  * @since 1.0.0
  */
 public final class Update<E extends EntityBean> extends AbstractEntityClause<E, E, Update<E>>
-    implements StartClause, MainClause<E> {
+    implements StartClause, MainDbClause<E> {
 
   /** Name of {@link Update} for marshaling. */
   public static final String NAME_UPDATE = "update";
@@ -110,5 +110,12 @@ public final class Update<E extends EntityBean> extends AbstractEntityClause<E, 
   public UpdateStatement<E> get() {
 
     return this.statement;
+  }
+
+  @Override
+  // make visible
+  protected AliasMap getAliasMap() {
+
+    return super.getAliasMap();
   }
 }

@@ -71,4 +71,11 @@ public class CreateIndexOn<E extends EntityBean> extends AbstractEntityClause<E,
     return NAME_ON;
   }
 
+  @Override
+  // make visible
+  protected AliasMap getAliasMap() {
+
+    return super.getAliasMap();
+  }
+
 }

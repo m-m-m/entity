@@ -15,7 +15,7 @@ import io.github.mmm.entity.bean.EntityBean;
  * @since 1.0.0
  */
 public abstract class FromClause<R, E extends EntityBean, SELF extends FromClause<R, E, SELF>>
-    extends AbstractEntitiesClause<R, E, SELF> implements MainClause<R>, TypedClauseWithWhere<R> {
+    extends AbstractEntitiesClause<R, E, SELF> implements MainDbClause<R>, TypedClauseWithWhere<R> {
 
   /** Name of {@link FromClause} for marshaling. */
   public static final String NAME_FROM = "from";
