@@ -98,28 +98,34 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
   public DbStatement<?> parse(CharStreamScanner scanner) {
 
     try {
+      DbStatement<?> statement;
       scanner.skipWhile(NEWLINE_OR_SPACE);
       String name = scanner.readWhile(CharFilter.LATIN_LETTER);
       scanner.requireOneOrMore(NEWLINE_OR_SPACE);
       if (Select.NAME_SELECT.equalsIgnoreCase(name)) {
-        return parseSelectStatement(scanner);
+        statement = parseSelectStatement(scanner);
       } else if (Update.NAME_UPDATE.equalsIgnoreCase(name)) {
-        return parseUpdateStatement(scanner);
+        statement = parseUpdateStatement(scanner);
       } else if (Insert.NAME_INSERT.equalsIgnoreCase(name)) {
-        return parseInsertStatement(scanner);
+        statement = parseInsertStatement(scanner);
       } else if (Delete.NAME_DELETE.equalsIgnoreCase(name)) {
-        return parseDeleteStatement(scanner);
+        statement = parseDeleteStatement(scanner);
       } else if ("CREATE".equalsIgnoreCase(name)) {
         scanner.require("TABLE", true);
         scanner.requireOneOrMore(NEWLINE_OR_SPACE);
-        return parseCreateTableStatement(scanner);
+        statement = parseCreateTableStatement(scanner);
       } else if (Upsert.NAME_UPSERT.equalsIgnoreCase(name)) {
-        return parseUsertStatement(scanner);
+        statement = parseUsertStatement(scanner);
       } else if (Merge.NAME_MERGE.equalsIgnoreCase(name)) {
-        return parseMergeStatement(scanner);
+        statement = parseMergeStatement(scanner);
       } else {
         throw new IllegalStateException("Unknown statement: " + name);
       }
+      scanner.skipWhile(NEWLINE_OR_SPACE);
+      if (scanner.hasNext()) {
+        throw new IllegalStateException("Internal error: Statement not parsed to the end.");
+      }
+      return statement;
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to parse DB statement after \n" + scanner.getBufferParsed()
           + "\n and before \n" + scanner.getBufferToParse() + "\nwith error: " + e.getMessage(), e);
@@ -266,14 +272,33 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
   private UpdateStatement<?> parseUpdateStatement(CharStreamScanner scanner) {
 
     Update<?> update = parseUpdate(scanner);
-    UpdateStatement<?> updateStatement = update.get();
-    return updateStatement;
+    UpdateStatement<?> statement = update.get();
+    AliasMap aliasMap = getAliasMap(update);
+    parseUpdateSet(scanner, statement.getSet(), aliasMap);
+    parseWhere(scanner, statement.getWhere());
+    return statement;
+  }
+
+  private void parseUpdateSet(CharStreamScanner scanner, SetClause set, PropertyPathParser pathParser) {
+
+    do {
+      scanner.skipWhile(NEWLINE_OR_SPACE);
+      PropertyPath<?> property = pathParser.parse(scanner);
+      scanner.skipWhile(NEWLINE_OR_SPACE);
+      scanner.requireOne('=');
+      scanner.skipWhile(NEWLINE_OR_SPACE);
+      CriteriaObject value = this.criteriaSelectionParser.parseSelection(scanner, pathParser);
+      set.and(PropertyAssignment.of(property, value));
+      scanner.skipWhile(NEWLINE_OR_SPACE);
+    } while (scanner.expectOne(','));
   }
 
   private Update<?> parseUpdate(CharStreamScanner scanner) {
 
     Update<?> update = new Update<>(null);
-    parseEntityClause(scanner, update);
+    parseEntitiesClause(scanner, update);
+    scanner.require("SET", true);
+    scanner.requireOneOrMore(NEWLINE_OR_SPACE);
     return update;
   }
 
@@ -317,10 +342,10 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
     List<PropertyPath<?>> columns = new ArrayList<>();
     boolean todo = true;
     while (todo) {
-      scanner.skipWhile(' ');
+      scanner.skipWhile(NEWLINE_OR_SPACE);
       PropertyPath<?> path = EntityPathParser.parsePath(scanner, entity);
       columns.add(path);
-      scanner.skipWhile(' ');
+      scanner.skipWhile(NEWLINE_OR_SPACE);
       if (scanner.expectOne(')')) {
         todo = false;
       } else if (!scanner.expectOne(',')) {
@@ -459,8 +484,11 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
         CriteriaObject<?> selection = this.criteriaSelectionParser.parseSelection(scanner);
         if (projectionBean != null) {
           PropertyPath path = null;
-          if (scanner.expectOne(' ')) {
-            scanner.expectStrict("AS ", true);
+          int spaces = scanner.skipWhile(NEWLINE_OR_SPACE);
+          if ((spaces > 0)) {
+            if (scanner.expectStrict("AS", true)) {
+              scanner.requireOneOrMore(NEWLINE_OR_SPACE);
+            }
             path = EntityPathParser.parsePath(scanner, projectionBean);
           } else if (selection instanceof PropertyPath) {
             path = EntityPathParser.resolvePath(projectionBean, (PropertyPath) selection);
@@ -489,52 +517,60 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
 
   private void parseFrom(CharStreamScanner scanner, FromClause from) {
 
-    scanner.skipWhile(' ');
-    scanner.require("FROM ", true);
+    scanner.skipWhile(NEWLINE_OR_SPACE);
+    scanner.require("FROM", true);
+    scanner.requireOneOrMore(NEWLINE_OR_SPACE);
+    parseEntitiesClause(scanner, from);
+  }
+
+  private void parseEntitiesClause(CharStreamScanner scanner, AbstractEntitiesClause entitesClause) {
+
     do {
-      scanner.skipWhile(' ');
+      scanner.skipWhile(NEWLINE_OR_SPACE);
       String entityName = parseSegment(scanner);
       Class entityClass = this.classNameMapper.getClass(entityName);
       EntityBean entity = (EntityBean) this.beanFactory.create(entityClass);
-      if (from.getEntity() == null) {
-        from.setEntity(entity);
+      if (entitesClause.getEntity() == null) {
+        entitesClause.setEntity(entity);
       } else {
-        from.and(entity);
+        entitesClause.and(entity);
       }
       scanner.requireOneOrMore(NEWLINE_OR_SPACE);
       String entityAlias = parseSegment(scanner);
-      from.as(entityAlias);
-      scanner.skipWhile(' ');
+      entitesClause.as(entityAlias);
+      scanner.skipWhile(NEWLINE_OR_SPACE);
     } while (scanner.expectOne(','));
   }
 
   private void parseWhere(CharStreamScanner scanner, WhereClause where) {
 
-    if (!scanner.expectStrict("WHERE ", true)) {
+    if (!scanner.expectStrict("WHERE", true)) {
       return;
     }
     do {
+      scanner.requireOneOrMore(NEWLINE_OR_SPACE);
       CriteriaObject<?> expression = this.criteriaSelectionParser.parse(scanner);
       if (expression instanceof CriteriaPredicate) {
         where.and((CriteriaPredicate) expression);
       } else {
         throw new IllegalArgumentException("Expected predicate but found " + expression);
       }
-      scanner.skipWhile(' ');
-    } while (scanner.expectStrict("AND ", true));
+      scanner.skipWhile(NEWLINE_OR_SPACE);
+    } while (scanner.expectStrict("AND", true));
   }
 
   private void parseGroupBy(CharStreamScanner scanner, GroupBy groupBy) {
 
-    if (!scanner.expectStrict(" GROUP BY ", true)) {
+    if (!scanner.expectStrict(" GROUP BY", true)) {
       return;
     }
+    scanner.requireOneOrMore(NEWLINE_OR_SPACE);
     PropertyPathParser pathParser = getAliasMap(groupBy);
     do {
-      scanner.skipWhile(' ');
+      scanner.skipWhile(NEWLINE_OR_SPACE);
       PropertyPath<?> path = pathParser.parse(scanner);
       groupBy.and(path);
-      scanner.skipWhile(' ');
+      scanner.skipWhile(NEWLINE_OR_SPACE);
     } while (scanner.expectOne(','));
   }
 
