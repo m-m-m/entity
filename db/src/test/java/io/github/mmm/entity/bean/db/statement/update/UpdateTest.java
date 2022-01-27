@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.mmm.entity.bean.db.statement.DbStatementTest;
 import io.github.mmm.entity.bean.db.statement.Person;
+import io.github.mmm.entity.bean.db.statement.Song;
 import io.github.mmm.entity.id.LongId;
 
 /**
@@ -34,6 +35,20 @@ public class UpdateTest extends DbStatementTest {
         .where(p.Id().eq(LongId.of(4711L))).get();
     // then
     check(updateStatement, "UPDATE Person p SET p.Single=FALSE WHERE p.Id = 4711");
+  }
+
+  /** Test of {@link Update} for with data from other entity. */
+  @Test
+  public void testUpdateFromJoinTable() {
+
+    // given
+    Song s = Song.of();
+    Person p = Person.of();
+    // when
+    UpdateStatement<Song> updateStatement = new Update<>(s).as("s").and(p).as("p").set(s.Title(), p.Name())
+        .where(s.Composer().eq(p.Id())).get();
+    // then
+    check(updateStatement, "UPDATE Song s, Person p SET s.Title=p.Name WHERE s.Composer = p.Id");
   }
 
 }

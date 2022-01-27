@@ -92,12 +92,26 @@ public final class Update<E extends EntityBean> extends AbstractEntitiesClause<E
    *
    * @param <V> type of the {@link PropertyPath#get() value}.
    * @param property the {@link PropertyPath property} to set.
-   * @param value the {@link io.github.mmm.property.criteria.Literal} value to set (assign the {@code property} to).
+   * @param value the {@link io.github.mmm.property.criteria.Literal} value to set.
    * @return the {@link UpdateSet} for fluent API.
    */
   public <V> UpdateSet<E> set(PropertyPath<V> property, V value) {
 
     return set(PropertyAssignment.of(property, value));
+  }
+
+  /**
+   * Convenience method for
+   * <code>{@link #set(PropertyAssignment) set}({@link PropertyAssignment}.{@link PropertyAssignment#of(PropertyPath, PropertyPath) of}(property, valueProperty)).</code>
+   *
+   * @param <V> type of the {@link PropertyPath#get() value}.
+   * @param property the {@link PropertyPath property} to set.
+   * @param valueProperty the {@link PropertyPath property} from where to read the value to set.
+   * @return the {@link UpdateSet} for fluent API.
+   */
+  public <V> UpdateSet<E> set(PropertyPath<V> property, PropertyPath<V> valueProperty) {
+
+    return set(PropertyAssignment.of(property, valueProperty));
   }
 
   @Override

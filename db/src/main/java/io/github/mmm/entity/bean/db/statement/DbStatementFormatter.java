@@ -157,7 +157,7 @@ public class DbStatementFormatter implements DbClauseVisitor {
   public void onUpdate(Update<?> update) {
 
     write("UPDATE ");
-    onEntity(update);
+    onEntities(update);
     DbClauseVisitor.super.onUpdate(update);
   }
 

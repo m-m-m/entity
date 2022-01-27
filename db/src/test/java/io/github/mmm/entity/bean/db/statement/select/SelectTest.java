@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import io.github.mmm.entity.bean.db.statement.City;
 import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
+import io.github.mmm.entity.bean.db.statement.DbStatementTest;
 import io.github.mmm.entity.bean.db.statement.Person;
 import io.github.mmm.entity.bean.db.statement.Result;
 import io.github.mmm.entity.bean.db.statement.Song;
-import io.github.mmm.entity.bean.db.statement.DbStatementTest;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 import io.github.mmm.property.criteria.CriteriaParametersNamed;
 
@@ -59,7 +59,7 @@ public class SelectTest extends DbStatementTest {
     // when
     SelectStatement<Person> query = new SelectEntity<>(p).from().as("p").get();
     // then
-    assertThat(query).hasToString("SELECT p FROM Person p");
+    check(query, "SELECT p FROM Person p");
   }
 
   /** Test creation of {@link SelectStatement} and verifying resulting pseudo-SQL including auto-generated alias. */
@@ -72,7 +72,7 @@ public class SelectTest extends DbStatementTest {
     // when
     SelectStatement<Person> query = new SelectEntity<>(p).from().and(p2).where(p.Id().eq(p2.Id())).get();
     // then
-    assertThat(query).hasToString("SELECT p FROM Person p, Person pe WHERE p.Id = pe.Id");
+    check(query, "SELECT p FROM Person p, Person pe WHERE p.Id = pe.Id");
   }
 
   /** Test creation of {@link SelectStatement} and verifying resulting pseudo-SQL. */
@@ -113,7 +113,7 @@ public class SelectTest extends DbStatementTest {
         .where(c.GeoLocation().get().Latitude().eq(40.6892534).and(c.GeoLocation().get().Longitude().eq(-74.0466891)))
         .get();
     // then
-    assertThat(query).hasToString(
+    check(query,
         "SELECT c FROM City c WHERE c.GeoLocation.Latitude = 40.6892534 AND c.GeoLocation.Longitude = -74.0466891");
   }
 
