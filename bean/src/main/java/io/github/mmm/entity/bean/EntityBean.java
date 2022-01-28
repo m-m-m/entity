@@ -8,6 +8,7 @@ import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.entity.property.id.PkProperty;
 
 /**
  * {@link WritableBean} for an entity that can be loaded from or saved to a database. Can be identified uniquely by its
@@ -21,9 +22,9 @@ public interface EntityBean extends WritableBean, Entity {
   /**
    * @return the {@link IdProperty property} with the {@link Id} (primary key) of this entity.
    */
-  default IdProperty Id() {
+  default PkProperty Id() {
 
-    return new IdProperty(LongVersionId.getEmpty().withEntityType(getType().getJavaClass()));
+    return new PkProperty(LongVersionId.getEmpty().withEntityType(getType().getJavaClass()));
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })

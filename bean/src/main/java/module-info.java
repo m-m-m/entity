@@ -17,7 +17,8 @@ module io.github.mmm.entity.bean {
   requires transitive io.github.mmm.binary;
 
   provides io.github.mmm.property.factory.PropertyFactory //
-      with io.github.mmm.entity.property.id.PropertyFactoryId, //
+      with io.github.mmm.entity.property.id.PropertyFactoryFk, //
+      io.github.mmm.entity.property.id.PropertyFactoryPk, //
       io.github.mmm.entity.property.link.PropertyFactoryLink //
   ;
 

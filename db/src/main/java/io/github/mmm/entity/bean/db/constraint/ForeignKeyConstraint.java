@@ -1,6 +1,7 @@
 package io.github.mmm.entity.bean.db.constraint;
 
 import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.entity.property.id.PkProperty;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.PropertyPath;
 
@@ -46,7 +47,7 @@ public final class ForeignKeyConstraint extends DbConstraint {
    */
   public ForeignKeyConstraint(String name, PropertyPath<?> column, String referenceTable) {
 
-    this(name, column, referenceTable, IdProperty.NAME);
+    this(name, column, referenceTable, PkProperty.NAME);
   }
 
   /**

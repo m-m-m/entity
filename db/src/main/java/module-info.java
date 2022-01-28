@@ -16,7 +16,8 @@ module io.github.mmm.entity.db {
 
   provides io.github.mmm.entity.bean.db.dialect.DbDialect //
       with io.github.mmm.entity.bean.db.dialect.h2.H2Dialect, //
-      io.github.mmm.entity.bean.db.dialect.postgresql.PostgreSqlDialect //
+      io.github.mmm.entity.bean.db.dialect.postgresql.PostgreSqlDialect, //
+      io.github.mmm.entity.bean.db.dialect.sqlserver.SqlServerDialect //
   ;
 
   exports io.github.mmm.entity.bean.db.constraint;
@@ -30,6 +31,8 @@ module io.github.mmm.entity.db {
   exports io.github.mmm.entity.bean.db.dialect.sqlserver;
 
   exports io.github.mmm.entity.bean.db.naming;
+
+  exports io.github.mmm.entity.bean.db.orm;
 
   exports io.github.mmm.entity.bean.db.result;
 

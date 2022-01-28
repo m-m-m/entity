@@ -9,6 +9,7 @@ import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.entity.property.id.PkProperty;
 import io.github.mmm.property.PropertyMetadata;
 
 /**
@@ -19,7 +20,7 @@ import io.github.mmm.property.PropertyMetadata;
 public class SimpleEntityBean extends Bean implements EntityBean {
 
   /** The {@link IdProperty property} with the {@link Id primary key}. */
-  public final IdProperty Id;
+  public final PkProperty Id;
 
   /**
    * The constructor.
@@ -34,17 +35,17 @@ public class SimpleEntityBean extends Bean implements EntityBean {
    *
    * @param idProperty the {@link #Id() ID property}.
    */
-  public SimpleEntityBean(IdProperty idProperty) {
+  public SimpleEntityBean(PkProperty idProperty) {
 
     super();
     if (idProperty == null) {
-      idProperty = new IdProperty(LongVersionId.getEmpty().withEntityType(getClass()), PropertyMetadata.of(this));
+      idProperty = new PkProperty(LongVersionId.getEmpty().withEntityType(getClass()), PropertyMetadata.of(this));
     }
     this.Id = add(idProperty);
   }
 
   @Override
-  public IdProperty Id() {
+  public PkProperty Id() {
 
     return this.Id;
   }

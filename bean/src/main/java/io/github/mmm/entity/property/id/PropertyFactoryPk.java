@@ -8,20 +8,19 @@ import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.factory.AbstractPropertyFactory;
 import io.github.mmm.property.factory.PropertyFactory;
-import io.github.mmm.property.object.ObjectProperty;
 
 /**
- * This is the implementation of {@link PropertyFactory} for {@link ObjectProperty}.
+ * This is the implementation of {@link PropertyFactory} for {@link PkProperty}.
  *
  * @since 1.0.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class PropertyFactoryId extends AbstractPropertyFactory<Id<?>, IdProperty> {
+public class PropertyFactoryPk extends AbstractPropertyFactory<Id<?>, PkProperty> {
 
   @Override
   public Class<? extends Id<?>> getValueClass() {
 
-    return (Class) Id.class;
+    return null;
   }
 
   @Override
@@ -37,15 +36,15 @@ public class PropertyFactoryId extends AbstractPropertyFactory<Id<?>, IdProperty
   }
 
   @Override
-  public Class<IdProperty> getImplementationClass() {
+  public Class<PkProperty> getImplementationClass() {
 
-    return IdProperty.class;
+    return PkProperty.class;
   }
 
   @Override
-  public IdProperty create(String name, Class<? extends Id<?>> valueClass, PropertyMetadata<Id<?>> metadata) {
+  public PkProperty create(String name, Class<? extends Id<?>> valueClass, PropertyMetadata<Id<?>> metadata) {
 
-    return new IdProperty(name, null, metadata);
+    return new PkProperty(name, null, metadata);
   }
 
   @Override

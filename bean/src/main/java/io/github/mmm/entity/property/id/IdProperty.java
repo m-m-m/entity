@@ -4,44 +4,21 @@ package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.PropertyMetadata;
-import io.github.mmm.property.object.ObjectProperty;
 import io.github.mmm.property.object.SimpleProperty;
 
 /**
- * {@link ObjectProperty} with {@link Id} {@link #get() value} pointing to an entity.
+ * {@link SimpleProperty} with {@link Id} {@link #get() value} pointing to an entity.
  *
+ * @param <V> type of the {@link #get() value}.
  * @since 1.0.0
  */
-public class IdProperty extends SimpleProperty<Id<?>> {
+public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
 
-  /** Default {@link #getName() name} for primary key. */
-  public static final String NAME = "Id";
-
-  private GenericId<?, ?, ?> value;
-
-  /**
-   * The constructor.
-   *
-   * @param id the initial {@link #get() value}.
-   */
-  public IdProperty(Id<?> id) {
-
-    this(NAME, id, null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param id the initial {@link #get() value}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
-  public IdProperty(Id<?> id, PropertyMetadata<Id<?>> metadata) {
-
-    this(NAME, id, metadata);
-  }
+  private V value;
 
   /**
    * The constructor.
@@ -50,71 +27,75 @@ public class IdProperty extends SimpleProperty<Id<?>> {
    * @param id the initial {@link #get() value}.
    * @param metadata the {@link #getMetadata() metadata}.
    */
-  @SuppressWarnings("rawtypes")
-  public IdProperty(String name, Id<?> id, PropertyMetadata<Id<?>> metadata) {
+  @SuppressWarnings("unchecked")
+  public IdProperty(String name, V id, PropertyMetadata<V> metadata) {
 
     super(name, metadata);
-    assert (id != null);
-    this.value = (GenericId) id;
+    if (id == null) {
+      this.value = (V) LongVersionId.getEmpty();
+    } else {
+      this.value = id;
+    }
   }
 
   @Override
-  protected Id<?> doGet() {
+  protected V doGet() {
 
     return this.value;
   }
 
   @Override
-  @SuppressWarnings("rawtypes")
-  protected void doSet(Id<?> newValue) {
+  @SuppressWarnings("unchecked")
+  protected void doSet(V newValue) {
 
-    GenericId<?, ?, ?> newId = (GenericId) newValue;
     if (this.value != null) {
-      if (newId == null) {
-        newId = this.value.withIdAndVersion(null, null);
+      if (newValue == null) {
+        newValue = (V) ((GenericId<?, ?, ?>) this.value).withIdAndVersion(null, null);
       } else {
-        Class<?> newEntityType = newId.getEntityType();
+        Class<?> newEntityType = newValue.getEntityType();
         Class<?> entityType = this.value.getEntityType();
         if (newEntityType == null) {
-          newId = newId.withEntityType(entityType);
+          newValue = (V) ((GenericId<?, ?, ?>) newValue).withEntityType(entityType);
         } else if (entityType == null) {
           assert (entityType == newEntityType) : "Can not change entity type of primary key!";
         }
       }
     }
-    this.value = newId;
+    this.value = newValue;
   }
 
   @Override
-  public Id<?> getSafe() {
+  public V getSafe() {
 
     return get();
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
   @Override
-  public Class<Id<?>> getValueClass() {
+  public Class<V> getValueClass() {
 
     return (Class) Id.class;
   }
 
   @Override
-  public Id<?> parse(String valueAsString) {
+  @SuppressWarnings("unchecked")
+  public V parse(String valueAsString) {
 
-    return this.value.create(valueAsString);
+    return (V) ((GenericId<?, ?, ?>) this.value).create(valueAsString);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void read(StructuredReader reader) {
 
-    GenericId<?, ?, ?> id = this.value.readObject(reader);
+    V id = (V) ((GenericId<?, ?, ?>) this.value).readObject(reader);
     set(id);
   }
 
   @Override
   public void write(StructuredWriter writer) {
 
-    this.value.write(writer);
+    ((GenericId<?, ?, ?>) this.value).write(writer);
   }
 
 }

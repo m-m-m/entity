@@ -14,8 +14,10 @@ import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.link.IdLink;
-import io.github.mmm.entity.property.id.IdProperty;
-import io.github.mmm.entity.property.id.IdPropertyBuilder;
+import io.github.mmm.entity.property.id.FkProperty;
+import io.github.mmm.entity.property.id.FkPropertyBuilder;
+import io.github.mmm.entity.property.id.PkProperty;
+import io.github.mmm.entity.property.id.PkPropertyBuilder;
 import io.github.mmm.entity.property.link.LinkProperty;
 import io.github.mmm.entity.property.link.LinkPropertyBuilder;
 import io.github.mmm.property.AttributeReadOnly;
@@ -32,34 +34,65 @@ public interface EntityPropertyBuilders extends PropertyBuilders {
 
   /**
    * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link IdPropertyBuilder}.
+   * @return a new {@link PkPropertyBuilder}.
    */
-  default IdPropertyBuilder newId() {
+  default PkPropertyBuilder newPk() {
 
-    return newId();
+    return newPk(null);
   }
 
   /**
    * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link IdPropertyBuilder}.
+   * @return a new {@link PkPropertyBuilder}.
    */
-  default IdPropertyBuilder newId(Id<?> idTemplate) {
+  default PkPropertyBuilder newPk(Id<?> idTemplate) {
 
-    return builder(new IdPropertyBuilder(getLock(), safeId(idTemplate)), this);
+    return builder(new PkPropertyBuilder(getLock(), safeId(idTemplate)), this);
   }
 
   /**
    * @param name the {@link Property#getName() property name}.
    * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link IdProperty}.
+   * @return a new {@link PkProperty}.
    */
-  default IdProperty newId(String name, Id<?> idTemplate) {
+  default PkProperty newPk(String name, Id<?> idTemplate) {
 
-    return get(name, this, metadata -> accept(new IdProperty(name, safeId(idTemplate), metadata), this));
+    return get(name, this, metadata -> accept(new PkProperty(name, safeId(idTemplate), metadata), this));
+  }
+
+  /**
+   * @param <E> type of the referenced {@link EntityBean}.
+   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
+   * @return a new {@link FkPropertyBuilder}.
+   */
+  default <E extends EntityBean> FkPropertyBuilder<E> newFk() {
+
+    return newFk(null);
+  }
+
+  /**
+   * @param <E> type of the referenced {@link EntityBean}.
+   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
+   * @return a new {@link PkPropertyBuilder}.
+   */
+  default <E extends EntityBean> FkPropertyBuilder<E> newFk(Id<E> idTemplate) {
+
+    return builder(new FkPropertyBuilder<>(getLock(), safeId(idTemplate)), this);
+  }
+
+  /**
+   * @param <E> type of the referenced {@link EntityBean}.
+   * @param name the {@link Property#getName() property name}.
+   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
+   * @return a new {@link PkProperty}.
+   */
+  default <E extends EntityBean> FkProperty<E> newFk(String name, Id<E> idTemplate) {
+
+    return get(name, this, metadata -> accept(new FkProperty<>(name, safeId(idTemplate), metadata), this));
   }
 
   @SuppressWarnings("rawtypes")
-  private Id<?> safeId(Id<?> id) {
+  private <E> Id<E> safeId(Id<E> id) {
 
     if (id == null) {
       id = LongVersionId.getEmpty();

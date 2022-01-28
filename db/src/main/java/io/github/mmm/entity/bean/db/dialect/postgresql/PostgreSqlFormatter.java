@@ -1,7 +1,7 @@
 package io.github.mmm.entity.bean.db.dialect.postgresql;
 
 import io.github.mmm.entity.bean.db.dialect.DbDialectStatementFormatter;
-import io.github.mmm.entity.bean.typemapping.TypeMapping;
+import io.github.mmm.entity.bean.db.orm.Orm;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 
 /**
@@ -14,22 +14,22 @@ public class PostgreSqlFormatter extends DbDialectStatementFormatter {
   /**
    * The constructor.
    *
-   * @param typeMapping the {@link TypeMapping}.
+   * @param orm the {@link Orm}.
    * @param criteriaFormatter the {@link CriteriaFormatter} used to format criteria fragments to database syntax (SQL).
    */
-  public PostgreSqlFormatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
+  public PostgreSqlFormatter(Orm orm, CriteriaFormatter criteriaFormatter) {
 
-    super(typeMapping, criteriaFormatter);
+    super(orm, criteriaFormatter);
   }
 
   /**
    * The constructor.
    *
-   * @param typeMapping the {@link TypeMapping}.
+   * @param orm the {@link Orm}.
    */
-  public PostgreSqlFormatter(TypeMapping typeMapping) {
+  public PostgreSqlFormatter(Orm orm) {
 
-    super(typeMapping);
+    super(orm);
   }
 
 }

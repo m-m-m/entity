@@ -1,7 +1,7 @@
 package io.github.mmm.entity.bean.db.dialect;
 
+import io.github.mmm.entity.bean.db.orm.Orm;
 import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
-import io.github.mmm.entity.bean.typemapping.TypeMapping;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 
 /**
@@ -12,23 +12,23 @@ public abstract class DbDialectStatementFormatter extends DbStatementFormatter {
   /**
    * The constructor.
    *
-   * @param typeMapper the {@link TypeMapping}.
+   * @param orm the {@link Orm}.
    */
-  public DbDialectStatementFormatter(TypeMapping typeMapper) {
+  public DbDialectStatementFormatter(Orm orm) {
 
-    super(typeMapper, CriteriaFormatter.ofIndexedParameters());
+    super(orm, CriteriaFormatter.ofIndexedParameters());
   }
 
   /**
    * The constructor.
    *
-   * @param typeMapping the {@link TypeMapping}.
+   * @param orm the {@link Orm}.
    * @param criteriaFormatter the {@link CriteriaFormatter} used to format criteria fragments to database syntax (e.g.
    *        SQL).
    */
-  public DbDialectStatementFormatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
+  public DbDialectStatementFormatter(Orm orm, CriteriaFormatter criteriaFormatter) {
 
-    super(typeMapping, criteriaFormatter);
+    super(orm, criteriaFormatter);
   }
 
 }

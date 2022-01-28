@@ -1,9 +1,17 @@
-package io.github.mmm.entity.bean.db.orm;
+package io.github.mmm.entity.db.impl;
 
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.db.naming.DbNamingStrategy;
+import io.github.mmm.entity.bean.db.orm.DbBeanMapper;
+import io.github.mmm.entity.bean.db.orm.DbBeanMapperImpl;
+import io.github.mmm.entity.bean.db.orm.DbPropertyMapper;
+import io.github.mmm.entity.bean.db.orm.DbPropertyMapperImpl;
+import io.github.mmm.entity.bean.db.orm.DbSegmentMapper;
+import io.github.mmm.entity.bean.db.orm.Orm;
 import io.github.mmm.entity.bean.db.result.DbResultEntryObjectWithDeclaration;
 import io.github.mmm.entity.bean.typemapping.TypeMapping;
+import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.IdMapper;
 import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.criteria.ProjectionProperty;
 import io.github.mmm.value.CriteriaObject;
@@ -34,6 +42,22 @@ public class OrmImpl implements Orm {
     this.namingStrategy = namingStrategy;
   }
 
+  /**
+   * @return the {@link TypeMapping}.
+   */
+  public TypeMapping getTypeMapping() {
+
+    return this.typeMapping;
+  }
+
+  /**
+   * @return the {@link DbNamingStrategy}.
+   */
+  public DbNamingStrategy getNamingStrategy() {
+
+    return this.namingStrategy;
+  }
+
   @Override
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public <B extends WritableBean> DbBeanMapper<B> createBeanMapping(B bean,
@@ -60,7 +84,7 @@ public class OrmImpl implements Orm {
       WritableProperty property = (WritableProperty) projectionProperty.getProperty();
       String columnName = this.namingStrategy.getColumnName(property);
       DbSegmentMapper valueMapper = createSegmentMapper(projectionProperty.getSelection(), columnName,
-          property.getValueClass());
+          property.getValueClass(), property);
       ReadablePath parent = property.parentPath();
       if (parent != null) {
         parent = parent.parentPath();
@@ -77,13 +101,20 @@ public class OrmImpl implements Orm {
   private <V> DbSegmentMapper<V, ?> createSegmentMapper(WritableProperty<V> property) {
 
     String columnName = this.namingStrategy.getColumnName(property);
-    return createSegmentMapper(property, columnName, property.getValueClass());
+    return createSegmentMapper(property, columnName, property.getValueClass(), property);
   }
 
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   private <V> DbSegmentMapper<V, ?> createSegmentMapper(CriteriaObject<?> selection, String columnName,
-      Class<V> valueClass) {
+      Class<V> valueClass, WritableProperty<V> property) {
 
     TypeMapper<V, ?> typeMapper = this.typeMapping.getTypeMapper(valueClass);
+    if ((typeMapper == null) && (property != null)) {
+      typeMapper = property.getTypeMapper();
+    }
+    if ((typeMapper == null) && (Id.class.equals(valueClass))) {
+      typeMapper = (TypeMapper) IdMapper.of();
+    }
     if (typeMapper == null) {
       throw new IllegalStateException("No type mapping could be found for type " + valueClass + " and selection "
           + selection + "[" + selection.getClass().getSimpleName() + "]");
@@ -106,9 +137,21 @@ public class OrmImpl implements Orm {
           newColumnName, typeMapper.getDeclaration());
       return new DbSegmentMapper<>(typeMapper, entry, nextSegment);
     } else {
-      DbSegmentMapper child = createSegmentMapper(selection, newColumnName, typeMapper.getTargetType());
+      DbSegmentMapper child = createSegmentMapper(selection, newColumnName, typeMapper.getTargetType(), null);
       return new DbSegmentMapper<>(typeMapper, child, nextSegment);
     }
+  }
+
+  /**
+   * @param newNamingStrategy the new {@link DbNamingStrategy} to use.
+   * @return a {@link OrmImpl} with the given {@link DbNamingStrategy}.
+   */
+  public OrmImpl withNamingStrategy(DbNamingStrategy newNamingStrategy) {
+
+    if (this.namingStrategy == newNamingStrategy) {
+      return this;
+    }
+    return new OrmImpl(this.typeMapping, newNamingStrategy);
   }
 
 }

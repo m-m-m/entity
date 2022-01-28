@@ -8,10 +8,14 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.mmm.base.exception.ObjectNotFoundException;
 import io.github.mmm.base.io.AppendableWriter;
 import io.github.mmm.bean.mapping.ClassNameMapper;
+import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.bean.db.constraint.DbConstraint;
+import io.github.mmm.entity.bean.db.orm.DbBeanMapper;
+import io.github.mmm.entity.bean.db.orm.Orm;
+import io.github.mmm.entity.bean.db.result.DbResult;
+import io.github.mmm.entity.bean.db.result.DbResultEntry;
 import io.github.mmm.entity.bean.db.statement.create.CreateIndexColumns;
 import io.github.mmm.entity.bean.db.statement.create.CreateTable;
 import io.github.mmm.entity.bean.db.statement.create.CreateTableColumns;
@@ -25,9 +29,8 @@ import io.github.mmm.entity.bean.db.statement.select.SelectFrom;
 import io.github.mmm.entity.bean.db.statement.select.SelectStatement;
 import io.github.mmm.entity.bean.db.statement.update.Update;
 import io.github.mmm.entity.bean.db.statement.upsert.Upsert;
-import io.github.mmm.entity.bean.db.typemapping.DbEmptyTypeMapping;
-import io.github.mmm.entity.bean.typemapping.TypeMapping;
 import io.github.mmm.property.ReadableProperty;
+import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.criteria.BooleanLiteral;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 import io.github.mmm.property.criteria.CriteriaOrdering;
@@ -36,7 +39,6 @@ import io.github.mmm.property.criteria.PredicateOperator;
 import io.github.mmm.property.criteria.PropertyAssignment;
 import io.github.mmm.value.CriteriaObject;
 import io.github.mmm.value.PropertyPath;
-import io.github.mmm.value.converter.TypeMapper;
 
 /**
  * Formatter to format a {@link DbClause} or {@link DbStatement} to SQL.
@@ -49,7 +51,7 @@ public class DbStatementFormatter implements DbClauseVisitor {
 
   private static final CriteriaPredicate PARENT_AND = PredicateOperator.AND.expression(List.of(BooleanLiteral.TRUE));
 
-  private final TypeMapping typeMapping;
+  private final Orm orm;
 
   private final CriteriaFormatter criteriaFormatter;
 
@@ -65,19 +67,19 @@ public class DbStatementFormatter implements DbClauseVisitor {
    */
   public DbStatementFormatter(CriteriaFormatter criteriaFormatter) {
 
-    this(DbEmptyTypeMapping.get(), criteriaFormatter);
+    this(null, criteriaFormatter);
   }
 
   /**
    * The constructor.
    *
-   * @param typeMapping the {@link TypeMapping}.
+   * @param orm the {@link Orm}.
    * @param criteriaFormatter the {@link CriteriaFormatter} used to format criteria fragments to SQL.
    */
-  public DbStatementFormatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
+  public DbStatementFormatter(Orm orm, CriteriaFormatter criteriaFormatter) {
 
     super();
-    this.typeMapping = typeMapping;
+    this.orm = orm;
     this.criteriaFormatter = criteriaFormatter;
   }
 
@@ -375,16 +377,34 @@ public class DbStatementFormatter implements DbClauseVisitor {
     DbClauseVisitor.super.onSet(set);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void onColumns(CreateTableColumns<?> columns) {
 
     String s = "  ";
-    List<PropertyPath<?>> cols = columns.getProperties().stream().sorted((p1, p2) -> p1.path().compareTo(p2.path()))
-        .collect(Collectors.toList());
-    for (PropertyPath<?> property : cols) {
-      write(s);
-      onCreateColumn((ReadableProperty<?>) property);
-      s = ",\n  ";
+    List<PropertyPath<?>> properties = columns.getProperties();
+    List<PropertyPath<?>> cols = sortColumns(properties);
+
+    if (this.orm == null) {
+      ClassNameMapper classNameMapper = ClassNameMapper.get();
+      for (PropertyPath<?> property : cols) {
+        ReadableProperty<?> prop = (ReadableProperty<?>) property;
+        Class<?> valueClass = prop.getValueClass();
+        write(s);
+        onCreateColumn(prop.path(), classNameMapper.getName(valueClass));
+        s = ",\n  ";
+      }
+    } else {
+      EntityBean entity = columns.get().getCreateTable().getEntity();
+      DbBeanMapper<EntityBean> mapping = this.orm.createBeanMapping(entity, (List<? extends WritableProperty<?>>) cols);
+      DbResult result = mapping.java2db(entity);
+      for (DbResultEntry<?> entry : result) {
+        String columnName = entry.getDbName();
+        String declaration = entry.getDeclaration();
+        write(s);
+        onCreateColumn(columnName, declaration);
+        s = ",\n  ";
+      }
     }
     List<DbConstraint> constraints = columns.getConstraints().stream()
         .sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).collect(Collectors.toList());
@@ -398,28 +418,23 @@ public class DbStatementFormatter implements DbClauseVisitor {
   }
 
   /**
-   * @param column the {@link ReadableProperty} representing the column to create.
+   * @param properties the {@link List} of {@link PropertyPath properties}.
+   * @return a sorted {@link List} with the same {@link PropertyPath properties}.
    */
-  protected void onCreateColumn(ReadableProperty<?> column) {
+  protected List<PropertyPath<?>> sortColumns(List<PropertyPath<?>> properties) {
 
-    // TODO must be refactored to work recursive...
-    TypeMapper<?, ?> sqlType = this.typeMapping.getTypeMapper(column);
-    String columnName = column.path();
-    if (sqlType == null) {
-      throw new ObjectNotFoundException("TypeMapper", column.getValueClass());
-    }
-    do {
-      write(sqlType.mapName(columnName));
-      write(" ");
-      if (sqlType.hasDeclaration()) {
-        write(sqlType.getDeclaration());
-      } else {
-        Class<?> valueClass = column.getValueClass();
-        String name = ClassNameMapper.get().getName(valueClass);
-        write(name);
-      }
-      sqlType = sqlType.next();
-    } while (sqlType != null);
+    return properties.stream().sorted((p1, p2) -> p1.path().compareTo(p2.path())).collect(Collectors.toList());
+  }
+
+  /**
+   * @param columnName the name of the column.
+   * @param declaration the column-type declaration.
+   */
+  protected void onCreateColumn(String columnName, String declaration) {
+
+    write(columnName);
+    write(" ");
+    write(declaration);
   }
 
   @Override

@@ -14,7 +14,9 @@ import io.github.mmm.entity.bean.db.constraint.UniqueConstraint;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.entity.bean.db.statement.PropertyClause;
+import io.github.mmm.entity.property.id.FkProperty;
 import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.entity.property.id.PkProperty;
 import io.github.mmm.entity.property.link.LinkProperty;
 import io.github.mmm.property.Property;
 import io.github.mmm.property.ReadableProperty;
@@ -81,13 +83,11 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
       ReadableProperty<?> p = (ReadableProperty<?>) property;
       if (p.getMetadata().getValidator().isMandatory()) {
         return andNotNull(property);
-      } else if (p instanceof IdProperty) {
-        if (IdProperty.NAME.equals(p.getName())) {
-          this.constraints.add(new PrimaryKeyConstraint(
-              PrimaryKeyConstraint.PREFIX + this.statement.getCreateTable().getEntityName(), p));
-        } else {
-          return andForeignKey((IdProperty) p);
-        }
+      } else if (p instanceof PkProperty) {
+        this.constraints.add(
+            new PrimaryKeyConstraint(PrimaryKeyConstraint.PREFIX + this.statement.getCreateTable().getEntityName(), p));
+      } else if (p instanceof FkProperty) {
+        return andForeignKey((FkProperty<?>) p);
       } else if (p instanceof LinkProperty) {
         return andForeignKey((LinkProperty<?>) p);
       }
@@ -132,7 +132,7 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
    * @param property the {@link IdProperty} to add as column with {@link ForeignKeyConstraint}.
    * @return this {@link CreateTableColumns} for fluent API calls.
    */
-  public CreateTableColumns<E> andForeignKey(IdProperty property) {
+  public CreateTableColumns<E> andForeignKey(FkProperty<?> property) {
 
     and(property, false);
     return andForeignKey(property, property.get().getEntityType());

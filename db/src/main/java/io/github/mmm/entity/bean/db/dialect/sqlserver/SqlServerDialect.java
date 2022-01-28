@@ -2,6 +2,7 @@ package io.github.mmm.entity.bean.db.dialect.sqlserver;
 
 import io.github.mmm.entity.bean.db.dialect.AbstractDbDialect;
 import io.github.mmm.entity.bean.db.dialect.DbDialect;
+import io.github.mmm.entity.bean.db.orm.Orm;
 import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
 
 /**
@@ -9,7 +10,7 @@ import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
  *
  * @since 1.0.0
  */
-public class SqlServerDialect extends AbstractDbDialect {
+public class SqlServerDialect extends AbstractDbDialect<SqlServerDialect> {
 
   /**
    * The constructor.
@@ -19,6 +20,16 @@ public class SqlServerDialect extends AbstractDbDialect {
     super(new SqlServerTypeMapper());
   }
 
+  /**
+   * The constructor.
+   *
+   * @param orm the {@link Orm}.
+   */
+  protected SqlServerDialect(Orm orm) {
+
+    super(orm);
+  }
+
   @Override
   public String getName() {
 
@@ -26,9 +37,15 @@ public class SqlServerDialect extends AbstractDbDialect {
   }
 
   @Override
+  protected SqlServerDialect withOrm(Orm newOrm) {
+
+    return new SqlServerDialect(newOrm);
+  }
+
+  @Override
   public DbStatementFormatter createFormatter() {
 
-    return new SqlServerFormatter(getTypeMapping());
+    return new SqlServerFormatter(getOrm());
   }
 
 }

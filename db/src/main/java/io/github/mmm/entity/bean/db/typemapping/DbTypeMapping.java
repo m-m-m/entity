@@ -5,6 +5,13 @@ import java.math.BigInteger;
 
 import io.github.mmm.entity.bean.db.dialect.DbDialect;
 import io.github.mmm.entity.bean.typemapping.ComposedTypeMapping;
+import io.github.mmm.entity.id.IdMapper;
+import io.github.mmm.entity.id.LongInstantId;
+import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.StringInstantId;
+import io.github.mmm.entity.id.StringVersionId;
+import io.github.mmm.entity.id.UuidInstantId;
+import io.github.mmm.entity.id.UuidVersionId;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.converter.IdentityTypeMapper;
 import io.github.mmm.value.converter.TypeMapper;
@@ -22,6 +29,12 @@ public class DbTypeMapping extends ComposedTypeMapping {
   public DbTypeMapping() {
 
     super();
+    add(IdMapper.of(LongVersionId.getEmpty()));
+    add(IdMapper.of(LongInstantId.getEmpty()));
+    add(IdMapper.of(StringVersionId.getEmpty()));
+    add(IdMapper.of(StringInstantId.getEmpty()));
+    add(IdMapper.of(UuidVersionId.getEmpty()));
+    add(IdMapper.of(UuidInstantId.getEmpty()));
   }
 
   /**
@@ -47,11 +60,13 @@ public class DbTypeMapping extends ComposedTypeMapping {
     add(new SingleTypeMappingBinary(declarationAny, declarationVariable));
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public <V> TypeMapper<V, ?> getTypeMapper(Class<V> valueType, ReadableProperty<?> property) {
 
     TypeMapper<V, ?> typeMapper = super.getTypeMapper(valueType, property);
     if (typeMapper == null) {
+
       if (BigDecimal.class.equals(valueType)) {
         typeMapper = new IdentityTypeMapper<>(valueType, getDeclarationDecimal(30, 10));
       } else if (BigInteger.class.equals(valueType)) {

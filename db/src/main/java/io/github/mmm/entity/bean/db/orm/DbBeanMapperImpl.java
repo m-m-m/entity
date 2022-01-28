@@ -26,7 +26,6 @@ public class DbBeanMapperImpl<B extends WritableBean> implements DbBeanMapper<B>
    *
    * @param bean the {@link WritableBean} template.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public DbBeanMapperImpl(B bean) {
 
     super();

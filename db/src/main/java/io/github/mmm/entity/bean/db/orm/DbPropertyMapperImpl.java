@@ -70,4 +70,10 @@ public class DbPropertyMapperImpl<V> implements DbPropertyMapper<V> {
     javaBean.setDynamic(this.propertyName, value);
   }
 
+  @Override
+  public String toString() {
+
+    return this.propertyName;
+  }
+
 }

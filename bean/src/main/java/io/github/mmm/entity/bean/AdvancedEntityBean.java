@@ -11,6 +11,7 @@ import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
+import io.github.mmm.entity.property.id.PkProperty;
 import io.github.mmm.property.PropertyMetadata;
 
 /**
@@ -21,7 +22,7 @@ import io.github.mmm.property.PropertyMetadata;
 public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
 
   /** The {@link IdProperty property} with the {@link Id primary key}. */
-  public final IdProperty Id;
+  public final PkProperty Id;
 
   /**
    * The constructor.
@@ -34,11 +35,11 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
   /**
    * The constructor.
    *
-   * @param idProperty the {@link #Id() ID property}.
+   * @param pkProperty the {@link #Id() ID property}.
    */
-  public AdvancedEntityBean(IdProperty idProperty) {
+  public AdvancedEntityBean(PkProperty pkProperty) {
 
-    this(null, idProperty);
+    this(null, pkProperty);
   }
 
   /**
@@ -55,23 +56,23 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    * The constructor.
    *
    * @param type the {@link #getType() type}.
-   * @param idProperty the {@link #Id() ID property}.
+   * @param pkProperty the {@link #Id() ID property}.
    */
-  private AdvancedEntityBean(BeanClass type, IdProperty idProperty) {
+  private AdvancedEntityBean(BeanClass type, PkProperty pkProperty) {
 
     super(type);
-    if (idProperty == null) {
+    if (pkProperty == null) {
       // default
       Id<?> id = LongVersionId.getEmpty().withEntityType(getClass());
-      idProperty = new IdProperty(id, PropertyMetadata.of(this));
+      pkProperty = new PkProperty(id, PropertyMetadata.of(this));
     } else {
-      assert idProperty.getName().equals(IdProperty.NAME);
+      assert pkProperty.getName().equals(PkProperty.NAME);
     }
-    this.Id = add(idProperty);
+    this.Id = add(pkProperty);
   }
 
   @Override
-  public IdProperty Id() {
+  public PkProperty Id() {
 
     return this.Id;
   }

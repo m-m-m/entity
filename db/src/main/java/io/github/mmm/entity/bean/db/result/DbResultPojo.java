@@ -52,4 +52,10 @@ public class DbResultPojo implements DbResult {
     return (Iterator) this.entries.iterator();
   }
 
+  @Override
+  public String toString() {
+
+    return "" + this.entries;
+  }
+
 }

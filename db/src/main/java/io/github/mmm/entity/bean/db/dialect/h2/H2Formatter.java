@@ -1,7 +1,7 @@
 package io.github.mmm.entity.bean.db.dialect.h2;
 
 import io.github.mmm.entity.bean.db.dialect.DbDialectStatementFormatter;
-import io.github.mmm.entity.bean.typemapping.TypeMapping;
+import io.github.mmm.entity.bean.db.orm.Orm;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 
 /**
@@ -14,22 +14,22 @@ public class H2Formatter extends DbDialectStatementFormatter {
   /**
    * The constructor.
    *
-   * @param typeMapping the {@link TypeMapping}.
+   * @param orm the {@link Orm}.
    * @param criteriaFormatter the {@link CriteriaFormatter} used to format criteria fragments to database syntax (SQL).
    */
-  public H2Formatter(TypeMapping typeMapping, CriteriaFormatter criteriaFormatter) {
+  public H2Formatter(Orm orm, CriteriaFormatter criteriaFormatter) {
 
-    super(typeMapping, criteriaFormatter);
+    super(orm, criteriaFormatter);
   }
 
   /**
    * The constructor.
    *
-   * @param typeMapping the {@link TypeMapping}.
+   * @param orm the {@link Orm}.
    */
-  public H2Formatter(TypeMapping typeMapping) {
+  public H2Formatter(Orm orm) {
 
-    super(typeMapping);
+    super(orm);
   }
 
 }

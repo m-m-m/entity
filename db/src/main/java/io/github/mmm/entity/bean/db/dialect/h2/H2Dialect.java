@@ -2,12 +2,13 @@ package io.github.mmm.entity.bean.db.dialect.h2;
 
 import io.github.mmm.entity.bean.db.dialect.AbstractDbDialect;
 import io.github.mmm.entity.bean.db.dialect.DbDialect;
+import io.github.mmm.entity.bean.db.orm.Orm;
 import io.github.mmm.entity.bean.db.statement.DbStatementFormatter;
 
 /**
  * Implementation of {@link DbDialect} for H2 database.
  */
-public class H2Dialect extends AbstractDbDialect {
+public final class H2Dialect extends AbstractDbDialect<H2Dialect> {
 
   /**
    * The constructor.
@@ -17,6 +18,16 @@ public class H2Dialect extends AbstractDbDialect {
     super(new H2TypeMapping());
   }
 
+  /**
+   * The constructor.
+   *
+   * @param orm the {@link Orm}.
+   */
+  protected H2Dialect(Orm orm) {
+
+    super(orm);
+  }
+
   @Override
   public String getName() {
 
@@ -24,9 +35,15 @@ public class H2Dialect extends AbstractDbDialect {
   }
 
   @Override
+  protected H2Dialect withOrm(Orm newOrm) {
+
+    return new H2Dialect(newOrm);
+  }
+
+  @Override
   public DbStatementFormatter createFormatter() {
 
-    return new H2Formatter(getTypeMapping());
+    return new H2Formatter(getOrm());
   }
 
 }
