@@ -30,7 +30,6 @@ import io.github.mmm.entity.bean.db.statement.select.SelectStatement;
 import io.github.mmm.entity.bean.db.statement.update.Update;
 import io.github.mmm.entity.bean.db.statement.upsert.Upsert;
 import io.github.mmm.property.ReadableProperty;
-import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.criteria.BooleanLiteral;
 import io.github.mmm.property.criteria.CriteriaFormatter;
 import io.github.mmm.property.criteria.CriteriaOrdering;
@@ -396,7 +395,8 @@ public class DbStatementFormatter implements DbClauseVisitor {
       }
     } else {
       EntityBean entity = columns.get().getCreateTable().getEntity();
-      DbBeanMapper<EntityBean> mapping = this.orm.createBeanMapping(entity, (List<? extends WritableProperty<?>>) cols);
+      @SuppressWarnings("rawtypes")
+      DbBeanMapper<EntityBean> mapping = this.orm.createBeanMapping(entity, (List) cols);
       DbResult result = mapping.java2db(entity);
       for (DbResultEntry<?> entry : result) {
         String columnName = entry.getDbName();
