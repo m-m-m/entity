@@ -45,7 +45,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
   /**
    * @param <E> type of the identified entity.
    * @param <I> type of the {@link GenericId#get() ID}.
-   * @param <V> type of the {@link GenericId#getVersion() version}.
+   * @param <V> type of the {@link GenericId#getRevision() revision}.
    * @param reader the {@link StructuredReader} to read from.
    * @param factory the {@link IdFactory} to create {@link Id} instances.
    * @param entityType the {@link GenericId#getEntityType() entity type}.
@@ -55,7 +55,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
       Class<E> entityType) {
 
     Object id = null;
-    Object version = null;
+    Object revision = null;
     try {
       if (reader.readStartObject()) {
         while (!reader.readEnd()) {
@@ -66,10 +66,10 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
             id = update(id, UuidParser.get().parse(reader.readValueAsString()), Id.PROPERTY_ID);
           } else if (GenericId.PROPERTY_STRING_ID.equals(name)) {
             id = update(id, reader.readValueAsString(), Id.PROPERTY_ID);
-          } else if (GenericId.PROPERTY_LONG_VERSION.equals(name)) {
-            version = update(version, reader.readValueAsLong(), Id.PROPERTY_VERSION);
-          } else if (GenericId.PROPERTY_INSTANT_VERSION.equals(name)) {
-            version = update(version, reader.readValueAsInstant(), Id.PROPERTY_VERSION);
+          } else if (GenericId.PROPERTY_LONG_REVISION.equals(name)) {
+            revision = update(revision, reader.readValueAsLong(), Id.PROPERTY_REVISION);
+          } else if (GenericId.PROPERTY_INSTANT_REVISION.equals(name)) {
+            revision = update(revision, reader.readValueAsInstant(), Id.PROPERTY_REVISION);
           } else {
             // ignore unknown property for compatibility and future extensions...
           }
@@ -80,7 +80,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to parse Id.", e);
     }
-    return factory.createGeneric(entityType, id, version);
+    return factory.createGeneric(entityType, id, revision);
   }
 
   private static Object update(Object oldValue, Object newValue, String key) {

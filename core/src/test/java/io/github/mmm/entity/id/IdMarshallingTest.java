@@ -40,7 +40,7 @@ public class IdMarshallingTest extends Assertions {
 
     assertThat(id.getEntityType()).isSameAs(Entity.class);
     assertThat(writeJson(id)).isEqualTo(json);
-    assertThat(readJson(id.withIdAndVersion(null, null), json)).isEqualTo(id);
+    assertThat(readJson(id.withIdAndRevision(null, null), json)).isEqualTo(id);
   }
 
   public static String writeJson(GenericId<?, ?, ?> id) {

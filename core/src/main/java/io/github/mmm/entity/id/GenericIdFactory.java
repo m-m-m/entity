@@ -21,18 +21,18 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public <E> GenericId<E, Object, Comparable<?>> create(Class<E> entityType, Object id, Comparable<?> version) {
+  public <E> GenericId<E, Object, Comparable<?>> create(Class<E> entityType, Object id, Comparable<?> revision) {
 
     GenericId result;
     if (id == null) {
-      assert (version == null);
+      assert (revision == null);
       return null;
     } else if (id instanceof Long) {
-      result = LongId.of((Long) id, entityType, version);
+      result = LongId.of((Long) id, entityType, revision);
     } else if (id instanceof UUID) {
-      result = UuidId.of((UUID) id, entityType, version);
+      result = UuidId.of((UUID) id, entityType, revision);
     } else if (id instanceof String) {
-      result = StringId.of((String) id, entityType, version);
+      result = StringId.of((String) id, entityType, revision);
     } else {
       throw new IllegalStateException("Unsupported ID type: " + id.getClass().getName());
     }
@@ -50,13 +50,13 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
   }
 
   @Override
-  public Comparable<?> parseVersion(String versionString) {
+  public Comparable<?> parseRevision(String revisionString) {
 
-    Instant instant = InstantParser.get().parse(versionString);
+    Instant instant = InstantParser.get().parse(revisionString);
     if (instant != null) {
       return instant;
     }
-    return Long.valueOf(versionString);
+    return Long.valueOf(revisionString);
   }
 
 }

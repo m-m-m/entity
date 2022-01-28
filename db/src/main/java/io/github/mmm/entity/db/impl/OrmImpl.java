@@ -82,7 +82,7 @@ public class OrmImpl implements Orm {
     DbBeanMapperImpl<B> beanMapper = new DbBeanMapperImpl<>(bean);
     for (ProjectionProperty<?> projectionProperty : properties) {
       WritableProperty property = (WritableProperty) projectionProperty.getProperty();
-      String columnName = this.namingStrategy.getColumnName(property);
+      String columnName = property.getName();
       DbSegmentMapper valueMapper = createSegmentMapper(projectionProperty.getSelection(), columnName,
           property.getValueClass(), property);
       ReadablePath parent = property.parentPath();
@@ -100,7 +100,7 @@ public class OrmImpl implements Orm {
 
   private <V> DbSegmentMapper<V, ?> createSegmentMapper(WritableProperty<V> property) {
 
-    String columnName = this.namingStrategy.getColumnName(property);
+    String columnName = property.getName();
     return createSegmentMapper(property, columnName, property.getValueClass(), property);
   }
 
@@ -133,6 +133,7 @@ public class OrmImpl implements Orm {
     }
     String newColumnName = typeMapper.mapName(columnName);
     if (typeMapper.hasDeclaration()) {
+      newColumnName = this.namingStrategy.getColumnName(newColumnName);
       DbResultEntryObjectWithDeclaration entry = new DbResultEntryObjectWithDeclaration<>(selection, null,
           newColumnName, typeMapper.getDeclaration());
       return new DbSegmentMapper<>(typeMapper, entry, nextSegment);

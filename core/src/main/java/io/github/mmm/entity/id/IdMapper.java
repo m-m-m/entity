@@ -45,7 +45,7 @@ public class IdMapper extends AtomicTypeMapper<Id, Object> {
   @Override
   public Id toSource(Object id) {
 
-    return this.idTemplate.withIdAndVersion(id, null);
+    return this.idTemplate.withIdAndRevision(id, null);
   }
 
   /**
@@ -64,7 +64,7 @@ public class IdMapper extends AtomicTypeMapper<Id, Object> {
 
     Objects.requireNonNull(id);
     GenericId genericId = (GenericId) id;
-    return new IdMapper(genericId.withIdAndVersion(null, null));
+    return new IdMapper(genericId.withIdAndRevision(null, null));
   }
 
 }

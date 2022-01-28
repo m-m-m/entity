@@ -27,8 +27,8 @@ public interface Link<E> {
   /**
    * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getTarget() bean}.
    *         When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
-   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no ID assigned, yet. In such
-   *         case this method will return {@code null}.
+   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no {@link Id#get() primary key}
+   *         assigned, yet. In such case this method will return an {@link Id#isEmpty() empty} {@link Id}.
    */
   Id<E> getId();
 
@@ -46,8 +46,7 @@ public interface Link<E> {
    * {@link #isResolved()} to distinguish and prevent undesired link resolving.<br>
    * Further, after serialization (e.g. mapping to JSON and back) maybe only the {@link #getId() ID} was transferred and
    * this link can not be resolved. In that case this method may return {@code null}. Please note that {@link #getId()
-   * id} and {@link #getTarget() target} can not both be null. In case a link property is empty it will contain
-   * {@code null} instead of an empty {@link Link} so you can always properly distinguish the scenarios.
+   * id} and {@link #getTarget() target} can not both be {@code null}.
    *
    * @return the link target or {@code null} if the link can not be resolved.
    */

@@ -42,7 +42,7 @@ public class CreateTableTest extends DbStatementTest {
 
   /** Test of {@link CreateTable} that automatically creates all columns for H2 database. */
   @Test
-  public void testAutoWithDialect() {
+  public void testAutoWithH2Dialect() {
 
     // given
     Song s = Song.of();
@@ -59,13 +59,15 @@ public class CreateTableTest extends DbStatementTest {
         + "  DURATION BIGINT,\n" //
         + "  GENRE VARCHAR,\n" //
         + "  ID BIGINT,\n" //
-        + "  V BIGINT,\n" //
+        + "  REV BIGINT,\n" //
         + "  TITLE VARCHAR,\n" //
         + "  TRACK_NO INTEGER,\n" //
         + "  CONSTRAINT FK_Song_Composer FOREIGN KEY (Composer) REFERENCES Person(Id),\n" //
         + "  CONSTRAINT NN_Song_Title NOT NULL (Title),\n" //
         + "  CONSTRAINT PK_Song PRIMARY KEY (Id)\n" //
         + ")");
+
+    System.out.println(Object.class.isAssignableFrom(String.class));
   }
 
 }

@@ -3,7 +3,7 @@
 package io.github.mmm.entity.id;
 
 /**
- * An abstract base implementation of {@link Id} using {@link Long} as type for the {@link #getVersion() version}.
+ * An abstract base implementation of {@link Id} using {@link Long} as type for the {@link #getRevision() revision}.
  *
  * @param <E> type of the identified entity.
  * @param <I> type of the {@link #get() ID}.
@@ -12,42 +12,52 @@ package io.github.mmm.entity.id;
  */
 public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
 
-  private final Long version;
+  private final Long revision;
 
   /**
    * The constructor.
    *
    * @param type - see {@link #getEntityType()}.
-   * @param version - see {@link #getVersion()}.
+   * @param revision - see {@link #getRevision()}.
    */
-  public AbstractVersionId(Class<E> type, Long version) {
+  public AbstractVersionId(Class<E> type, Long revision) {
 
     super(type);
-    this.version = version;
+    this.revision = revision;
   }
 
   @Override
-  public Long getVersion() {
+  public Long getRevision() {
 
-    return this.version;
+    return this.revision;
   }
 
   @Override
-  public Class<Long> getVersionType() {
+  public Class<Long> getRevisionType() {
 
     return Long.class;
   }
 
   @Override
-  public Long parseVersion(String versionString) {
+  public Long parseRevision(String revisionString) {
 
-    return Long.valueOf(versionString);
+    return Long.valueOf(revisionString);
   }
 
   @Override
-  public String getMarshalPropertyVersion() {
+  public Long updateRevision(Long currentRevision) {
 
-    return PROPERTY_LONG_VERSION;
+    long r = 0;
+    if (currentRevision != null) {
+      r = currentRevision.longValue();
+    }
+    return Long.valueOf(r + 1);
+  }
+
+  @Override
+  public String getMarshalPropertyRevision() {
+
+    return PROPERTY_LONG_REVISION;
   }
 
 }

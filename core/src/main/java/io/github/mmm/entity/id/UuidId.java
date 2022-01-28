@@ -8,10 +8,10 @@ import java.util.UUID;
 import io.github.mmm.base.uuid.UuidParser;
 
 /**
- * {@link Id} using {@link UUID} as {@link #get() primary key (ID)}. (e.g. apache cassandra supports this).
+ * {@link Id} using {@link UUID} as {@link #get() primary key (ID)}. (e.g. apache cassandra supports this natively).
  *
  * @param <E> type of the identified entity.
- * @param <V> type of the {@link #getVersion() version}.
+ * @param <V> type of the {@link #getRevision() revision}.
  * @since 1.0.0
  */
 public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V> {
@@ -69,20 +69,20 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
-   * @param version the optional {@link #getVersion() version}.
+   * @param revision the optional {@link #getRevision() revision}.
    * @return the new {@link UuidId}.
    */
-  static <E> UuidId<E, ?> of(UUID id, Class<E> type, Object version) {
+  static <E> UuidId<E, ?> of(UUID id, Class<E> type, Object revision) {
 
     if (id == null) {
       return null;
     }
-    if ((version == null) || (version instanceof Long)) {
-      return new UuidVersionId<>(type, id, (Long) version);
-    } else if (version instanceof Instant) {
-      return new UuidInstantId<>(type, id, (Instant) version);
+    if ((revision == null) || (revision instanceof Long)) {
+      return new UuidVersionId<>(type, id, (Long) revision);
+    } else if (revision instanceof Instant) {
+      return new UuidInstantId<>(type, id, (Instant) revision);
     }
-    throw new IllegalStateException("Unsupported version type: " + version.getClass().getName());
+    throw new IllegalStateException("Unsupported revision type: " + revision.getClass().getName());
   }
 
 }

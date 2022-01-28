@@ -22,11 +22,11 @@ public final class UuidVersionId<E> extends AbstractVersionId<E, UUID> implement
    *
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
-   * @param version the {@link #getVersion() version}.
+   * @param revision the {@link #getRevision() revision}.
    */
-  public UuidVersionId(Class<E> type, UUID id, Long version) {
+  public UuidVersionId(Class<E> type, UUID id, Long revision) {
 
-    super(type, version);
+    super(type, revision);
     this.id = id;
   }
 
@@ -37,9 +37,9 @@ public final class UuidVersionId<E> extends AbstractVersionId<E, UUID> implement
   }
 
   @Override
-  public <T> UuidVersionId<T> create(Class<T> newEntityType, UUID newId, Long newVersion) {
+  public <T> UuidVersionId<T> create(Class<T> newEntityType, UUID newId, Long newRevision) {
 
-    return new UuidVersionId<>(newEntityType, newId, newVersion);
+    return new UuidVersionId<>(newEntityType, newId, newRevision);
   }
 
   /**

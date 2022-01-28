@@ -23,11 +23,11 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
    *
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
-   * @param version the {@link #getVersion() version}.
+   * @param revision the {@link #getRevision() revision}.
    */
-  public UuidInstantId(Class<E> type, UUID id, Instant version) {
+  public UuidInstantId(Class<E> type, UUID id, Instant revision) {
 
-    super(type, version);
+    super(type, revision);
     this.id = id;
   }
 
@@ -38,9 +38,9 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
   }
 
   @Override
-  public <T> UuidInstantId<T> create(Class<T> newEntityType, UUID newId, Instant newVersion) {
+  public <T> UuidInstantId<T> create(Class<T> newEntityType, UUID newId, Instant newRevision) {
 
-    return new UuidInstantId<>(newEntityType, newId, newVersion);
+    return new UuidInstantId<>(newEntityType, newId, newRevision);
   }
 
   /**

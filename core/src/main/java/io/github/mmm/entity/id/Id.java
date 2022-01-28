@@ -12,13 +12,13 @@ import io.github.mmm.entity.Entity;
  * {@link #getEntityType() type} ({@code <E>}). <br>
  * An {@link Id} has the following properties:
  * <ul>
- * <li>{@link #get() object-id} - the primary key that identifies the entity and is unique for a specific
- * {@link #getEntityType() type}. As a best practice it is recommended to make the object-id even unique for all
+ * <li>{@link #get() primary-key} - the primary key that identifies the entity and is unique for a specific
+ * {@link #getEntityType() type}. As a best practice it is recommended to make the primary-key even unique for all
  * entities of a database.</li>
- * <li>{@link #getVersion() version} - the optional version (revision) of the entity.</li>
+ * <li>{@link #getRevision() revision} - the optional revision of the entity.</li>
  * <li>{@link #getEntityType() type} - is the type of the identified entity.</li>
  * </ul>
- * Just like the {@link #get() primary key} the {@link #getVersion() version} and {@link #getEntityType() type} of an
+ * Just like the {@link #get() primary key} the {@link #getRevision() revision} and {@link #getEntityType() type} of an
  * object do not change. This allows to use the {@link Id} as globally unique identifier for its corresponding
  * entity.<br>
  * An {@link Id} has a compact {@link #toString() string representation}. However, for structured representation and
@@ -42,17 +42,17 @@ public interface Id<E> extends Supplier<Object> {
   /** Name of the {@link #get() id} property. */
   String PROPERTY_ID = "id";
 
-  /** Name of the {@link #getVersion() version} property. */
-  String PROPERTY_VERSION = "version";
+  /** Name of the {@link #getRevision() revision} property. */
+  String PROPERTY_REVISION = "rev";
 
   /**
-   * The value used as {@link #getVersion() version} if it unspecified. If you are using an {@link Id} as link to an
-   * {@link Entity} you will use this value to point to the recent version of the {@link io.github.mmm.entity.Entity}.
+   * The value used as {@link #getRevision() revision} if it unspecified. If you are using an {@link Id} as link to an
+   * {@link Entity} you will use this value to point to the recent revision of the {@link io.github.mmm.entity.Entity}.
    */
-  Comparable<?> VERSION_LATEST = null;
+  Comparable<?> REVISION_LATEST = null;
 
-  /** The separator for the {@link #getVersion() version}. */
-  char VERSION_SEPARATOR = '@';
+  /** The separator for the {@link #getRevision() revision}. */
+  char REVISION_SEPARATOR = '@';
 
   /**
    * @see LongVersionId
@@ -83,12 +83,12 @@ public interface Id<E> extends Supplier<Object> {
   public abstract Class<?> getIdType();
 
   /**
-   * @return {@code true} if both {@link #get() primary key} and {@link #getVersion() version} are empty (such
+   * @return {@code true} if both {@link #get() primary key} and {@link #getRevision() revision} are empty (such
    *         {@link Id} object is used as placeholder and factory), {@code false} otherwise (e.g. if persistent).
    */
   default boolean isEmpty() {
 
-    return (get() == null) && (getVersion() == null);
+    return (get() == null) && (getRevision() == null);
   }
 
   /**
@@ -98,45 +98,46 @@ public interface Id<E> extends Supplier<Object> {
   Class<E> getEntityType();
 
   /**
-   * @return a copy of this {@link Id} without a {@link #getVersion() version} ({@code null}) e.g. to use the {@link Id}
-   *         as regular <em>foreign key</em> (pointing to the latest revision and not a historic revision) or this
-   *         {@link Id} itself if already satisfying.
+   * @return a copy of this {@link Id} without a {@link #getRevision() revision} ({@code null}) e.g. to use the
+   *         {@link Id} as regular <em>foreign key</em> (pointing to the latest revision and not a historic revision) or
+   *         this {@link Id} itself if already satisfying.
    */
-  Id<E> withoutVersion();
+  Id<E> withoutRevision();
 
   /**
-   * @return the {@code version} of this entity. Whenever the {@link io.github.mmm.entity.Entity} gets updated (a
-   *         modification is saved and the transaction is committed), this version is increased. Typically the version
+   * @return the {@code revision} of this entity. Whenever the {@link io.github.mmm.entity.Entity} gets updated (a
+   *         modification is saved and the transaction is committed), this revision is increased. Typically the revision
    *         is a {@link Number} starting with {@code 1} for a new {@link io.github.mmm.entity.Entity} that is increased
-   *         whenever a modification is committed. However, it may also be an {@link java.time.Instant}. The version
-   *         acts as a modification sequence for optimistic locking. On each update it will be verified that the version
-   *         has not been increased already by another transaction. When linking an {@link io.github.mmm.entity.Entity}
-   *         ({@link Id} used as foreign key) the version can act as revision for auditing. If it is {@code null} it
-   *         points to the latest version of the {@link io.github.mmm.entity.Entity}. Otherwise it points to a specific
-   *         historic revision of the {@link io.github.mmm.entity.Entity}.
+   *         whenever a modification is committed. However, it may also be an {@link java.time.Instant}. The revision
+   *         acts as a modification sequence for optimistic locking. On each update it will be verified that the
+   *         revision has not been increased already by another transaction. When linking an
+   *         {@link io.github.mmm.entity.Entity} ({@link Id} used as foreign key) the revision can act as version
+   *         identifier for auditing. If it is {@code null} it points to the latest revision of the
+   *         {@link io.github.mmm.entity.Entity}. Otherwise it points to a specific historic revision of the
+   *         {@link io.github.mmm.entity.Entity}.
    */
-  Comparable<?> getVersion();
+  Comparable<?> getRevision();
 
   /**
-   * @return the {@link Class} reflecting the {@link #getVersion() version}.
+   * @return the {@link Class} reflecting the {@link #getRevision() revision}.
    */
-  public abstract Class<? extends Comparable<?>> getVersionType();
+  public abstract Class<? extends Comparable<?>> getRevisionType();
 
   /**
-   * @return the {@link #getVersion() version} as {@link String} for marshalling.
+   * @return the {@link #getRevision() revision} as {@link String} for marshalling.
    */
-  default String getVersionAsString() {
+  default String getRevisionAsString() {
 
-    Object version = getVersion();
-    if (version == null) {
-      return null; // should never happen...
+    Object revision = getRevision();
+    if (revision == null) {
+      return null;
     }
-    return version.toString();
+    return revision.toString();
   }
 
   /**
    * @return the {@link String} representation of this {@link Id}. Will consist of {@link #get() object-id},
-   *         {@link #getEntityType() type} and {@link #getVersion() revision} separated with a specific separator.
+   *         {@link #getEntityType() type} and {@link #getRevision() revision} separated with a specific separator.
    *         Segments that are {@code null} will typically be omitted in the {@link String} representation.
    */
   @Override

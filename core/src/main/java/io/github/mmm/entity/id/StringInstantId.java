@@ -23,11 +23,11 @@ public final class StringInstantId<E> extends AbstractInstantId<E, String> imple
    *
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
-   * @param version the {@link #getVersion() version}.
+   * @param revision the {@link #getRevision() revision}.
    */
-  public StringInstantId(Class<E> type, String id, Instant version) {
+  public StringInstantId(Class<E> type, String id, Instant revision) {
 
-    super(type, version);
+    super(type, revision);
     this.id = id;
   }
 
@@ -38,9 +38,9 @@ public final class StringInstantId<E> extends AbstractInstantId<E, String> imple
   }
 
   @Override
-  public <T> StringInstantId<T> create(Class<T> newEntityType, String newId, Instant newVersion) {
+  public <T> StringInstantId<T> create(Class<T> newEntityType, String newId, Instant newRevision) {
 
-    return new StringInstantId<>(newEntityType, newId, newVersion);
+    return new StringInstantId<>(newEntityType, newId, newRevision);
   }
 
   /**

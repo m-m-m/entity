@@ -22,11 +22,11 @@ public final class LongInstantId<E> extends AbstractInstantId<E, Long> implement
    *
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
-   * @param version the {@link #getVersion() version}.
+   * @param revision the {@link #getRevision() revision}.
    */
-  public LongInstantId(Class<E> type, Long id, Instant version) {
+  public LongInstantId(Class<E> type, Long id, Instant revision) {
 
-    super(type, version);
+    super(type, revision);
     this.id = id;
   }
 
@@ -37,9 +37,9 @@ public final class LongInstantId<E> extends AbstractInstantId<E, Long> implement
   }
 
   @Override
-  public <T> GenericId<T, Long, Instant> create(Class<T> newEntityType, Long newId, Instant newVersion) {
+  public <T> GenericId<T, Long, Instant> create(Class<T> newEntityType, Long newId, Instant newRevision) {
 
-    return new LongInstantId<>(newEntityType, newId, newVersion);
+    return new LongInstantId<>(newEntityType, newId, newRevision);
   }
 
   /**

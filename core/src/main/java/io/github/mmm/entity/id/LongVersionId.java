@@ -21,11 +21,11 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
    *
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
-   * @param version the {@link #getVersion() version}.
+   * @param revision the {@link #getRevision() revision}.
    */
-  public LongVersionId(Class<E> type, Long id, Long version) {
+  public LongVersionId(Class<E> type, Long id, Long revision) {
 
-    super(type, version);
+    super(type, revision);
     this.id = id;
   }
 
@@ -36,9 +36,9 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
   }
 
   @Override
-  public <T> GenericId<T, Long, Long> create(Class<T> newEntityType, Long newId, Long newVersion) {
+  public <T> GenericId<T, Long, Long> create(Class<T> newEntityType, Long newId, Long newRevision) {
 
-    return new LongVersionId<>(newEntityType, newId, newVersion);
+    return new LongVersionId<>(newEntityType, newId, newRevision);
   }
 
   /**

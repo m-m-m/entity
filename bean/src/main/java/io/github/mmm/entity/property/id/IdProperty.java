@@ -50,7 +50,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
 
     if (this.value != null) {
       if (newValue == null) {
-        newValue = (V) ((GenericId<?, ?, ?>) this.value).withIdAndVersion(null, null);
+        newValue = (V) ((GenericId<?, ?, ?>) this.value).withIdAndRevision(null, null);
       } else {
         Class<?> newEntityType = newValue.getEntityType();
         Class<?> entityType = this.value.getEntityType();

@@ -9,7 +9,7 @@ import java.time.Instant;
  * generic type of {@link #get() primary key}. However {@link LongId} or {@link UuidId} will be much more efficient.
  *
  * @param <E> type of the identified entity.
- * @param <V> type of the {@link #getVersion() version}.
+ * @param <V> type of the {@link #getRevision() revision}.
  * @since 1.0.0
  */
 public interface StringId<E, V extends Comparable<?>> extends GenericId<E, String, V> {
@@ -60,19 +60,19 @@ public interface StringId<E, V extends Comparable<?>> extends GenericId<E, Strin
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
-   * @param version the optional {@link #getVersion() version}.
+   * @param revision the optional {@link #getRevision() revision}.
    * @return the new {@link StringId}.
    */
-  static <E> StringId<E, ?> of(String id, Class<E> type, Object version) {
+  static <E> StringId<E, ?> of(String id, Class<E> type, Object revision) {
 
     if (id == null) {
       return null;
     }
-    if ((version == null) || (version instanceof Long)) {
-      return new StringVersionId<>(type, id, (Long) version);
-    } else if (version instanceof Instant) {
-      return new StringInstantId<>(type, id, (Instant) version);
+    if ((revision == null) || (revision instanceof Long)) {
+      return new StringVersionId<>(type, id, (Long) revision);
+    } else if (revision instanceof Instant) {
+      return new StringInstantId<>(type, id, (Instant) revision);
     }
-    throw new IllegalStateException("Unsupported version type: " + version.getClass().getName());
+    throw new IllegalStateException("Unsupported revision type: " + revision.getClass().getName());
   }
 }

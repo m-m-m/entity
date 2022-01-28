@@ -12,12 +12,12 @@ import io.github.mmm.marshall.Unmarshaller;
  *
  * @param <E> type of the identified entity.
  * @param <I> type of the {@link #get() ID}.
- * @param <V> type of the {@link #getVersion() version}.
+ * @param <R> type of the {@link #getRevision() revision}.
  * @since 1.0.0
  * @see AbstractId
  */
-public interface GenericId<E, I, V extends Comparable<?>>
-    extends Id<E>, IdFactory<I, V>, MarshallableObject, Unmarshaller<GenericId<E, I, V>> {
+public interface GenericId<E, I, R extends Comparable<?>>
+    extends Id<E>, IdFactory<I, R>, MarshallableObject, Unmarshaller<GenericId<E, I, R>> {
 
   /**
    * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link Long}.
@@ -44,23 +44,23 @@ public interface GenericId<E, I, V extends Comparable<?>>
   String PROPERTY_UUID = "u";
 
   /**
-   * Name of the {@link #getVersion() version} property (e.g. for JSON or XML) in case of a {@link Long}.
+   * Name of the {@link #getRevision() revision} property (e.g. for JSON or XML) in case of a {@link Long}.
    *
    * @see LongVersionId
    * @see UuidVersionId
    * @see StringVersionId
    */
-  String PROPERTY_LONG_VERSION = "v";
+  String PROPERTY_LONG_REVISION = "v";
 
   /**
-   * Name of the {@link #getVersion() version} property (e.g. for JSON or XML) in case of an {@link java.time.Instant}
+   * Name of the {@link #getRevision() revision} property (e.g. for JSON or XML) in case of an {@link java.time.Instant}
    * ("t" for "timestamp").
    *
    * @see LongInstantId
    * @see UuidInstantId
    * @see StringInstantId
    */
-  String PROPERTY_INSTANT_VERSION = "t";
+  String PROPERTY_INSTANT_REVISION = "t";
 
   @Override
   I get();
@@ -72,54 +72,54 @@ public interface GenericId<E, I, V extends Comparable<?>>
   Class<I> getIdType();
 
   @Override
-  V getVersion();
+  R getRevision();
 
   /**
-   * @return the {@link Class} reflecting the {@link #getVersion() version}.
+   * @return the {@link Class} reflecting the {@link #getRevision() revision}.
    */
   @Override
-  Class<V> getVersionType();
+  Class<R> getRevisionType();
 
   /**
    * @param valueString the {@link #toString() string representation} of this {@link GenericId}.
    * @return the parsed {@link GenericId}.
    */
-  default GenericId<E, I, V> create(String valueString) {
+  default GenericId<E, I, R> create(String valueString) {
 
     return create(getEntityType(), valueString);
   }
 
   @Override
-  default Id<E> withoutVersion() {
+  default Id<E> withoutRevision() {
 
-    return withVersion(null);
+    return withRevision(null);
   }
 
   /**
-   * @param newVersion the new value of {@link #getVersion() version}.
-   * @return a copy of this {@link Id} with the given {@link #getVersion() version} or this {@link Id} itself if already
-   *         satisfying.
+   * @param newRevision the new value of {@link #getRevision() revision}.
+   * @return a copy of this {@link Id} with the given {@link #getRevision() revision} or this {@link Id} itself if
+   *         already satisfying.
    */
-  default GenericId<E, I, V> withVersion(V newVersion) {
+  default GenericId<E, I, R> withRevision(R newRevision) {
 
-    if (Objects.equals(getVersion(), newVersion)) {
+    if (Objects.equals(getRevision(), newRevision)) {
       return this;
     }
-    return create(getEntityType(), get(), newVersion);
+    return create(getEntityType(), get(), newRevision);
   }
 
   /**
    * @param newId the new value of {@link #get() primary key}.
-   * @param newVersion the new value of {@link #getVersion() version}.
-   * @return a copy of this {@link Id} with the given {@link #get() primary key} and {@link #getVersion() version} or
+   * @param newRevision the new value of {@link #getRevision() revision}.
+   * @return a copy of this {@link Id} with the given {@link #get() primary key} and {@link #getRevision() revision} or
    *         this {@link Id} itself if already satisfying.
    */
-  default GenericId<E, I, V> withIdAndVersion(I newId, V newVersion) {
+  default GenericId<E, I, R> withIdAndRevision(I newId, R newRevision) {
 
-    if (Objects.equals(getVersion(), newVersion) && Objects.equals(get(), newId)) {
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
       return this;
     }
-    return create(getEntityType(), newId, newVersion);
+    return create(getEntityType(), newId, newRevision);
   }
 
   /**
@@ -134,16 +134,32 @@ public interface GenericId<E, I, V extends Comparable<?>>
    * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityType() type} assigned.
    */
   @SuppressWarnings("unchecked")
-  default GenericId<E, I, V> withEntityType(Class<?> newEntityType) {
+  default GenericId<E, I, R> withEntityType(Class<?> newEntityType) {
 
     Class<E> entityType = getEntityType();
     if (entityType == null) {
-      return create((Class<E>) newEntityType, get(), getVersion());
+      return create((Class<E>) newEntityType, get(), getRevision());
     } else if (entityType != newEntityType) {
       throw new IllegalArgumentException(
           "Illegal type " + newEntityType + " - already typed to " + entityType.getName() + " at " + toString());
     }
     return this;
+  }
+
+  /**
+   * @param currentRevision the current {@link #getRevision() revision}.
+   * @return the updated or incremented revision.
+   */
+  R updateRevision(R currentRevision);
+
+  /**
+   * @return a new {@link GenericId} with an {@link #updateRevision(Comparable) updated} {@link #getRevision()
+   *         revision}.
+   */
+  default GenericId<E, I, R> updateRevision() {
+
+    R newRevision = updateRevision(getRevision());
+    return withRevision(newRevision);
   }
 
   /**
@@ -155,19 +171,19 @@ public interface GenericId<E, I, V extends Comparable<?>>
   String getMarshalPropertyId();
 
   /**
-   * @return the property name of the {@link #getVersion() version} for marshalling.
-   * @see #PROPERTY_LONG_VERSION
-   * @see #PROPERTY_INSTANT_VERSION
+   * @return the property name of the {@link #getRevision() revision} for marshalling.
+   * @see #PROPERTY_LONG_REVISION
+   * @see #PROPERTY_INSTANT_REVISION
    */
-  String getMarshalPropertyVersion();
+  String getMarshalPropertyRevision();
 
   @SuppressWarnings("exports")
   @Override
   default void write(StructuredWriter writer) {
 
-    V version = getVersion();
+    R revision = getRevision();
     I id = get();
-    if (version == null) {
+    if (revision == null) {
       if (id == null) {
         writer.writeValueAsNull();
       } else {
@@ -178,15 +194,15 @@ public interface GenericId<E, I, V extends Comparable<?>>
       writer.writeName(getMarshalPropertyId());
       assert (id != null);
       writer.writeValue(id);
-      writer.writeName(getMarshalPropertyVersion());
-      writer.writeValue(version);
+      writer.writeName(getMarshalPropertyRevision());
+      writer.writeValue(revision);
       writer.writeEnd();
     }
   }
 
   @SuppressWarnings("exports")
   @Override
-  default GenericId<E, I, V> readObject(StructuredReader reader) {
+  default GenericId<E, I, R> readObject(StructuredReader reader) {
 
     return IdMarshalling.readObject(reader, this, getEntityType());
   }

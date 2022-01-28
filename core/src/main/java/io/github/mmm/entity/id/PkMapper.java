@@ -58,12 +58,12 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
     private void withId(Object newId) {
 
-      this.id = this.id.withIdAndVersion(newId, this.id.getVersion());
+      this.id = this.id.withIdAndRevision(newId, this.id.getRevision());
     }
 
-    private void withVersion(Object newVersion) {
+    private void withRevision(Object newRevision) {
 
-      this.id = this.id.withVersion((Comparable) newVersion);
+      this.id = this.id.withRevision((Comparable) newRevision);
     }
 
     @Override
@@ -73,30 +73,30 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     }
   }
 
-  private static class PkMapperVersion extends PkMapper {
+  private static class PkMapperRevision extends PkMapper {
 
-    private PkMapperVersion(GenericId idTemplate) {
+    private PkMapperRevision(GenericId idTemplate) {
 
-      super(idTemplate, "V", null);
+      super(idTemplate, "Rev", null);
     }
 
     @Override
     public Class<? extends Object> getTargetType() {
 
-      return this.idTemplate.getVersionType();
+      return this.idTemplate.getRevisionType();
     }
 
     @Override
     public Object toTarget(Id id) {
 
-      return id.getVersion();
+      return id.getRevision();
     }
 
     @Override
-    public void with(Builder<Id> builder, Object version) {
+    public void with(Builder<Id> builder, Object revision) {
 
       IdBuilder idBuilder = (IdBuilder) builder;
-      idBuilder.withVersion(version);
+      idBuilder.withRevision(revision);
     }
 
   }
@@ -106,9 +106,9 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     /**
      * The constructor.
      *
-     * @param next the {@link PkMapperVersion}.
+     * @param next the {@link PkMapperRevision}.
      */
-    public PkMapperId(PkMapperVersion next) {
+    public PkMapperId(PkMapperRevision next) {
 
       super(null, "Id", next);
     }
@@ -147,8 +147,8 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
     Objects.requireNonNull(id);
     GenericId genericId = (GenericId) id;
-    PkMapperVersion version = new PkMapperVersion(genericId.withIdAndVersion(null, null));
-    return new PkMapperId(version);
+    PkMapperRevision revMapper = new PkMapperRevision(genericId.withIdAndRevision(null, null));
+    return new PkMapperId(revMapper);
   }
 
 }

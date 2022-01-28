@@ -20,11 +20,11 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
    *
    * @param type the {@link #getEntityType() type}.
    * @param id the {@link #get() primary key}.
-   * @param version the {@link #getVersion() version}.
+   * @param revision the {@link #getRevision() revision}.
    */
-  public StringVersionId(Class<E> type, String id, Long version) {
+  public StringVersionId(Class<E> type, String id, Long revision) {
 
-    super(type, version);
+    super(type, revision);
     this.id = id;
   }
 
@@ -35,9 +35,9 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
   }
 
   @Override
-  public <T> StringVersionId<T> create(Class<T> newEntityType, String newId, Long newVersion) {
+  public <T> StringVersionId<T> create(Class<T> newEntityType, String newId, Long newRevision) {
 
-    return new StringVersionId<>(newEntityType, newId, newVersion);
+    return new StringVersionId<>(newEntityType, newId, newRevision);
   }
 
   /**

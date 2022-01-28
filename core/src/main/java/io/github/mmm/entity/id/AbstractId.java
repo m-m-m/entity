@@ -9,10 +9,10 @@ import java.util.Objects;
  *
  * @param <E> type of the identified entity.
  * @param <I> type of the {@link #get() ID}.
- * @param <V> type of the {@link #getVersion() version}.
+ * @param <R> type of the {@link #getRevision() revision}.
  * @since 1.0.0
  */
-public abstract class AbstractId<E, I, V extends Comparable<?>> implements GenericId<E, I, V> {
+public abstract class AbstractId<E, I, R extends Comparable<?>> implements GenericId<E, I, R> {
 
   private final Class<E> entityType;
 
@@ -55,7 +55,7 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Gener
     if ((this.entityType != null) && (other.entityType != null) && !this.entityType.equals(other.entityType)) {
       return false;
     }
-    if (!Objects.equals(getVersion(), other.getVersion())) {
+    if (!Objects.equals(getRevision(), other.getRevision())) {
       return false;
     }
     return true;
@@ -81,10 +81,10 @@ public abstract class AbstractId<E, I, V extends Comparable<?>> implements Gener
       return;
     }
     buffer.append(id);
-    V version = getVersion();
-    if (version != null) {
-      buffer.append(VERSION_SEPARATOR);
-      buffer.append(version);
+    R revision = getRevision();
+    if (revision != null) {
+      buffer.append(REVISION_SEPARATOR);
+      buffer.append(revision);
     }
   }
 

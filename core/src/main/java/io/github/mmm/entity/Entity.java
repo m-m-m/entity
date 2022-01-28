@@ -19,8 +19,8 @@ public interface Entity {
   /**
    * Please prefer the usage of {@link #getId(Entity)} or {@link Id#from(Entity)} instead of using this method directly.
    *
-   * @return the unique ID (primary key) of this entity or {@code null} if not available (e.g. entity is not
-   *         persistent).
+   * @return the unique ID (primary key) of this entity. This method should never return {@code null}. A transient
+   *         entity should return an {@link Id#isEmpty() empty} {@link Id}.
    * @see #getId(Entity)
    */
   Id<? extends Entity> getId();

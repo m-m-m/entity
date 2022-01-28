@@ -5,7 +5,7 @@ package io.github.mmm.entity.id;
 import java.time.Instant;
 
 /**
- * An abstract base implementation of {@link Id} using {@link Instant} as type for the {@link #getVersion() version}.
+ * An abstract base implementation of {@link Id} using {@link Instant} as type for the {@link #getRevision() revision}.
  *
  * @param <E> type of the identified entity.
  * @param <I> type of the {@link #get() ID}.
@@ -14,42 +14,48 @@ import java.time.Instant;
  */
 public abstract class AbstractInstantId<E, I> extends AbstractId<E, I, Instant> {
 
-  private final Instant version;
+  private final Instant revision;
 
   /**
    * The constructor.
    *
    * @param type - see {@link #getEntityType()}.
-   * @param version - see {@link #getVersion()}.
+   * @param revision - see {@link #getRevision()}.
    */
-  public AbstractInstantId(Class<E> type, Instant version) {
+  public AbstractInstantId(Class<E> type, Instant revision) {
 
     super(type);
-    this.version = version;
+    this.revision = revision;
   }
 
   @Override
-  public Instant getVersion() {
+  public Instant getRevision() {
 
-    return this.version;
+    return this.revision;
   }
 
   @Override
-  public Class<Instant> getVersionType() {
+  public Class<Instant> getRevisionType() {
 
     return Instant.class;
   }
 
   @Override
-  public Instant parseVersion(String versionString) {
+  public Instant parseRevision(String revisionString) {
 
-    return Instant.parse(versionString);
+    return Instant.parse(revisionString);
   }
 
   @Override
-  public String getMarshalPropertyVersion() {
+  public Instant updateRevision(Instant currentRevision) {
 
-    return PROPERTY_INSTANT_VERSION;
+    return Instant.now();
+  }
+
+  @Override
+  public String getMarshalPropertyRevision() {
+
+    return PROPERTY_INSTANT_REVISION;
   }
 
 }

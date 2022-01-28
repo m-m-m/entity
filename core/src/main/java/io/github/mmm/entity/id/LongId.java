@@ -8,7 +8,7 @@ import java.time.Instant;
  * {@link Id} using {@link Long} as {@link #get() primary key (ID)}.
  *
  * @param <E> type of the identified entity.
- * @param <V> type of the {@link #getVersion() version}.
+ * @param <V> type of the {@link #getRevision() revision}.
  * @since 1.0.0
  */
 public interface LongId<E, V extends Comparable<?>> extends GenericId<E, Long, V> {
@@ -71,20 +71,20 @@ public interface LongId<E, V extends Comparable<?>> extends GenericId<E, Long, V
    * @param <E> the generic type of the identified entity.
    * @param id the actual {@link #get() primary key}.
    * @param entityType the {@link #getEntityType() entity type}.
-   * @param version the optional {@link #getVersion() version}.
+   * @param revision the optional {@link #getRevision() revision}.
    * @return the new {@link LongId}.
    */
-  static <E> LongId<E, ?> of(Long id, Class<E> entityType, Object version) {
+  static <E> LongId<E, ?> of(Long id, Class<E> entityType, Object revision) {
 
     if (id == null) {
       return null;
     }
-    if ((version == null) || (version instanceof Long)) {
-      return new LongVersionId<>(entityType, id, (Long) version);
-    } else if (version instanceof Instant) {
-      return new LongInstantId<>(entityType, id, (Instant) version);
+    if ((revision == null) || (revision instanceof Long)) {
+      return new LongVersionId<>(entityType, id, (Long) revision);
+    } else if (revision instanceof Instant) {
+      return new LongInstantId<>(entityType, id, (Instant) revision);
     }
-    throw new IllegalStateException("Unsupported version type: " + version.getClass().getName());
+    throw new IllegalStateException("Unsupported revision type: " + revision.getClass().getName());
   }
 
 }

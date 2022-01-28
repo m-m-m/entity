@@ -7,32 +7,20 @@ import io.github.mmm.property.ReadableProperty;
 /**
  * Interface to define the naming strategy to map {@link EntityBean}s to a database.
  *
- * @see #getColumnName(ReadableProperty)
+ * @see #getColumnName(String)
  * @see #getTableName(EntityBean)
  * @since 1.0.0
  */
 public interface DbNamingStrategy {
 
   /**
-   * @param property the {@link ReadableProperty} to map to a database column.
-   * @return the (logical) column name. Please note that the physical column name may still be derived from this result
-   *         via {@link io.github.mmm.value.converter.TypeMapper#mapName(String) name mapping} and
-   *         {@link io.github.mmm.value.converter.TypeMapper#next() decomposition}.
+   * @param rawColumnName the raw column name to map. May be the {@link ReadableProperty#getName() property name} or
+   *        {@link io.github.mmm.value.converter.TypeMapper#mapName(String) remapped and decomposed} from it.
+   * @return the final column name.
    */
-  default String getColumnName(ReadableProperty<?> property) {
+  default String getColumnName(String rawColumnName) {
 
-    return getColumnName(property.getName());
-  }
-
-  /**
-   * @param propertyName the {@link ReadableProperty#getName() property name} to map to a database column.
-   * @return the (logical) column name. Please note that the physical column name may still be derived from this result
-   *         via {@link io.github.mmm.value.converter.TypeMapper#mapName(String) name mapping} and
-   *         {@link io.github.mmm.value.converter.TypeMapper#next() decomposition}.
-   */
-  default String getColumnName(String propertyName) {
-
-    return propertyName;
+    return rawColumnName;
   }
 
   /**
@@ -45,12 +33,13 @@ public interface DbNamingStrategy {
   }
 
   /**
-   * @param beanName the {@link io.github.mmm.bean.BeanType#getStableName() entity name} to map to a database table.
-   * @return the physical table name.
+   * @param rawTableName the raw table name to map. May be the {@link io.github.mmm.bean.BeanType#getStableName() stable
+   *        entity name}.
+   * @return the database table name.
    */
-  default String getTableName(String beanName) {
+  default String getTableName(String rawTableName) {
 
-    return beanName;
+    return rawTableName;
   }
 
   /**
