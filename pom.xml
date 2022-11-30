@@ -20,6 +20,7 @@
   </modules>
 
   <properties>
+    <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     <mmm.repository>entity</mmm.repository>
     <revision>0-SNAPSHOT</revision>
   </properties>
