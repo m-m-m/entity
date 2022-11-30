@@ -498,7 +498,7 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
           selection = new ProjectionProperty(selection, path);
         }
         select.getSelections().add(selection);
-        c = scanner.forceNext();
+        c = scanner.next();
       } while (c == ',');
       if (c != ')') {
         throw new IllegalArgumentException("Missing ')'.");
