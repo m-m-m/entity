@@ -5,7 +5,7 @@ image:https://github.com/m-m-m/entity/actions/workflows/build.yml/badge.svg["Bui
 
 = mmm-entity
 
-image:https://img.shields.io/maven-central/v/io.github.m-m-m/mmm-entity.svg?label=Maven%20Central["Maven Central",link=https://search.maven.org/search?q=g:io.github.m-m-m]
+image:https://img.shields.io/maven-central/v/io.github.m-m-m/mmm-entity.svg?label=Maven%20Central["Maven Central",link=https://search.maven.org/search?q=g:io.github.m-m-m%20a:mmm-ui-entity*]
 image:https://javadoc.io/badge2/io.github.m-m-m/mmm-entity/javadoc.svg["base JavaDoc", link=https://javadoc.io/doc/io.github.m-m-m/mmm-entity]
 
 The module `io.github.mmm.entity` (artifactId `mmm-entity`) provides API and fundamentals for persistent entities.
