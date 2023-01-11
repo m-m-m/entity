@@ -147,7 +147,7 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
     scanner.requireOne('(');
     do {
       scanner.skipWhile(NEWLINE_OR_SPACE);
-      if (scanner.expectStrict("CONSTRAINT")) {
+      if (scanner.expect("CONSTRAINT")) {
         DbConstraint constraint = parseConstraint(scanner, entity);
         columns.constraint(constraint);
       } else {
@@ -170,7 +170,7 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
     String constraintName = parseSegment(scanner);
     scanner.requireOneOrMore(NEWLINE_OR_SPACE);
     DbConstraint constraint = null;
-    if (scanner.expectStrict(ForeignKeyConstraint.TYPE, true)) {
+    if (scanner.expect(ForeignKeyConstraint.TYPE, true)) {
       ReadableProperty<?> column = parseColumn(scanner, entity);
       scanner.require("REFERENCES", true);
       scanner.requireOneOrMore(NEWLINE_OR_SPACE);
@@ -182,20 +182,20 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
       scanner.skipWhile(NEWLINE_OR_SPACE);
       scanner.requireOne(')');
       constraint = new ForeignKeyConstraint(constraintName, column, referenceTable, referenceColumn);
-    } else if (scanner.expectStrict(PrimaryKeyConstraint.TYPE, true)) {
+    } else if (scanner.expect(PrimaryKeyConstraint.TYPE, true)) {
       ReadableProperty<?> column = parseColumn(scanner, entity);
       constraint = new PrimaryKeyConstraint(constraintName, column);
-    } else if (scanner.expectStrict(NotNullConstraint.TYPE, true)) {
+    } else if (scanner.expect(NotNullConstraint.TYPE, true)) {
       ReadableProperty<?> column = parseColumn(scanner, entity);
       constraint = new NotNullConstraint(constraintName, column);
-    } else if (scanner.expectStrict(UniqueConstraint.TYPE, true)) {
+    } else if (scanner.expect(UniqueConstraint.TYPE, true)) {
       List<WritableProperty<?>> columns = parseColumns(scanner, entity, 1);
       constraint = new UniqueConstraint(constraintName, columns.get(0));
       List<WritableProperty<?>> list = (List<WritableProperty<?>>) constraint.getColumns();
       for (int i = 1; i < columns.size(); i++) {
         list.add(columns.get(i));
       }
-    } else if (scanner.expectStrict(CheckConstraint.TYPE, true)) {
+    } else if (scanner.expect(CheckConstraint.TYPE, true)) {
       PropertyPathParser pathParser = new EntityPathParser(entity);
       CriteriaPredicate predicate = this.criteriaSelectionParser.parsePredicate(scanner, pathParser);
       constraint = new CheckConstraint(constraintName, predicate);
@@ -438,7 +438,7 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
 
   private void parseOrderBy(CharStreamScanner scanner, OrderBy orderBy) {
 
-    if (!scanner.expectStrict("ORDER BY ", true)) {
+    if (!scanner.expect("ORDER BY ", true)) {
       return;
     }
     AliasMap aliasMap = ((AbstractDbStatement) orderBy.get()).getAliasMap();
@@ -448,9 +448,9 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
       SortOrder order = SortOrder.ASC;
       int spaces = scanner.skipWhile(' ');
       if (spaces > 0) {
-        if (scanner.expectStrict("ASC", true)) {
+        if (scanner.expect("ASC", true)) {
           order = SortOrder.ASC;
-        } else if (scanner.expectStrict("DESC", true)) {
+        } else if (scanner.expect("DESC", true)) {
           order = SortOrder.DESC;
         }
         scanner.skipWhile(' ');
@@ -465,7 +465,7 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
 
     scanner.skipWhile(NEWLINE_OR_SPACE);
     Select select;
-    if (scanner.expectStrict("new", true)) {
+    if (scanner.expect("new", true)) {
       scanner.requireOneOrMore(NEWLINE_OR_SPACE);
       WritableBean projectionBean = null;
       String bean = scanner.readUntil('(', false);
@@ -486,7 +486,7 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
           PropertyPath path = null;
           int spaces = scanner.skipWhile(NEWLINE_OR_SPACE);
           if ((spaces > 0)) {
-            if (scanner.expectStrict("AS", true)) {
+            if (scanner.expect("AS", true)) {
               scanner.requireOneOrMore(NEWLINE_OR_SPACE);
             }
             path = EntityPathParser.parsePath(scanner, projectionBean);
@@ -544,7 +544,7 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
 
   private void parseWhere(CharStreamScanner scanner, WhereClause where) {
 
-    if (!scanner.expectStrict("WHERE", true)) {
+    if (!scanner.expect("WHERE", true)) {
       return;
     }
     do {
@@ -556,12 +556,12 @@ public class DbStatementParser implements CharScannerParser<DbStatement<?>> {
         throw new IllegalArgumentException("Expected predicate but found " + expression);
       }
       scanner.skipWhile(NEWLINE_OR_SPACE);
-    } while (scanner.expectStrict("AND", true));
+    } while (scanner.expect("AND", true));
   }
 
   private void parseGroupBy(CharStreamScanner scanner, GroupBy groupBy) {
 
-    if (!scanner.expectStrict(" GROUP BY", true)) {
+    if (!scanner.expect(" GROUP BY", true)) {
       return;
     }
     scanner.requireOneOrMore(NEWLINE_OR_SPACE);
