@@ -45,7 +45,8 @@ public class PropertyFactoryFk<E extends EntityBean> extends AbstractPropertyFac
   }
 
   @Override
-  public FkProperty<E> create(String name, Class<? extends Id<E>> valueClass, PropertyMetadata<Id<E>> metadata) {
+  public FkProperty<E> create(String name, Class<? extends Id<E>> valueClass, PropertyMetadata<Id<E>> metadata,
+      WritableProperty<?> valueProperty) {
 
     return new FkProperty<>(name, null, metadata);
   }

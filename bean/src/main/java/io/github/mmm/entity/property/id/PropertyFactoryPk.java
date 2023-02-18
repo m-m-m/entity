@@ -42,7 +42,8 @@ public class PropertyFactoryPk extends AbstractPropertyFactory<Id<?>, PkProperty
   }
 
   @Override
-  public PkProperty create(String name, Class<? extends Id<?>> valueClass, PropertyMetadata<Id<?>> metadata) {
+  public PkProperty create(String name, Class<? extends Id<?>> valueClass, PropertyMetadata<Id<?>> metadata,
+      WritableProperty<?> valueProperty) {
 
     return new PkProperty(name, null, metadata);
   }
