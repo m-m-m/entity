@@ -36,7 +36,7 @@ public class InsertTest extends DbStatementTest {
     // when
     InsertStatement<Person> insertStatement = new Insert().into(p).values().get();
     // then
-    check(insertStatement, "INSERT INTO Person(Single, Id, Name) VALUES (TRUE, 4711, 'John Doe')");
+    check(insertStatement, "INSERT INTO Person(Id, Name, Single) VALUES (4711, 'John Doe', TRUE)");
   }
 
 }
