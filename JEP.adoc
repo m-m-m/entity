@@ -1,6 +1,6 @@
 = Java Enhancement Proposal on Properties and Beans
 
-So far this is far from being a JEP but just a starting point to open the discussion about goals, requirements, and features on the topic of properties and beans.
+This is far from being a JEP but just a starting point to open the discussion about goals, requirements, and features on the topic of properties and beans.
 
 == tl;dr
 
@@ -44,9 +44,10 @@ IMHO Java definitely needs proper beans to address the above problems.
 
 I created a powerful but maybe complex solution for this with pure Java and am working on a generator to make it work in CWA contexts like GraalVM or TeaVM.
 I am happy to discuss and question every detail of this approach.
-Also, I am totally happy to discuss alternative approaches like beans as mutable records or
-a builder-pattern for records based on their properties as a Java language feature.
-So maybe something like https://download.java.net/java/early_access/panama/docs/api/java.base/java/lang/reflect/RecordComponent.html[RecordComponent] could also be the "Real Property", but IMHO it is too deeply bundled with reflection.
+Also, I am totally happy to discuss alternative approaches like beans as mutable records or a builder-pattern for records based on their properties as a Java language feature.
+Records are a great feature but IMHO they currently still disqualify as a replacement for Java beans as frameworks (e.g. hibernate) can not easily be adopted to support Records.
+Immutability may not be the major problem but fabrication is since framework would need really complex reflection magic in order to determine the proper constructor and order of constructor arguments to instantiate recrods from their properties (say a map from property name to their values).
+But also maybe something like https://download.java.net/java/early_access/panama/docs/api/java.base/java/lang/reflect/RecordComponent.html[RecordComponent] could also be the "Real Property" (if not already too deeply bundled with reflection).
 I can also think of data-types (including valhalla) as monads so instead of `null` we always have a real neutral instance representation that could act as factory of the datatype to address marshalling and support type decisions even for empty properties.
 
 === Open the road to avoid deep reflection
