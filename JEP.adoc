@@ -1,0 +1,70 @@
+= Java Enhancement Proposal on Properties and Beans
+
+So far this is far from being a JEP but just a starting point to open the discussion about goals, requirements, and features on the topic of properties and beans.
+
+== tl;dr
+
+I have completely reinvented the wheel to come up with a free OSS solution that fills all the gaps I was facing after more than 20 years of Java coding.
+I tried my best to design it well but before you get lost in details of my code and reject any further investigation saying "this is too complex, too ignorant, ..." I would love to share the vision via some real world use-cases and make a statement what I am lacking in Java and would love to see properly addressed some day in the future (intentionally in reverse order from advanced to basic):
+
+1. *Typesafe DSLs* without code-generators: See https://github.com/m-m-m/entity/blob/be3f18a2e823f137c67931f090df58235fc75f67/db/src/test/java/io/github/mmm/entity/bean/db/statement/select/SelectTest.java#L107-L118[SQL example] with https://github.com/m-m-m/entity/blob/master/db/src/test/java/io/github/mmm/entity/bean/db/statement/City.java[City] bean.
+This is what we developers love to have: low code with high expressiveness but still flexibility for extension.
+2. https://github.com/m-m-m/validation/[*Validation*] like bean-validation but seamlessly integrated and designed for CWA. See https://github.com/m-m-m/bean/blob/915a0e60130b05a78f3757a37a8993540b5cd6d9/core/src/test/java/io/github/mmm/bean/BeanTest.java#L125-L147[Validation test] with low-level approach in https://github.com/m-m-m/bean/blob/915a0e60130b05a78f3757a37a8993540b5cd6d9/core/src/test/java/io/github/mmm/bean/examples/TestBuildersBean.java#L32-L34[TestBuildersBean] and even more sophisticated via https://github.com/m-m-m/entity/blob/be3f18a2e823f137c67931f090df58235fc75f67/db/src/test/java/io/github/mmm/entity/bean/db/statement/Song.java#L21[bean as interface with annotations].
+3. https://github.com/m-m-m/marshall/[*Marshalling*] as universal solution for things like JSON-P, JSON-B, Jackson, snakeyaml, etc. So you only implement your mapping once making it work for any serialization format like JSON, YAML, XML, protobuf, etc. and implement your service and add or remove support for serialization formats with just a dependency/module. See the beauty in https://github.com/m-m-m/bean/blob/915a0e60130b05a78f3757a37a8993540b5cd6d9/core/src/test/java/io/github/mmm/bean/BeanMarshallingTest.java#L28-L59[BeanMarshallingTest].
+4. https://github.com/m-m-m/bean/[*Real Beans*] as new Java citizens. To avoid deep reflection entirely, I created support for https://github.com/m-m-m/bean/blob/master/core/src/test/java/io/github/mmm/bean/examples/TestBean.java[Beans as class]. To further reduce boilerplate code and allow multi-inheritance I prefer my approach as https://github.com/m-m-m/bean/blob/915a0e60130b05a78f3757a37a8993540b5cd6d9/factory-test/src/main/java/io/github/mmm/bean/factory/test/PersonBean.java#L14-L31[Bean as interface]. Ideally beans would become new Java type constructs just like records had been introduced (see xref:_real_beans[Real beans] section).
+5. https://github.com/m-m-m/property/[*Real Properties*] like JavaFx properties - see xref:_real_properties[Real Properties] section).
+
+== The problem with Java Beans
+
+* Java Beans suck! Every developer hates them with their pointless boilerplate code (getters, setters, equals, hashCode, toString)
+* Even though you could heal some of this pain with tools like lombok, you still have no real beans that allow to iterate their properties, etc.
+Further, I have seen many projects and developers struggling with code-generation being in sync after code-changes so features directly integrated into the Java language are always way more seamless.
+* As a result tons of frameworks have been created that all workaround this problem with deep reflection. This includes all JPA vendors, JAXB implementations, JSON-B implementations, Bean-Validation implementations, and Bean-Mappers (MapStruct, Dozer, Orika, etc.) just to name a few.
+* All these frameworks solve this complex problem on their own and almost all of them have bugs as this is a very underestimated problem. E.g. to determine the type of a property with support for generics is nothing an average Java developer can implement without errors.
+* Approaches like GraalVM with native image, TeaVM, GWT, etc. do not support deep reflection. As a workaround every of these frameworks has to provide configurations, generators or workarounds to make it work or even worse are simply not supported.
+* Each of the frameworks listed above needs custom logic for mapping (e.g. custom datatypes). So the great idea of strong datatypes (e.g. from DDD) gives you a very high burden. For every custom datatype, you have to implement `AttributeConverter`, `JsonSerializer`, `JsonDeserializer`, `XmlAdapter`, and many more. As a result developers do not do it ending up with poor data-models and use-case signatures (everything of type String instead of `CustomerNumber`, `Iban`, `MonetaryAmount`, etc.). Also bean validation (JSR 303) is IMHO flawed as it suggests to write a custom validator based on deeper reflection and requires annotation introspection by design and creating a constraint annotation (e.g. `@Iban` and annotate it on `String` properties) rather than building real data-types.
+* The biggest pain is data-binding that is mainly a concern of UI-technologies and therefore JavaFX has created its own solution for the problem. See xref:_real_properties[Real Properties] section below for further details.
+
+== The proposal and RfC
+
+=== Real properties
+
+IMHO the "decision" https://blog.joda.org/2014/11/no-properties-in-java-language.html[no properties in the Java language]
+*has* to be revisited after GraalVM and CWP for the future of Java.
+
+JavaFX has invented very well-designed properties.
+However, they have been invented in the namespace of JavaFX preventing them to be used in other contexts.
+I based my code initially on pure JavaFx properties but after hitting some limitations I created https://github.com/m-m-m/property/[my own implementation] just to escape the fence to get my vision working.
+I am more than happy to consider this a PoC to be thrown away and start from scratch with an JavaFX compatible approach that still addresses these lacking features.
+But my plea would be to consider something to have in a namespace like `java.util.property`.
+
+=== Real beans
+
+IMHO Java definitely needs proper beans to address the above problems.
+
+I created a powerful but maybe complex solution for this with pure Java and am working on a generator to make it work in CWA contexts like GraalVM or TeaVM.
+I am happy to discuss and question every detail of this approach.
+Also, I am totally happy to discuss alternative approaches like beans as mutable records or
+a builder-pattern for records based on their properties as a Java language feature.
+So maybe something like https://download.java.net/java/early_access/panama/docs/api/java.base/java/lang/reflect/RecordComponent.html[RecordComponent] could also be the "Real Property", but IMHO it is too deeply bundled with reflection.
+I can also think of data-types (including valhalla) as monads so instead of `null` we always have a real neutral instance representation that could act as factory of the datatype to address marshalling and support type decisions even for empty properties.
+
+=== Open the road to avoid deep reflection
+
+With CWA I see a trend to eliminate deep-reflection entirely from Java at runtime.
+IMHO the best way towards this road is to give strong answers from the Java language itself.
+
+Just as a thought try to imagine that something like my approach for properties, beans, validation, marshalling, etc. would have been part of the JDK since tiger (1.5).
+How would JPA, spring, quarkus, etc. look like today and run as native image or in the browser (cross-compiled with a potential future GraalVM Java to wasm compiler).
+And assuming this would be a native feature of Java it could be implemented much more efficient (without internal `Map<String, Property>`, etc.).
+
+== How to proceed
+
+From my PoV this article is just a starting point to get into discussion.
+In case you agree on some ideas and would like to start a discussion, I would be extremely happy.
+My hope is that this goes beyond 1-2 email ping pongs, I would love to use any collaborative discussion platform like github discussions, JIRA, or whatever you may suggest.
+
+== Side note
+
+I use to think big and with https://github.com/m-m-m/ui-api/blob/master/doc/motivation.adoc[my UI framework PoC] I might show a tendency for megalomania, but please be aware that I am totally open and happy to be patient and make small steps applying to KISS principle.
+So even if we come down to just 1% of my vision ending up in a real JEP, that would already make me happy.
