@@ -1,6 +1,6 @@
 = Java Enhancement Proposal on Properties and Beans
 
-So far this is far from being a JEP but just a starting point to open the discussion about goals, requirements, and features on the topic of properties and beans.
+This is far from being a JEP but just a starting point to open the discussion about goals, requirements, and features on the topic of properties and beans.
 
 == tl;dr
 
@@ -44,9 +44,10 @@ IMHO Java definitely needs proper beans to address the above problems.
 
 I created a powerful but maybe complex solution for this with pure Java and am working on a generator to make it work in CWA contexts like GraalVM or TeaVM.
 I am happy to discuss and question every detail of this approach.
-Also, I am totally happy to discuss alternative approaches like beans as mutable records or
-a builder-pattern for records based on their properties as a Java language feature.
-So maybe something like https://download.java.net/java/early_access/panama/docs/api/java.base/java/lang/reflect/RecordComponent.html[RecordComponent] could also be the "Real Property", but IMHO it is too deeply bundled with reflection.
+Also, I am totally happy to discuss alternative approaches like beans as mutable records or a builder-pattern for records based on their properties as a Java language feature.
+Records are great but they do not solve the problem as frameworks (e.g. hibernate) can not know how to do fabrication of records.
+IMHO the problem would not mainly be the immutality (which has great benefits) but more the fact that you would magically have to find the proper constructor and order of property values as constructor arguments what IMHO currently disqualifies records as the new Java Bean.
+But maybe something like https://download.java.net/java/early_access/panama/docs/api/java.base/java/lang/reflect/RecordComponent.html[RecordComponent] could also be the "Real Property", but IMHO it is too deeply bundled with reflection.
 I can also think of data-types (including valhalla) as monads so instead of `null` we always have a real neutral instance representation that could act as factory of the datatype to address marshalling and support type decisions even for empty properties.
 
 === Open the road to avoid deep reflection
