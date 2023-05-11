@@ -35,7 +35,7 @@ IMHO the "decision" https://blog.joda.org/2014/11/no-properties-in-java-language
 JavaFX has invented very well-designed properties.
 However, they have been invented in the namespace of JavaFX preventing them to be used in other contexts.
 I based my code initially on pure JavaFx properties but after hitting some limitations I created https://github.com/m-m-m/property/[my own implementation] just to escape the fence to get my vision working.
-I am more than happy to consider this a PoC to be thrown away and start from scratch with an JavaFX compatible approach that still addresses these lacking features.
+I am more than happy to consider this a PoC and start something new (collaboratively with Java & OpenJFX experts) with an JavaFX compatible approach that still addresses these lacking features.
 But my plea would be to consider something to have in a namespace like `java.util.property`.
 
 === Real beans
