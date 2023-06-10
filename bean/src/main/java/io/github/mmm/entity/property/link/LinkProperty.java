@@ -68,6 +68,33 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     this.resolver = resolver;
   }
 
+  /**
+   * The constructor.
+   *
+   * @param name the {@link #getName() name}.
+   * @param value the (initial) {@link #get() value}.
+   * @param metadata the {@link #getMetadata() metadata}.
+   */
+  public LinkProperty(String name, Link<E> value, PropertyMetadata<Link<E>> metadata) {
+
+    this(name, value, metadata, null);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param name the {@link #getName() name}.
+   * @param value the (initial) {@link #get() value}.
+   * @param metadata the {@link #getMetadata() metadata}.
+   * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
+   */
+  public LinkProperty(String name, Link<E> value, PropertyMetadata<Link<E>> metadata, Function<Id<E>, E> resolver) {
+
+    super(name, value, metadata);
+    this.entityClass = value.getId().getEntityType();
+    this.resolver = resolver;
+  }
+
   @Override
   protected void doSet(Link<E> newValue) {
 
