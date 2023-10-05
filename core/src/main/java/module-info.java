@@ -7,7 +7,9 @@
  */
 module io.github.mmm.entity {
 
-  requires static io.github.mmm.marshall;
+  // https://issues.apache.org/jira/browse/SUREFIRE-1563
+  // requires static io.github.mmm.marshall;
+  requires io.github.mmm.marshall;
 
   requires transitive io.github.mmm.value.converter;
 
