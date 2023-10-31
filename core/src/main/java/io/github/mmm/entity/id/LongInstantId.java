@@ -3,6 +3,7 @@
 package io.github.mmm.entity.id;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * Implementation of {@link AbstractInstantId} using {@link Long} as {@link #get() primary key}.
@@ -37,9 +38,46 @@ public final class LongInstantId<E> extends AbstractInstantId<E, Long> implement
   }
 
   @Override
-  public <T> GenericId<T, Long, Instant> create(Class<T> newEntityType, Long newId, Instant newRevision) {
+  public <T> LongInstantId<T> create(Class<T> newEntityType, Long newId, Instant newRevision) {
 
     return new LongInstantId<>(newEntityType, newId, newRevision);
+  }
+
+  @Override
+  public LongInstantId<E> withIdAndRevision(Long newId, Instant newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+      return this;
+    }
+    return create(getEntityType(), newId, newRevision);
+  }
+
+  @Override
+  public LongInstantId<E> withRevision(Instant newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision)) {
+      return this;
+    }
+    return create(getEntityType(), get(), newRevision);
+  }
+
+  @Override
+  public LongInstantId<E> withoutRevision() {
+
+    return withRevision(null);
+  }
+
+  @Override
+  public LongInstantId<E> withEntityType(Class<?> newEntityType) {
+
+    return (LongInstantId<E>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public LongInstantId<E> updateRevision() {
+
+    Instant newRevision = updateRevision(getRevision());
+    return withRevision(newRevision);
   }
 
   /**

@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -40,6 +41,43 @@ public final class UuidVersionId<E> extends AbstractVersionId<E, UUID> implement
   public <T> UuidVersionId<T> create(Class<T> newEntityType, UUID newId, Long newRevision) {
 
     return new UuidVersionId<>(newEntityType, newId, newRevision);
+  }
+
+  @Override
+  public UuidVersionId<E> withIdAndRevision(UUID newId, Long newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+      return this;
+    }
+    return create(getEntityType(), newId, newRevision);
+  }
+
+  @Override
+  public UuidVersionId<E> withRevision(Long newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision)) {
+      return this;
+    }
+    return create(getEntityType(), get(), newRevision);
+  }
+
+  @Override
+  public UuidVersionId<E> withoutRevision() {
+
+    return withRevision(null);
+  }
+
+  @Override
+  public UuidVersionId<E> withEntityType(Class<?> newEntityType) {
+
+    return (UuidVersionId<E>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public UuidVersionId<E> updateRevision() {
+
+    Long newRevision = updateRevision(getRevision());
+    return withRevision(newRevision);
   }
 
   /**

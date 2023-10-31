@@ -3,6 +3,7 @@
 package io.github.mmm.entity.id;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -41,6 +42,43 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
   public <T> UuidInstantId<T> create(Class<T> newEntityType, UUID newId, Instant newRevision) {
 
     return new UuidInstantId<>(newEntityType, newId, newRevision);
+  }
+
+  @Override
+  public UuidInstantId<E> withIdAndRevision(UUID newId, Instant newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+      return this;
+    }
+    return create(getEntityType(), newId, newRevision);
+  }
+
+  @Override
+  public UuidInstantId<E> withRevision(Instant newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision)) {
+      return this;
+    }
+    return create(getEntityType(), get(), newRevision);
+  }
+
+  @Override
+  public UuidInstantId<E> withoutRevision() {
+
+    return withRevision(null);
+  }
+
+  @Override
+  public UuidInstantId<E> withEntityType(Class<?> newEntityType) {
+
+    return (UuidInstantId<E>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public UuidInstantId<E> updateRevision() {
+
+    Instant newRevision = updateRevision(getRevision());
+    return withRevision(newRevision);
   }
 
   /**

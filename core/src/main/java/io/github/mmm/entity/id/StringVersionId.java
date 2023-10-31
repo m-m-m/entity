@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
+import java.util.Objects;
+
 /**
  * Implementation of {@link AbstractVersionId} as {@link StringId}.
  *
@@ -38,6 +40,43 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
   public <T> StringVersionId<T> create(Class<T> newEntityType, String newId, Long newRevision) {
 
     return new StringVersionId<>(newEntityType, newId, newRevision);
+  }
+
+  @Override
+  public StringVersionId<E> withIdAndRevision(String newId, Long newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+      return this;
+    }
+    return create(getEntityType(), newId, newRevision);
+  }
+
+  @Override
+  public StringVersionId<E> withRevision(Long newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision)) {
+      return this;
+    }
+    return create(getEntityType(), get(), newRevision);
+  }
+
+  @Override
+  public StringVersionId<E> withoutRevision() {
+
+    return withRevision(null);
+  }
+
+  @Override
+  public StringVersionId<E> withEntityType(Class<?> newEntityType) {
+
+    return (StringVersionId<E>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public StringVersionId<E> updateRevision() {
+
+    Long newRevision = updateRevision(getRevision());
+    return withRevision(newRevision);
   }
 
   /**

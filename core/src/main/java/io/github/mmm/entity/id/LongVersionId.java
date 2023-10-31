@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
+import java.util.Objects;
+
 /**
  * Implementation of {@link AbstractVersionId} using {@link Long} as {@link #get() primary key}.
  *
@@ -36,9 +38,46 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
   }
 
   @Override
-  public <T> GenericId<T, Long, Long> create(Class<T> newEntityType, Long newId, Long newRevision) {
+  public <T> LongVersionId<T> create(Class<T> newEntityType, Long newId, Long newRevision) {
 
     return new LongVersionId<>(newEntityType, newId, newRevision);
+  }
+
+  @Override
+  public LongVersionId<E> withIdAndRevision(Long newId, Long newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+      return this;
+    }
+    return create(getEntityType(), newId, newRevision);
+  }
+
+  @Override
+  public LongVersionId<E> withRevision(Long newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision)) {
+      return this;
+    }
+    return create(getEntityType(), get(), newRevision);
+  }
+
+  @Override
+  public LongVersionId<E> withoutRevision() {
+
+    return withRevision(null);
+  }
+
+  @Override
+  public LongVersionId<E> withEntityType(Class<?> newEntityType) {
+
+    return (LongVersionId<E>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public LongVersionId<E> updateRevision() {
+
+    Long newRevision = updateRevision(getRevision());
+    return withRevision(newRevision);
   }
 
   /**

@@ -3,6 +3,7 @@
 package io.github.mmm.entity.id;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * Implementation of {@link AbstractInstantId} as {@link StringId}.
@@ -41,6 +42,43 @@ public final class StringInstantId<E> extends AbstractInstantId<E, String> imple
   public <T> StringInstantId<T> create(Class<T> newEntityType, String newId, Instant newRevision) {
 
     return new StringInstantId<>(newEntityType, newId, newRevision);
+  }
+
+  @Override
+  public StringInstantId<E> withIdAndRevision(String newId, Instant newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+      return this;
+    }
+    return create(getEntityType(), newId, newRevision);
+  }
+
+  @Override
+  public StringInstantId<E> withRevision(Instant newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision)) {
+      return this;
+    }
+    return create(getEntityType(), get(), newRevision);
+  }
+
+  @Override
+  public StringInstantId<E> withoutRevision() {
+
+    return withRevision(null);
+  }
+
+  @Override
+  public StringInstantId<E> withEntityType(Class<?> newEntityType) {
+
+    return (StringInstantId<E>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public StringInstantId<E> updateRevision() {
+
+    Instant newRevision = updateRevision(getRevision());
+    return withRevision(newRevision);
   }
 
   /**
