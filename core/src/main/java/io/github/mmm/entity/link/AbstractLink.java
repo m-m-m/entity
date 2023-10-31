@@ -24,7 +24,7 @@ public abstract class AbstractLink<E> implements Link<E> {
   }
 
   @Override
-  public int hashCode() {
+  public final int hashCode() {
 
     Id<E> id = getId();
     if (id == null) {
@@ -34,13 +34,12 @@ public abstract class AbstractLink<E> implements Link<E> {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public final boolean equals(Object obj) {
 
-    if ((obj == null) || (obj.getClass() != getClass())) {
-      return false;
-    }
     if (obj == this) {
       return true;
+    } else if ((obj == null) || !(obj instanceof AbstractLink)) {
+      return false;
     }
     Object id = ((AbstractLink<?>) obj).getId();
     if (!Objects.equals(getId(), id)) {

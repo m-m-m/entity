@@ -25,8 +25,8 @@ import io.github.mmm.entity.id.Id;
 public interface Link<E> {
 
   /**
-   * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getTarget() bean}.
-   *         When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
+   * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getTarget()
+   *         entity}. When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
    *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no {@link Id#get() primary key}
    *         assigned, yet. In such case this method will return an {@link Id#isEmpty() empty} {@link Id}.
    */
