@@ -75,7 +75,11 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
           }
         }
       } else {
-        id = reader.readValue();
+        if (reader.isStringValue()) {
+          id = reader.readValueAsString();
+        } else {
+          id = reader.readValueAsLong();
+        }
       }
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to parse Id.", e);

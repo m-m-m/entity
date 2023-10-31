@@ -34,6 +34,11 @@ public class IdMarshallingTest extends Assertions {
     check(new StringInstantId<>(Entity.class, "MyId", ts), "{\"s\":\"MyId\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
     check(new UuidInstantId<>(Entity.class, uuid, ts),
         "{\"u\":\"" + uuid + "\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
+    // test flat IDs
+    check(new LongVersionId<>(Entity.class, 42L, null), "42");
+    check(new StringVersionId<>(Entity.class, "MyId", null), "\"MyId\"");
+    check(new UuidVersionId<>(Entity.class, uuid, null), "\"" + uuid + "\"");
+
   }
 
   public static void check(GenericId<Entity, ?, ?> id, String json) {
