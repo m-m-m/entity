@@ -75,6 +75,12 @@ public interface GenericId<E, I, R extends Comparable<?>>
   R getRevision();
 
   /**
+   * @return {@code true} if this {@link Id} has relevant revision information, {@code false} otherwise (revision can be
+   *         omitted because it is {@code null} or zero).
+   */
+  boolean hasRevision();
+
+  /**
    * @return the {@link Class} reflecting the {@link #getRevision() revision}.
    */
   @Override
@@ -181,15 +187,9 @@ public interface GenericId<E, I, R extends Comparable<?>>
   @Override
   default void write(StructuredWriter writer) {
 
-    R revision = getRevision();
     I id = get();
-    if (revision == null) {
-      if (id == null) {
-        writer.writeValueAsNull();
-      } else {
-        writer.writeValue(id);
-      }
-    } else {
+    if (hasRevision()) {
+      R revision = getRevision();
       writer.writeStartObject();
       writer.writeName(getMarshalPropertyId());
       assert (id != null);
@@ -197,6 +197,8 @@ public interface GenericId<E, I, R extends Comparable<?>>
       writer.writeName(getMarshalPropertyRevision());
       writer.writeValue(revision);
       writer.writeEnd();
+    } else {
+      writer.writeValue(id);
     }
   }
 

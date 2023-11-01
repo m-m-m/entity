@@ -38,7 +38,19 @@ public class IdMarshallingTest extends Assertions {
     check(new LongVersionId<>(Entity.class, 42L, null), "42");
     check(new StringVersionId<>(Entity.class, "MyId", null), "\"MyId\"");
     check(new UuidVersionId<>(Entity.class, uuid, null), "\"" + uuid + "\"");
+  }
 
+  /**
+   * Test of {@link IdMarshalling} to JSON for all {@link AbstractVersionId}s with
+   * {@link AbstractVersionId#getRevision() revision} of {@code 0}.
+   */
+  @Test
+  public void testWriteWithZeroVersion() {
+
+    UUID uuid = UUID.randomUUID();
+    assertThat(writeJson(new LongVersionId<>(Entity.class, 42L, 0L))).isEqualTo("42");
+    assertThat(writeJson(new StringVersionId<>(Entity.class, "MyId", 0L))).isEqualTo("\"MyId\"");
+    assertThat(writeJson(new UuidVersionId<>(Entity.class, uuid, 0L))).isEqualTo("\"" + uuid + '"');
   }
 
   public static void check(GenericId<Entity, ?, ?> id, String json) {

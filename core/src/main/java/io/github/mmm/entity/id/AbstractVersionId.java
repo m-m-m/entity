@@ -33,6 +33,12 @@ public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
   }
 
   @Override
+  public boolean hasRevision() {
+
+    return (this.revision != null) && (this.revision.longValue() != 0);
+  }
+
+  @Override
   public Class<Long> getRevisionType() {
 
     return Long.class;
