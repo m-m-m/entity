@@ -71,6 +71,12 @@ public interface LongId<E, V extends Comparable<?>> extends GenericId<E, Long, V
     return (LongId<E, V>) GenericId.super.withoutRevision();
   }
 
+  @Override
+  default LongId<E, V> updateRevision() {
+
+    return (LongId<E, V>) GenericId.super.updateRevision();
+  }
+
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.

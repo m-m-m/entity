@@ -69,6 +69,12 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
     return (UuidId<E, V>) GenericId.super.withoutRevision();
   }
 
+  @Override
+  default UuidId<E, V> updateRevision() {
+
+    return (UuidId<E, V>) GenericId.super.updateRevision();
+  }
+
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.
