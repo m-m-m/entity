@@ -35,6 +35,31 @@ public interface StringId<E, V extends Comparable<?>> extends GenericId<E, Strin
     return PROPERTY_STRING_ID;
   }
 
+  @Override
+  default StringId<E, V> withEntityType(Class<?> newEntityType) {
+
+    return (StringId<E, V>) GenericId.super.withEntityType(newEntityType);
+  }
+
+  @Override
+  default StringId<E, V> withIdAndRevision(String newId, V newRevision) {
+
+    return (StringId<E, V>) GenericId.super.withIdAndRevision(newId, newRevision);
+  }
+
+  @Override
+  default StringId<E, V> withRevision(V newRevision) {
+
+    return (StringId<E, V>) GenericId.super.withRevision(newRevision);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  default StringId<E, V> withoutRevision() {
+
+    return (StringId<E, V>) GenericId.super.withoutRevision();
+  }
+
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.

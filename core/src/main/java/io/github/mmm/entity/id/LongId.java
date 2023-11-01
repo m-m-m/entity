@@ -46,6 +46,31 @@ public interface LongId<E, V extends Comparable<?>> extends GenericId<E, Long, V
     return PROPERTY_LONG_ID;
   }
 
+  @Override
+  default LongId<E, V> withEntityType(Class<?> newEntityType) {
+
+    return (LongId<E, V>) GenericId.super.withEntityType(newEntityType);
+  }
+
+  @Override
+  default LongId<E, V> withIdAndRevision(Long newId, V newRevision) {
+
+    return (LongId<E, V>) GenericId.super.withIdAndRevision(newId, newRevision);
+  }
+
+  @Override
+  default LongId<E, V> withRevision(V newRevision) {
+
+    return (LongId<E, V>) GenericId.super.withRevision(newRevision);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  default LongId<E, V> withoutRevision() {
+
+    return (LongId<E, V>) GenericId.super.withoutRevision();
+  }
+
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.

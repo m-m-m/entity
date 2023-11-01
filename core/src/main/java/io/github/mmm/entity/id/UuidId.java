@@ -44,6 +44,31 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
     return PROPERTY_UUID;
   }
 
+  @Override
+  default UuidId<E, V> withEntityType(Class<?> newEntityType) {
+
+    return (UuidId<E, V>) GenericId.super.withEntityType(newEntityType);
+  }
+
+  @Override
+  default UuidId<E, V> withIdAndRevision(UUID newId, V newRevision) {
+
+    return (UuidId<E, V>) GenericId.super.withIdAndRevision(newId, newRevision);
+  }
+
+  @Override
+  default UuidId<E, V> withRevision(V newRevision) {
+
+    return (UuidId<E, V>) GenericId.super.withRevision(newRevision);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  default UuidId<E, V> withoutRevision() {
+
+    return (UuidId<E, V>) GenericId.super.withoutRevision();
+  }
+
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.
