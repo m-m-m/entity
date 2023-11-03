@@ -37,7 +37,7 @@ public abstract class AbstractEntityRepository<E extends EntityBean> implements 
 
     super();
     this.prototype = prototype;
-    this.entityClass = ReadableBean.getClass(this.prototype);
+    this.entityClass = ReadableBean.getJavaClass(this.prototype);
     this.idGenerator = idGenerator;
   }
 
