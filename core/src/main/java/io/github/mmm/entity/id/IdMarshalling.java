@@ -34,7 +34,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
   /**
    * @param <E> type of the identified entity.
    * @param reader the {@link StructuredReader}.
-   * @param type the {@link Id#getEntityType() entity type}.
+   * @param type the {@link Id#getEntityClass() entity type}.
    * @return the unmarshalled {@link Id}.
    */
   default <E> Id<E> readObject(StructuredReader reader, Class<E> type) {
@@ -48,7 +48,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
    * @param <V> type of the {@link GenericId#getRevision() revision}.
    * @param reader the {@link StructuredReader} to read from.
    * @param factory the {@link IdFactory} to create {@link Id} instances.
-   * @param entityType the {@link GenericId#getEntityType() entity type}.
+   * @param entityType the {@link GenericId#getEntityClass() entity type}.
    * @return the unmarshalled {@link GenericId}.
    */
   static <E, I, V extends Comparable<?>> GenericId<E, I, V> readObject(StructuredReader reader, IdFactory<I, V> factory,

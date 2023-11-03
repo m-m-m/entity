@@ -37,7 +37,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
 
   private Function<Id<E>, E> resolver;
 
-  private LinkMapper valueMapper;
+  private LinkMapper typeMapper;
 
   /**
    * The constructor.
@@ -91,7 +91,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   public LinkProperty(String name, Link<E> value, PropertyMetadata<Link<E>> metadata, Function<Id<E>, E> resolver) {
 
     super(name, value, metadata);
-    this.entityClass = value.getId().getEntityType();
+    this.entityClass = value.getId().getEntityClass();
     this.resolver = resolver;
   }
 
@@ -102,9 +102,17 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
       Id<E> id = newValue.getId();
       if (id != null) {
         if (this.entityClass == null) {
-          this.entityClass = id.getEntityType();
-        } else if (newValue instanceof IdLink) {
-          newValue = ((IdLink<E>) newValue).withType(this.entityClass);
+          this.entityClass = id.getEntityClass();
+        } else {
+          Class<E> idEntityType = id.getEntityClass();
+          if (idEntityType == null) {
+            if (newValue instanceof IdLink) {
+              newValue = ((IdLink<E>) newValue).withType(this.entityClass);
+            }
+          } else if (!this.entityClass.isAssignableFrom(idEntityType)) {
+            throw new IllegalArgumentException("Cannot set link of type " + idEntityType.getName() + " to property "
+                + getName() + " with incompatible entity type " + this.entityClass.getName());
+          }
         }
       }
     }
@@ -112,7 +120,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   /**
-   * @return the {@link Id#getEntityType() entity class}.
+   * @return the {@link Id#getEntityClass() entity class}.
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Class<E> getEntityClass() {
@@ -122,7 +130,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
       if (link != null) {
         Id<E> id = link.getId();
         if (id != null) {
-          this.entityClass = id.getEntityType();
+          this.entityClass = id.getEntityClass();
         } else if (link.isResolved()) {
           E target = link.getTarget();
           this.entityClass = (Class) ((EntityBean) target).getType().getJavaClass();
@@ -136,10 +144,10 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   @Override
   public TypeMapper<Link<E>, Id<E>> getTypeMapper() {
 
-    if (this.valueMapper == null) {
-      this.valueMapper = new LinkMapper(this.resolver);
+    if (this.typeMapper == null) {
+      this.typeMapper = new LinkMapper(this.resolver);
     }
-    return (TypeMapper) this.valueMapper;
+    return (TypeMapper) this.typeMapper;
   }
 
   @Override
@@ -235,6 +243,28 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
       PropertyPath<V> property2) {
 
     return CriteriaPredicate.of(property1, op, property2);
+  }
+
+  /**
+   * <b>ATTENTION:<b><br>
+   * This is an internal method for framework code like {@link io.github.mmm.entity.repository.EntityRepository}
+   * implementations.
+   *
+   * @param resolver new resolver {@link Function}.
+   * @see IdLink#setResolver(Function)
+   */
+  @SuppressWarnings("unchecked")
+  public void setResolver(Function<Id<E>, E> resolver) {
+
+    // TODO: checks?
+    this.resolver = resolver;
+    this.typeMapper = null;
+    Link<E> link = doGet();
+    if ((link != null) && !link.isResolved()) {
+      if (link instanceof IdLink idLink) {
+        idLink.setResolver(resolver);
+      }
+    }
   }
 
 }

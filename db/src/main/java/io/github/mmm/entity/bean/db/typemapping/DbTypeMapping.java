@@ -60,7 +60,6 @@ public class DbTypeMapping extends ComposedTypeMapping {
     add(new SingleTypeMappingBinary(declarationAny, declarationVariable));
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public <V> TypeMapper<V, ?> getTypeMapper(Class<V> valueType, ReadableProperty<?> property) {
 

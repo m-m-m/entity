@@ -10,7 +10,7 @@
   <artifactId>mmm-entity-bean</artifactId>
   <packaging>jar</packaging>
   <name>${project.artifactId}</name>
-  <description>Property support for entity (IdProperty, LinkProperty, LinkListProperty).</description>
+  <description>Entity as Bean with Property support (IdProperty, LinkProperty, LinkListProperty).</description>
 
   <dependencies>
     <dependency>
@@ -24,10 +24,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>mmm-bean-factory</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>mmm-binary</artifactId>
     </dependency>
   </dependencies>
 </project>

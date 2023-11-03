@@ -69,7 +69,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
    * @return the {@link Class} reflecting the {@link #get() primary key}.
    */
   @Override
-  Class<I> getIdType();
+  Class<I> getType();
 
   @Override
   R getRevision();
@@ -92,7 +92,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
    */
   default GenericId<E, I, R> create(String valueString) {
 
-    return create(getEntityType(), valueString);
+    return create(getEntityClass(), valueString);
   }
 
   @Override
@@ -111,7 +111,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
     if (Objects.equals(getRevision(), newRevision)) {
       return this;
     }
-    return create(getEntityType(), get(), newRevision);
+    return create(getEntityClass(), get(), newRevision);
   }
 
   /**
@@ -125,31 +125,38 @@ public interface GenericId<E, I, R extends Comparable<?>>
     if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
       return this;
     }
-    return create(getEntityType(), newId, newRevision);
+    return create(getEntityClass(), newId, newRevision);
   }
 
-  /**
-   * <b>ATTENTION</b>: This method is designed to ensure and verify the expected {@link #getEntityType() type}. It will
-   * fail if a different type is already assigned.
-   *
-   * @param newEntityType the new value of {@link #getEntityType()}. Exact type should actually be
-   *        {@link Class}{@literal <E>} but this prevents simple generic usage. As the {@link #getEntityType() type} can
-   *        not actually be changed with this method, this should be fine.
-   * @return a copy of this {@link Id} with the given {@link #getEntityType() type} or this {@link Id} itself if already
-   *         satisfying.
-   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityType() type} assigned.
-   */
   @SuppressWarnings("unchecked")
-  default GenericId<E, I, R> withEntityType(Class<?> newEntityType) {
+  @Override
+  default <T> GenericId<T, I, R> withEntityType(Class<T> newEntityType) {
 
-    Class<E> entityType = getEntityType();
+    Class<E> entityType = getEntityClass();
     if (entityType == null) {
-      return create((Class<E>) newEntityType, get(), getRevision());
+      return create(newEntityType, get(), getRevision());
     } else if (entityType != newEntityType) {
       throw new IllegalArgumentException(
           "Illegal type " + newEntityType + " - already typed to " + entityType.getName() + " at " + toString());
     }
-    return this;
+    return (GenericId<T, I, R>) this;
+  }
+
+  /**
+   * <b>ATTENTION</b>: This method is designed to ensure and verify the expected {@link #getEntityClass() type}. It will
+   * fail if a different type is already assigned.
+   *
+   * @param newEntityType the new value of {@link #getEntityClass()}. Exact type should actually be
+   *        {@link Class}{@literal <E>} but this prevents simple generic usage. As the {@link #getEntityClass() type} can
+   *        not actually be changed with this method, this should be fine.
+   * @return a copy of this {@link Id} with the given {@link #getEntityClass() type} or this {@link Id} itself if already
+   *         satisfying.
+   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityClass() type} assigned.
+   */
+  @SuppressWarnings("unchecked")
+  default GenericId<E, I, R> withEntityTypeGeneric(Class<?> newEntityType) {
+
+    return (GenericId<E, I, R>) withEntityType(newEntityType);
   }
 
   /**
@@ -206,7 +213,17 @@ public interface GenericId<E, I, R extends Comparable<?>>
   @Override
   default GenericId<E, I, R> readObject(StructuredReader reader) {
 
-    return IdMarshalling.readObject(reader, this, getEntityType());
+    return IdMarshalling.readObject(reader, this, getEntityClass());
+  }
+
+  /**
+   * @param <E> type of the identified entity.
+   * @param id the {@link Id}.
+   * @return the new {@link Id} with {@link #updateRevision() updated revision}.
+   */
+  public static <E> Id<E> updateRevision(Id<E> id) {
+
+    return ((GenericId<E, ?, ?>) id).updateRevision();
   }
 
 }

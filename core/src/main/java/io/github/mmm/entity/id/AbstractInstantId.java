@@ -19,7 +19,7 @@ public abstract class AbstractInstantId<E, I> extends AbstractId<E, I, Instant> 
   /**
    * The constructor.
    *
-   * @param type - see {@link #getEntityType()}.
+   * @param type - see {@link #getEntityClass()}.
    * @param revision - see {@link #getRevision()}.
    */
   public AbstractInstantId(Class<E> type, Instant revision) {

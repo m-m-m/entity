@@ -20,6 +20,8 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
 
   private V value;
 
+  private Class<?> entityClass;
+
   /**
    * The constructor.
    *
@@ -34,7 +36,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
     if (id == null) {
       this.value = (V) LongVersionId.getEmpty();
     } else {
-      this.value = id;
+      doSet(id);
     }
   }
 
@@ -48,16 +50,16 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
   @SuppressWarnings("unchecked")
   protected void doSet(V newValue) {
 
-    if (this.value != null) {
-      if (newValue == null) {
-        newValue = (V) ((GenericId<?, ?, ?>) this.value).withIdAndRevision(null, null);
+    if (newValue != null) {
+      Class<?> newEntityClass = newValue.getEntityClass();
+      if (this.entityClass == null) {
+        this.entityClass = newEntityClass;
       } else {
-        Class<?> newEntityType = newValue.getEntityType();
-        Class<?> entityType = this.value.getEntityType();
-        if (newEntityType == null) {
-          newValue = (V) ((GenericId<?, ?, ?>) newValue).withEntityType(entityType);
-        } else if (entityType == null) {
-          assert (entityType == newEntityType) : "Can not change entity type of primary key!";
+        if (newEntityClass == null) {
+          newValue = (V) ((GenericId<?, ?, ?>) newValue).withEntityType(this.entityClass);
+        } else if (!this.entityClass.isAssignableFrom(newEntityClass)) {
+          throw new IllegalArgumentException("Cannot set ID of type " + newEntityClass.getName() + " to "
+              + getClass().getSimpleName() + " " + getName() + " with incompatible type " + this.entityClass.getName());
         }
       }
     }

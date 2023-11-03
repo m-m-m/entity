@@ -4,11 +4,13 @@ package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.IdFactory;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.property.WritableProperty;
 import io.github.mmm.property.factory.AbstractPropertyFactory;
 import io.github.mmm.property.factory.PropertyFactory;
+import io.github.mmm.property.factory.PropertyTypeInfo;
 import io.github.mmm.property.object.ObjectProperty;
 
 /**
@@ -21,7 +23,7 @@ import io.github.mmm.property.object.ObjectProperty;
 public class PropertyFactoryFk<E extends EntityBean> extends AbstractPropertyFactory<Id<E>, FkProperty<E>> {
 
   @Override
-  public Class<? extends Id<E>> getValueClass() {
+  public Class<Id<E>> getValueClass() {
 
     return (Class) Id.class;
   }
@@ -45,10 +47,12 @@ public class PropertyFactoryFk<E extends EntityBean> extends AbstractPropertyFac
   }
 
   @Override
-  public FkProperty<E> create(String name, Class<? extends Id<E>> valueClass, PropertyMetadata<Id<E>> metadata,
-      WritableProperty<?> valueProperty) {
+  public FkProperty<E> create(String name, PropertyTypeInfo<Id<E>> typeInfo, PropertyMetadata<Id<E>> metadata) {
 
-    return new FkProperty<>(name, null, metadata);
+    Class<?> entityClass = typeInfo.getTypeArgumentClass(0);
+    Class idClass = typeInfo.getValueClass();
+    Id id = IdFactory.get().createEmpty(entityClass, idClass);
+    return new FkProperty<>(name, id, metadata);
   }
 
   @Override

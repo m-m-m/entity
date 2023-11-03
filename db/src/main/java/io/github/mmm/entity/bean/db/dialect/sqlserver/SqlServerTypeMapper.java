@@ -1,3 +1,5 @@
+/* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
+ * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.bean.db.dialect.sqlserver;
 
 import java.math.BigDecimal;
@@ -13,8 +15,8 @@ import java.util.UUID;
 import io.github.mmm.entity.bean.db.typemapping.DbTypeMapping;
 
 /**
- * {@link DbTypeMapping} for
- * <a href="https://docs.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql">MS SQL Server</a>.
+ * {@link DbTypeMapping} for <a href="https://docs.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql">MS
+ * SQL Server</a>.
  *
  * @since 1.0.0
  */

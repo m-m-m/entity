@@ -21,7 +21,7 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
   /**
    * The constructor.
    *
-   * @param type the {@link #getEntityType() type}.
+   * @param type the {@link #getEntityClass() type}.
    * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
    * @param revision the {@link #getRevision() revision}.
    */
@@ -49,7 +49,7 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
     if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
       return this;
     }
-    return create(getEntityType(), newId, newRevision);
+    return create(getEntityClass(), newId, newRevision);
   }
 
   @Override
@@ -58,7 +58,7 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
     if (Objects.equals(getRevision(), newRevision)) {
       return this;
     }
-    return create(getEntityType(), get(), newRevision);
+    return create(getEntityClass(), get(), newRevision);
   }
 
   @Override
@@ -68,9 +68,15 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
   }
 
   @Override
-  public LongVersionId<E> withEntityType(Class<?> newEntityType) {
+  public <T> LongVersionId<T> withEntityType(Class<T> newEntityType) {
 
-    return (LongVersionId<E>) super.withEntityType(newEntityType);
+    return (LongVersionId<T>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public LongVersionId<E> withEntityTypeGeneric(Class<?> newEntityType) {
+
+    return (LongVersionId<E>) super.withEntityTypeGeneric(newEntityType);
   }
 
   @Override
@@ -91,13 +97,12 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
 
   /**
    * @param <E> type of the identified entity.
-   * @param entityType the {@link #getEntityType() entity type}.
+   * @param entityType the {@link #getEntityClass() entity type}.
    * @return the {@link #isEmpty() empty} template of this class.
    */
-  @SuppressWarnings("unchecked")
   public static <E> LongVersionId<E> getEmpty(Class<E> entityType) {
 
-    return (LongVersionId<E>) getEmpty().withEntityType(entityType);
+    return getEmpty().withEntityType(entityType);
   }
 
 }

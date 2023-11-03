@@ -18,4 +18,7 @@ module io.github.mmm.entity {
   exports io.github.mmm.entity.id;
 
   exports io.github.mmm.entity.link;
+
+  exports io.github.mmm.entity.repository;
+
 }

@@ -55,7 +55,7 @@ public class IdMarshallingTest extends Assertions {
 
   public static void check(GenericId<Entity, ?, ?> id, String json) {
 
-    assertThat(id.getEntityType()).isSameAs(Entity.class);
+    assertThat(id.getEntityClass()).isSameAs(Entity.class);
     assertThat(writeJson(id)).isEqualTo(json);
     assertThat(readJson(id.withIdAndRevision(null, null), json)).isEqualTo(id);
   }
@@ -71,7 +71,7 @@ public class IdMarshallingTest extends Assertions {
 
     StructuredReader reader = JsonFormat.of().reader(json);
     GenericId<Entity, ?, ?> newId = id.readObject(reader);
-    assertThat(newId.getEntityType()).isSameAs(Entity.class);
+    assertThat(newId.getEntityClass()).isSameAs(Entity.class);
     return newId;
   }
 

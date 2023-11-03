@@ -12,6 +12,8 @@ module io.github.mmm.entity.db {
 
   requires transitive io.github.mmm.entity.bean;
 
+  requires transitive io.github.mmm.binary;
+
   uses io.github.mmm.entity.bean.db.dialect.DbDialect;
 
   provides io.github.mmm.entity.bean.db.dialect.DbDialect //

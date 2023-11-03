@@ -23,14 +23,21 @@ public interface Entity {
    *         entity should return an {@link Id#isEmpty() empty} {@link Id}.
    * @see #getId(Entity)
    */
-  Id<? extends Entity> getId();
+  Id<?/* extends Entity */> getId();
 
   /**
+   * Sets the {@link #getId() ID} to the given new {@link Id}.<br>
+   * <b>ATTENTION:</b><br>
+   * This method is reserved for framework code like implementations of
+   * {@link io.github.mmm.entity.repository.EntityRepository} and should not be used by regular API users.
+   *
    * @param id the new {@link #getId() ID}.
    */
-  void setId(Id<? extends Entity> id);
+  void setId(Id<?> id);
 
   /**
+   * Type-safe variant of {@link #getId()}.
+   *
    * @param <B> type of {@link Entity}.
    * @param bean the {@link Entity} instance. May be {@code null}.
    * @return the {@link Id} of the given {@link Entity}. May be {@code null} if given {@link Entity} was {@code null} or

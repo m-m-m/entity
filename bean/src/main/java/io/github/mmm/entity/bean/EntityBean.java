@@ -27,15 +27,14 @@ public interface EntityBean extends WritableBean, Entity {
     return new PkProperty(LongVersionId.getEmpty().withEntityType(getType().getJavaClass()));
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  default Id<? extends EntityBean> getId() {
+  default Id<?/* extends EntityBean */> getId() {
 
-    return (Id) Id().get();
+    return Id().get();
   }
 
   @Override
-  default void setId(Id<? extends Entity> id) {
+  default void setId(Id<?> id) {
 
     Id().set(id);
   }

@@ -33,7 +33,7 @@ public class IdMapper extends AtomicTypeMapper<Id, Object> {
   @Override
   public Class<? extends Object> getTargetType() {
 
-    return this.idTemplate.getIdType();
+    return this.idTemplate.getType();
   }
 
   @Override

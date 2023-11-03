@@ -14,7 +14,7 @@ public interface IdFactory<I, V extends Comparable<?>> {
 
   /**
    * @param <E> type of the identified entity.
-   * @param entityType the {@link Id#getEntityType() entity type}.
+   * @param entityType the {@link Id#getEntityClass() entity type}.
    * @param id the {@link Id#get() primary key}.
    * @param revision the {@link Id#getRevision() revision}. May be {@code null}.
    * @return the {@link Id} for the given values.
@@ -23,8 +23,8 @@ public interface IdFactory<I, V extends Comparable<?>> {
 
   /**
    * @param <E> type of the identified entity.
-   * @param entityType the {@link Id#getEntityType() entity type}.
-   * @param idString the {@link Id#getIdAsString() primary key as string}.
+   * @param entityType the {@link Id#getEntityClass() entity type}.
+   * @param idString the {@link Id#getAsString() primary key as string}.
    * @return the parsed {@link Id}.
    */
   default <E> GenericId<E, I, V> create(Class<E> entityType, String idString) {
@@ -45,7 +45,7 @@ public interface IdFactory<I, V extends Comparable<?>> {
 
   /**
    * @param <E> type of the identified entity.
-   * @param entityType the {@link Id#getEntityType() entity type}.
+   * @param entityType the {@link Id#getEntityClass() entity type}.
    * @param id the {@link Id#get() primary key}.
    * @param revision the {@link Id#getRevision() revision}. May be {@code null}.
    * @return the new {@link AbstractId} for the given values.
@@ -63,7 +63,7 @@ public interface IdFactory<I, V extends Comparable<?>> {
   }
 
   /**
-   * @param idString the {@link Id#getIdAsString() ID as string}.
+   * @param idString the {@link Id#getAsString() ID as string}.
    * @return the parsed {@link Id#get() ID}.
    */
   I parseId(String idString);
@@ -73,6 +73,19 @@ public interface IdFactory<I, V extends Comparable<?>> {
    * @return the parsed {@link Id#getRevision() revision}.
    */
   V parseRevision(String revisionString);
+
+  /**
+   * @param <E> type of the identified {@link io.github.mmm.entity.Entity entity}.
+   * @param <ID> type of {@code idClass}.
+   * @param entityType the {@link Id#getEntityClass() entity type}. May be {@code null}.
+   * @param idClass {@link Class} reflecting the {@link Id} implementation. the May be {@code null} or abstract.
+   * @return the {@link Id#isEmpty() empty} {@link GenericId} instance.
+   */
+  @SuppressWarnings("rawtypes")
+  default <E, ID extends Id> GenericId<E, ?, ?> createEmpty(Class<E> entityType, Class<ID> idClass) {
+
+    return GenericIdFactory.empty(entityType, idClass);
+  }
 
   /**
    * @return a generic instance of {@link IdFactory}.

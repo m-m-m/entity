@@ -116,7 +116,7 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     @Override
     public Class<? extends Object> getTargetType() {
 
-      return this.idTemplate.getIdType();
+      return this.idTemplate.getType();
     }
 
     @Override
@@ -143,7 +143,7 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
    * @param id the {@link Id} to use as template.
    * @return the {@link PkMapper}.
    */
-  public static PkMapper of(Id id) {
+  public static PkMapper of(Id<?> id) {
 
     Objects.requireNonNull(id);
     GenericId genericId = (GenericId) id;

@@ -37,6 +37,9 @@ public class IdLink<E> extends AbstractLink<E> {
 
     super();
     Objects.requireNonNull(id, "id");
+    if (id.get() == null) {
+      throw new IllegalArgumentException("Cannot create link for empty ID - primary key must be present!");
+    }
     this.id = (GenericId) id;
     this.resolver = resolver;
   }
@@ -62,9 +65,6 @@ public class IdLink<E> extends AbstractLink<E> {
     return this.entity;
   }
 
-  /**
-   * @return
-   */
   private synchronized E resolve() {
 
     if ((this.entity == null) && (this.resolver != null)) {
@@ -75,21 +75,29 @@ public class IdLink<E> extends AbstractLink<E> {
   }
 
   /**
-   * @param type the new value of {@link Id#getEntityType()}. Exact type should actually be {@link Class}{@literal <E>}
+   * @param type the new value of {@link Id#getEntityClass()}. Exact type should actually be {@link Class}{@literal <E>}
    *        but this prevents simple usage.
-   * @return a copy of this {@link Link} with the given {@link Id#getEntityType() type} or this {@link Link} itself if
+   * @return a copy of this {@link Link} with the given {@link Id#getEntityClass() type} or this {@link Link} itself if
    *         already satisfying.
    * @see GenericId#withEntityType(Class)
    */
   public IdLink<E> withType(Class<?> type) {
 
-    Id<E> newId = this.id.withEntityType(type);
+    Id<E> newId = this.id.withEntityTypeGeneric(type);
     if (newId == this.id) {
       return this;
     }
     IdLink<E> newLink = new IdLink<>(newId, this.resolver);
     newLink.entity = this.entity;
     return newLink;
+  }
+
+  /**
+   * @param resolver the new {@link Function} to {@link #isResolved() resolve} the {@link #getTarget() target}.
+   */
+  public void setResolver(Function<Id<E>, E> resolver) {
+
+    this.resolver = resolver;
   }
 
   /**

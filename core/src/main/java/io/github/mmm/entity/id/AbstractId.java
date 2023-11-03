@@ -19,7 +19,7 @@ public abstract class AbstractId<E, I, R extends Comparable<?>> implements Gener
   /**
    * The constructor.
    *
-   * @param entityType - see {@link #getEntityType()}.
+   * @param entityType - see {@link #getEntityClass()}.
    */
   public AbstractId(Class<E> entityType) {
 
@@ -28,7 +28,7 @@ public abstract class AbstractId<E, I, R extends Comparable<?>> implements Gener
   }
 
   @Override
-  public final Class<E> getEntityType() {
+  public final Class<E> getEntityClass() {
 
     return this.entityType;
   }

@@ -14,8 +14,6 @@ module io.github.mmm.entity.bean {
 
   requires transitive io.github.mmm.bean.factory;
 
-  requires transitive io.github.mmm.binary;
-
   provides io.github.mmm.property.factory.PropertyFactory //
       with io.github.mmm.entity.property.id.PropertyFactoryFk, //
       io.github.mmm.entity.property.id.PropertyFactoryPk, //
@@ -23,6 +21,8 @@ module io.github.mmm.entity.bean {
   ;
 
   exports io.github.mmm.entity.bean;
+
+  exports io.github.mmm.entity.bean.repository;
 
   exports io.github.mmm.entity.bean.typemapping;
 

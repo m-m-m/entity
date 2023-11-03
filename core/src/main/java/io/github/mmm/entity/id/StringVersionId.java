@@ -20,7 +20,7 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
   /**
    * The constructor.
    *
-   * @param type the {@link #getEntityType() type}.
+   * @param type the {@link #getEntityClass() type}.
    * @param id the {@link #get() primary key}.
    * @param revision the {@link #getRevision() revision}.
    */
@@ -48,7 +48,7 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
     if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
       return this;
     }
-    return create(getEntityType(), newId, newRevision);
+    return create(getEntityClass(), newId, newRevision);
   }
 
   @Override
@@ -57,7 +57,7 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
     if (Objects.equals(getRevision(), newRevision)) {
       return this;
     }
-    return create(getEntityType(), get(), newRevision);
+    return create(getEntityClass(), get(), newRevision);
   }
 
   @Override
@@ -67,9 +67,15 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
   }
 
   @Override
-  public StringVersionId<E> withEntityType(Class<?> newEntityType) {
+  public <T> StringVersionId<T> withEntityType(Class<T> newEntityType) {
 
-    return (StringVersionId<E>) super.withEntityType(newEntityType);
+    return (StringVersionId<T>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public StringVersionId<E> withEntityTypeGeneric(Class<?> newEntityType) {
+
+    return (StringVersionId<E>) super.withEntityTypeGeneric(newEntityType);
   }
 
   @Override
@@ -90,12 +96,11 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
 
   /**
    * @param <E> type of the identified entity.
-   * @param entityType the {@link #getEntityType() entity type}.
+   * @param entityType the {@link #getEntityClass() entity type}.
    * @return the {@link #isEmpty() empty} template of this class.
    */
-  @SuppressWarnings("unchecked")
   public static <E> StringVersionId<E> getEmpty(Class<E> entityType) {
 
-    return (StringVersionId<E>) getEmpty().withEntityType(entityType);
+    return getEmpty().withEntityType(entityType);
   }
 }

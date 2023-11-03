@@ -22,7 +22,7 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
   /**
    * The constructor.
    *
-   * @param type the {@link #getEntityType() type}.
+   * @param type the {@link #getEntityClass() type}.
    * @param id the {@link #get() primary key}.
    * @param revision the {@link #getRevision() revision}.
    */
@@ -50,7 +50,7 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
     if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
       return this;
     }
-    return create(getEntityType(), newId, newRevision);
+    return create(getEntityClass(), newId, newRevision);
   }
 
   @Override
@@ -59,7 +59,7 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
     if (Objects.equals(getRevision(), newRevision)) {
       return this;
     }
-    return create(getEntityType(), get(), newRevision);
+    return create(getEntityClass(), get(), newRevision);
   }
 
   @Override
@@ -69,9 +69,15 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
   }
 
   @Override
-  public UuidInstantId<E> withEntityType(Class<?> newEntityType) {
+  public <T> UuidInstantId<T> withEntityType(Class<T> newEntityType) {
 
-    return (UuidInstantId<E>) super.withEntityType(newEntityType);
+    return (UuidInstantId<T>) super.withEntityType(newEntityType);
+  }
+
+  @Override
+  public UuidInstantId<E> withEntityTypeGeneric(Class<?> newEntityType) {
+
+    return (UuidInstantId<E>) super.withEntityTypeGeneric(newEntityType);
   }
 
   @Override
@@ -92,12 +98,11 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
 
   /**
    * @param <E> type of the identified entity.
-   * @param entityType the {@link #getEntityType() entity type}.
+   * @param entityType the {@link #getEntityClass() entity type}.
    * @return the {@link #isEmpty() empty} template of this class.
    */
-  @SuppressWarnings("unchecked")
   public static <E> UuidInstantId<E> getEmpty(Class<E> entityType) {
 
-    return (UuidInstantId<E>) getEmpty().withEntityType(entityType);
+    return getEmpty().withEntityType(entityType);
   }
 }

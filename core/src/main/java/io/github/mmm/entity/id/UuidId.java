@@ -20,7 +20,7 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
   UUID get();
 
   @Override
-  default Class<UUID> getIdType() {
+  default Class<UUID> getType() {
 
     return UUID.class;
   }
@@ -45,9 +45,15 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
   }
 
   @Override
-  default UuidId<E, V> withEntityType(Class<?> newEntityType) {
+  default <T> UuidId<T, V> withEntityType(Class<T> newEntityType) {
 
-    return (UuidId<E, V>) GenericId.super.withEntityType(newEntityType);
+    return (UuidId<T, V>) GenericId.super.withEntityType(newEntityType);
+  }
+
+  @Override
+  default UuidId<E, V> withEntityTypeGeneric(Class<?> newEntityType) {
+
+    return (UuidId<E, V>) GenericId.super.withEntityTypeGeneric(newEntityType);
   }
 
   @Override
@@ -88,7 +94,7 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.
-   * @param entityType the {@link #getEntityType() entity type}.
+   * @param entityType the {@link #getEntityClass() entity type}.
    * @return the new {@link UuidId}.
    */
   static <E> UuidId<E, ?> of(UUID id, Class<E> entityType) {
@@ -98,7 +104,7 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
 
   /**
    * @param <E> the generic type of the identified entity.
-   * @param type the {@link #getEntityType() type}.
+   * @param type the {@link #getEntityClass() type}.
    * @param id the {@link #get() primary key}.
    * @param revision the optional {@link #getRevision() revision}.
    * @return the new {@link UuidId}.

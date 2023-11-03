@@ -135,7 +135,7 @@ public class CreateTableColumns<E extends EntityBean> extends PropertyClause<E, 
   public CreateTableColumns<E> andForeignKey(FkProperty<?> property) {
 
     and(property, false);
-    return andForeignKey(property, property.get().getEntityType());
+    return andForeignKey(property, property.get().getEntityClass());
   }
 
   /**
