@@ -4,7 +4,7 @@ package io.github.mmm.entity.bean.db.statement;
 
 import org.assertj.core.api.Assertions;
 
-import io.github.mmm.marshall.JsonFormat;
+import io.github.mmm.marshall.StandardFormat;
 import io.github.mmm.marshall.MarshallingConfig;
 import io.github.mmm.marshall.StructuredTextFormat;
 
@@ -38,7 +38,7 @@ public abstract class DbStatementTest extends Assertions {
   protected void check(DbStatement<?> statement, String sql, String json) {
 
     check(statement, sql);
-    StructuredTextFormat format = JsonFormat.of(MarshallingConfig.NO_INDENTATION);
+    StructuredTextFormat format = StandardFormat.json(MarshallingConfig.NO_INDENTATION);
     StringBuilder sb = new StringBuilder();
     statement.writeObject(format.writer(sb), statement);
     String actualJson = sb.toString();

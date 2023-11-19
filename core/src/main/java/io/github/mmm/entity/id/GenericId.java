@@ -6,6 +6,9 @@ import io.github.mmm.marshall.MarshallableObject;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.marshall.Unmarshaller;
+import io.github.mmm.marshall.id.StructuredIdMapping;
+import io.github.mmm.marshall.id.StructuredIdMappingMap;
+import io.github.mmm.marshall.id.StructuredIdMappingObject;
 
 /**
  * Interface extending {@link Id} with generic features to be used by frameworks.
@@ -17,7 +20,7 @@ import io.github.mmm.marshall.Unmarshaller;
  * @see AbstractId
  */
 public interface GenericId<E, I, R extends Comparable<?>>
-    extends Id<E>, IdFactory<I, R>, MarshallableObject, Unmarshaller<GenericId<E, I, R>> {
+    extends Id<E>, IdFactory<I, R>, MarshallableObject, Unmarshaller<GenericId<E, I, R>>, StructuredIdMappingObject {
 
   /**
    * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link Long}.
@@ -147,11 +150,12 @@ public interface GenericId<E, I, R extends Comparable<?>>
    * fail if a different type is already assigned.
    *
    * @param newEntityType the new value of {@link #getEntityClass()}. Exact type should actually be
-   *        {@link Class}{@literal <E>} but this prevents simple generic usage. As the {@link #getEntityClass() type} can
-   *        not actually be changed with this method, this should be fine.
-   * @return a copy of this {@link Id} with the given {@link #getEntityClass() type} or this {@link Id} itself if already
-   *         satisfying.
-   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityClass() type} assigned.
+   *        {@link Class}{@literal <E>} but this prevents simple generic usage. As the {@link #getEntityClass() type}
+   *        can not actually be changed with this method, this should be fine.
+   * @return a copy of this {@link Id} with the given {@link #getEntityClass() type} or this {@link Id} itself if
+   *         already satisfying.
+   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityClass() type}
+   *         assigned.
    */
   @SuppressWarnings("unchecked")
   default GenericId<E, I, R> withEntityTypeGeneric(Class<?> newEntityType) {
@@ -190,14 +194,13 @@ public interface GenericId<E, I, R extends Comparable<?>>
    */
   String getMarshalPropertyRevision();
 
-  @SuppressWarnings("exports")
   @Override
   default void write(StructuredWriter writer) {
 
     I id = get();
     if (hasRevision()) {
       R revision = getRevision();
-      writer.writeStartObject();
+      writer.writeStartObject(this);
       writer.writeName(getMarshalPropertyId());
       assert (id != null);
       writer.writeValue(id);
@@ -209,7 +212,6 @@ public interface GenericId<E, I, R extends Comparable<?>>
     }
   }
 
-  @SuppressWarnings("exports")
   @Override
   default GenericId<E, I, R> readObject(StructuredReader reader) {
 
@@ -224,6 +226,26 @@ public interface GenericId<E, I, R extends Comparable<?>>
   public static <E> Id<E> updateRevision(Id<E> id) {
 
     return ((GenericId<E, ?, ?>) id).updateRevision();
+  }
+
+  @Override
+  default StructuredIdMapping defineIdMapping() {
+
+    StructuredIdMappingMap map = StructuredIdMappingMap.of(10);
+    // primary keys
+    map.put(1, PROPERTY_LONG_ID);
+    map.put(2, PROPERTY_UUID);
+    map.put(3, PROPERTY_STRING_ID);
+    // revisions
+    map.put(8, PROPERTY_LONG_REVISION);
+    map.put(9, PROPERTY_INSTANT_REVISION);
+    return map;
+  }
+
+  @Override
+  default Object asTypeKey() {
+
+    return Id.class;
   }
 
 }

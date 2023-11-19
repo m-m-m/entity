@@ -9,6 +9,7 @@ import java.util.List;
 import io.github.mmm.marshall.AbstractMarshallingObject;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
+import io.github.mmm.marshall.id.StructuredIdMapping;
 
 /**
  * Abstract base implementation of an SQL {@link DbStatement} that may be executed to the database.
@@ -18,13 +19,13 @@ import io.github.mmm.marshall.StructuredWriter;
  */
 public abstract class AbstractDbStatement<E> extends AbstractMarshallingObject implements DbStatement<E> {
 
-  private List<DbClause> clauses;
+  private List<AbstractDbClause> clauses;
 
   @Override
-  public List<DbClause> getClauses() {
+  public List<? extends DbClause> getClauses() {
 
     if (this.clauses == null) {
-      List<DbClause> list = new ArrayList<>();
+      List<AbstractDbClause> list = new ArrayList<>();
       addClauses(list);
       this.clauses = Collections.unmodifiableList(list);
     }
@@ -35,14 +36,15 @@ public abstract class AbstractDbStatement<E> extends AbstractMarshallingObject i
    * @param list the {@link List} where to {@link List#add(Object) add} the {@link DbClause}s.
    * @see #getClauses()
    */
-  protected abstract void addClauses(List<DbClause> list);
+  protected abstract void addClauses(List<AbstractDbClause> list);
 
   @Override
   protected void writeProperties(StructuredWriter writer) {
 
-    for (DbClause clause : getClauses()) {
+    getClauses(); // lazy init
+    for (AbstractDbClause clause : this.clauses) {
       if (!clause.isOmit()) {
-        String name = ((AbstractDbClause) clause).getMarshallingName();
+        String name = clause.getMarshallingName();
         writer.writeName(name);
         clause.write(writer);
       }
@@ -52,9 +54,10 @@ public abstract class AbstractDbStatement<E> extends AbstractMarshallingObject i
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
-    for (DbClause clause : getClauses()) {
-      String clauseName = ((AbstractDbClause) clause).getMarshallingName();
-      if (clauseName.equals(name)) {
+    getClauses(); // lazy init
+    for (AbstractDbClause clause : this.clauses) {
+      String clauseName = clause.getMarshallingName();
+      if (reader.isNameMatching(name, clauseName)) {
         clause.read(reader);
         return;
       }
@@ -66,6 +69,17 @@ public abstract class AbstractDbStatement<E> extends AbstractMarshallingObject i
    * @return the {@link AliasMap} of this statement.
    */
   protected abstract AliasMap getAliasMap();
+
+  @Override
+  public StructuredIdMapping defineIdMapping() {
+
+    String[] names = new String[getClauses().size()];
+    int i = 0;
+    for (AbstractDbClause clause : this.clauses) {
+      names[i++] = clause.getMarshallingName();
+    }
+    return StructuredIdMapping.of(names);
+  }
 
   @Override
   public String toString() {

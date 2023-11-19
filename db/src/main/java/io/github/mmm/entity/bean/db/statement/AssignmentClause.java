@@ -10,7 +10,7 @@ import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.LongId;
 import io.github.mmm.marshall.StructuredReader;
-import io.github.mmm.marshall.StructuredReader.State;
+import io.github.mmm.marshall.StructuredState;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.CriteriaMarshalling;
 import io.github.mmm.property.criteria.PropertyAssignment;
@@ -134,8 +134,8 @@ public abstract class AssignmentClause<E extends EntityBean, SELF extends Assign
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
-    if (NAME_ASSIGNMENTS.equals(name)) {
-      reader.require(State.START_ARRAY, true);
+    if (reader.isNameMatching(name, NAME_ASSIGNMENTS)) {
+      reader.require(StructuredState.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
         PropertyAssignment<?> assignment = marshalling.readAssignment(reader);

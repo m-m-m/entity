@@ -88,7 +88,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public void read(StructuredReader reader) {
+  protected void readValue(StructuredReader reader) {
 
     V id = (V) ((GenericId<?, ?, ?>) this.value).readObject(reader);
     set(id);

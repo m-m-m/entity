@@ -12,7 +12,7 @@ import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.DbStatementMarshalling;
 import io.github.mmm.entity.bean.db.statement.StartClause;
 import io.github.mmm.marshall.StructuredReader;
-import io.github.mmm.marshall.StructuredReader.State;
+import io.github.mmm.marshall.StructuredState;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.CriteriaExpression;
 import io.github.mmm.property.criteria.CriteriaMarshalling;
@@ -290,12 +290,12 @@ public abstract class Select<R> extends AbstractDbClause implements StartClause 
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
-    if (NAME_DISTINCT.equals(name)) {
+    if (reader.isNameMatching(name, NAME_DISTINCT)) {
       this.distinct = Boolean.TRUE.equals(reader.readValueAsBoolean());
-    } else if (NAME_RESULT.equals(name)) {
+    } else if (reader.isNameMatching(name, NAME_RESULT)) {
       this.resultName = reader.readValueAsString();
-    } else if (NAME_SELECTIONS.equals(name)) {
-      reader.require(State.START_ARRAY, true);
+    } else if (reader.isNameMatching(name, NAME_SELECTIONS)) {
+      reader.require(StructuredState.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
         CriteriaObject<?> selection = marshalling.readArg(reader);

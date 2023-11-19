@@ -5,6 +5,7 @@ package io.github.mmm.entity.bean.db.statement.create;
 import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.AbstractEntityClause;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
@@ -64,7 +65,7 @@ public class CreateTableStatement<E extends EntityBean> extends AbstractDbStatem
   }
 
   @Override
-  protected void addClauses(List<DbClause> list) {
+  protected void addClauses(List<AbstractDbClause> list) {
 
     list.add(this.createTable);
     list.add(this.columns);

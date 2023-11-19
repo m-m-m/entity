@@ -151,9 +151,9 @@ public abstract class AbstractEntityClause<R, E extends EntityBean, SELF extends
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
-    if (NAME_ENTITY.equals(name)) {
+    if (reader.isNameMatching(name, NAME_ENTITY)) {
       this.entityName = reader.readValueAsString();
-    } else if (NAME_ALIAS.equals(name)) {
+    } else if (reader.isNameMatching(name, NAME_ALIAS)) {
       this.alias = reader.readValueAsString();
     } else {
       super.readProperty(reader, name);

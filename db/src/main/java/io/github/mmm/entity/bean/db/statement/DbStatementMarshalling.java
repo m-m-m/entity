@@ -12,8 +12,8 @@ import io.github.mmm.entity.bean.db.statement.select.SelectFrom;
 import io.github.mmm.entity.bean.db.statement.update.Update;
 import io.github.mmm.entity.db.impl.GenericSelect;
 import io.github.mmm.marshall.Marshalling;
+import io.github.mmm.marshall.StructuredState;
 import io.github.mmm.marshall.StructuredReader;
-import io.github.mmm.marshall.StructuredReader.State;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.PropertyAssignment;
 
@@ -47,7 +47,7 @@ public class DbStatementMarshalling implements Marshalling<DbStatement<?>> {
   @Override
   public DbStatement<?> readObject(StructuredReader reader) {
 
-    reader.require(State.START_OBJECT, true);
+    reader.require(StructuredState.START_OBJECT, true);
     AbstractDbStatement<?> statement = null;
     while (!reader.readEnd()) {
       String name = reader.readName();

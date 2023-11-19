@@ -5,6 +5,7 @@ package io.github.mmm.entity.bean.db.statement.upsert;
 import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
@@ -73,7 +74,7 @@ public class UpsertStatement<E extends EntityBean> extends AbstractDbStatement<E
   }
 
   @Override
-  protected void addClauses(List<DbClause> list) {
+  protected void addClauses(List<AbstractDbClause> list) {
 
     list.add(this.upsert);
     list.add(this.into);

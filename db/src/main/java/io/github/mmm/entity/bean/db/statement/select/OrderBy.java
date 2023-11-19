@@ -10,7 +10,7 @@ import io.github.mmm.entity.bean.db.statement.AbstractTypedClause;
 import io.github.mmm.entity.bean.db.statement.DbClause;
 import io.github.mmm.entity.bean.db.statement.MainDbClause;
 import io.github.mmm.marshall.StructuredReader;
-import io.github.mmm.marshall.StructuredReader.State;
+import io.github.mmm.marshall.StructuredState;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.CriteriaMarshalling;
 import io.github.mmm.property.criteria.CriteriaOrdering;
@@ -113,8 +113,8 @@ public class OrderBy<R> extends AbstractTypedClause<R, OrderBy<R>> implements Ma
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
-    if (NAME_ORDERINGS.equals(name)) {
-      reader.require(State.START_ARRAY, true);
+    if (reader.isNameMatching(name, NAME_ORDERINGS)) {
+      reader.require(StructuredState.START_ARRAY, true);
       CriteriaMarshalling marshalling = CriteriaMarshalling.get();
       while (!reader.readEnd()) {
         this.orderings.add(marshalling.readOrdering(reader));

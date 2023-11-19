@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.marshall.StructuredReader;
-import io.github.mmm.marshall.StructuredReader.State;
+import io.github.mmm.marshall.StructuredState;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.criteria.CriteriaPredicate;
 import io.github.mmm.property.criteria.SimplePath;
@@ -93,8 +93,8 @@ public abstract class PropertyClause<E, SELF extends PropertyClause<E, SELF>> ex
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
-    if (NAME_PROPERTIES.equals(name)) {
-      reader.require(State.START_ARRAY, true);
+    if (reader.isNameMatching(name, NAME_PROPERTIES)) {
+      reader.require(StructuredState.START_ARRAY, true);
       while (!reader.readEnd()) {
         String path = reader.readValueAsString();
         this.properties.add(SimplePath.of(path));

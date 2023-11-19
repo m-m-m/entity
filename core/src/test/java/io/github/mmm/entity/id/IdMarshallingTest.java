@@ -9,8 +9,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.github.mmm.entity.Entity;
-import io.github.mmm.marshall.JsonFormat;
 import io.github.mmm.marshall.MarshallingConfig;
+import io.github.mmm.marshall.StandardFormat;
 import io.github.mmm.marshall.StructuredReader;
 
 /**
@@ -63,13 +63,13 @@ public class IdMarshallingTest extends Assertions {
   public static String writeJson(GenericId<?, ?, ?> id) {
 
     StringBuilder sb = new StringBuilder();
-    id.write(JsonFormat.of(MarshallingConfig.NO_INDENTATION).writer(sb));
+    id.write(StandardFormat.json(MarshallingConfig.NO_INDENTATION).writer(sb));
     return sb.toString();
   }
 
   public static GenericId<Entity, ?, ?> readJson(GenericId<Entity, ?, ?> id, String json) {
 
-    StructuredReader reader = JsonFormat.of().reader(json);
+    StructuredReader reader = StandardFormat.json().reader(json);
     GenericId<Entity, ?, ?> newId = id.readObject(reader);
     assertThat(newId.getEntityClass()).isSameAs(Entity.class);
     return newId;

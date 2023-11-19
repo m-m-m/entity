@@ -5,6 +5,7 @@ package io.github.mmm.entity.bean.db.statement.update;
 import java.util.List;
 
 import io.github.mmm.entity.bean.EntityBean;
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
@@ -74,7 +75,7 @@ public class UpdateStatement<E extends EntityBean> extends AbstractDbStatement<E
   }
 
   @Override
-  protected void addClauses(List<DbClause> list) {
+  protected void addClauses(List<AbstractDbClause> list) {
 
     list.add(this.update);
     list.add(this.set);

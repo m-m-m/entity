@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.marshall.StructuredReader;
-import io.github.mmm.marshall.StructuredReader.State;
+import io.github.mmm.marshall.StructuredState;
 import io.github.mmm.marshall.StructuredWriter;
 
 /**
@@ -120,8 +120,8 @@ public abstract class AbstractEntitiesClause<R, E extends EntityBean, SELF exten
   @Override
   protected void readProperty(StructuredReader reader, String name) {
 
-    if (NAME_ADDITIONAL_ENTITIES.equals(name)) {
-      reader.require(State.START_ARRAY, true);
+    if (reader.isNameMatching(name, NAME_ADDITIONAL_ENTITIES)) {
+      reader.require(StructuredState.START_ARRAY, true);
       while (!reader.readEnd()) {
         EntitySubClause additionalEntity = new EntitySubClause<>(getAliasMap(), null);
         additionalEntity.read(reader);

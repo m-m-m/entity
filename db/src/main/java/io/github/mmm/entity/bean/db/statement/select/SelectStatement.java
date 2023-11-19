@@ -4,6 +4,7 @@ package io.github.mmm.entity.bean.db.statement.select;
 
 import java.util.List;
 
+import io.github.mmm.entity.bean.db.statement.AbstractDbClause;
 import io.github.mmm.entity.bean.db.statement.AbstractDbStatement;
 import io.github.mmm.entity.bean.db.statement.AliasMap;
 import io.github.mmm.entity.bean.db.statement.DbClause;
@@ -106,7 +107,7 @@ public class SelectStatement<R> extends AbstractDbStatement<R> {
   }
 
   @Override
-  protected void addClauses(List<DbClause> list) {
+  protected void addClauses(List<AbstractDbClause> list) {
 
     list.add(this.select);
     list.add(this.from);

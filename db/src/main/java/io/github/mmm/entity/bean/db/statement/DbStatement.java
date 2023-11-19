@@ -21,9 +21,9 @@ public abstract interface DbStatement<E> extends MarshallingObject {
 
   /**
    * @return the {@link List} of {@link DbClause}s this {@link DbStatement} is composed of. Please note that this is a
-   *         generic API. Specific sub-classes implementing {@link DbStatement} will have dedicated getters for each type
-   *         of {@link DbClause}.
+   *         generic API. Specific sub-classes implementing {@link DbStatement} will have dedicated getters for each
+   *         type of {@link DbClause}.
    */
-  List<DbClause> getClauses();
+  List<? extends DbClause> getClauses();
 
 }

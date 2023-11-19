@@ -12,7 +12,6 @@ import io.github.mmm.marshall.StructuredWriter;
  * Helper class to read and write {@link Id} values.
  */
 // ID classes and factory work fine without marshalling on module-path
-@SuppressWarnings("exports")
 public interface IdMarshalling extends Marshalling<Id<?>> {
 
   @Override
@@ -57,7 +56,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
     Object id = null;
     Object revision = null;
     try {
-      if (reader.readStartObject()) {
+      if (reader.readStartObject(LongVersionId.getEmpty())) {
         while (!reader.readEnd()) {
           String name = reader.readName();
           if (GenericId.PROPERTY_LONG_ID.equals(name)) {
