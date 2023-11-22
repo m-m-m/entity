@@ -5,10 +5,9 @@ import java.util.function.Function;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.value.converter.AtomicTypeMapper;
-import io.github.mmm.value.converter.ValueMapper;
 
 /**
- * {@link ValueMapper} to convert from {@link Link} to {@link Id} and vice versa.
+ * {@link io.github.mmm.value.converter.TypeMapper} to convert from {@link Link} to {@link Id} and vice versa.
  *
  * @since 1.0.0
  */

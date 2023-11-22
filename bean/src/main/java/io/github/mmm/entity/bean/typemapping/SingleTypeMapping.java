@@ -21,19 +21,6 @@ public abstract class SingleTypeMapping<V> {
   public abstract TypeMapper<V, ?> getTypeMapper();
 
   /**
-   * @param <V> type of the {@link Range} bounds.
-   * @param property the {@link ReadableProperty}. May be {@code null}.
-   * @return the {@link Range}.
-   */
-  protected static <V extends Comparable<?>> Range<V> getRange(ReadableProperty<?> property) {
-
-    if (property != null) {
-      return property.getMetadata().getValidator().getRange();
-    }
-    return Range.unbounded();
-  }
-
-  /**
    * @param property the optional {@link ReadableProperty} containing the type (directly or indirectly). May be
    *        {@code null}.
    * @return the {@link TypeMapper} for the given {@link ReadableProperty}. Will be {@code null} if the given
@@ -45,6 +32,19 @@ public abstract class SingleTypeMapping<V> {
   public String toString() {
 
     return getClass().getSimpleName() + "[" + getTypeMapper() + "]";
+  }
+
+  /**
+   * @param <V> type of the {@link Range} bounds.
+   * @param property the {@link ReadableProperty}. May be {@code null}.
+   * @return the {@link Range}.
+   */
+  protected static <V extends Comparable<?>> Range<V> getRange(ReadableProperty<?> property) {
+
+    if (property != null) {
+      return property.getMetadata().getValidator().getRange();
+    }
+    return Range.unbounded();
   }
 
 }
