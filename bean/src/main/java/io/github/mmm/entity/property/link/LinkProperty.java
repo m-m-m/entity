@@ -20,6 +20,7 @@ import io.github.mmm.property.criteria.CriteriaPredicate;
 import io.github.mmm.property.criteria.PredicateOperator;
 import io.github.mmm.property.object.ObjectProperty;
 import io.github.mmm.value.PropertyPath;
+import io.github.mmm.value.ReadableValue;
 import io.github.mmm.value.converter.TypeMapper;
 
 /**
@@ -265,6 +266,16 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
         idLink.setResolver(resolver);
       }
     }
+  }
+
+  @Override
+  public void copyValue(ReadableValue<Link<E>> other) {
+
+    Link<E> link = other.get();
+    if ((link != null) && link.isResolved()) {
+      link = Link.of(link.getId());
+    }
+    set(link);
   }
 
 }
