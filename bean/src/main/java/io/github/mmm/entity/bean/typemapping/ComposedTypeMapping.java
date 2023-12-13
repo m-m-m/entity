@@ -78,6 +78,9 @@ public class ComposedTypeMapping implements TypeMapping {
    */
   protected void add(TypeMapper<?, ?> typeMapper) {
 
+    if (typeMapper == null) {
+      return;
+    }
     add(new SingleTypeMappingStatic<>(typeMapper));
   }
 

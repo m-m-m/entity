@@ -42,9 +42,11 @@ public abstract class AbstractEntityRepository<E extends EntityBean> implements 
   }
 
   /**
-   * @return an instance of the managed {@link EntityBean entity} to be used as template.
+   * @return an instance of the managed {@link EntityBean entity} to be used as template. Please note that this is an
+   *         internal method of the implementation that should only be used by framework code. Mutations on the
+   *         prototype by callers of this method are strictly forbidden and will lead to severe bugs.
    */
-  protected E getPrototype() {
+  public E getPrototype() {
 
     return this.prototype;
   }
@@ -52,6 +54,7 @@ public abstract class AbstractEntityRepository<E extends EntityBean> implements 
   /**
    * @return the {@link Class} reflecting the managed {@link EntityBean}.
    */
+  @Override
   public Class<E> getEntityClass() {
 
     return this.entityClass;

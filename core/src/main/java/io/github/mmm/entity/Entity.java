@@ -36,20 +36,47 @@ public interface Entity {
   void setId(Id<?> id);
 
   /**
+   * @return the Java {@link Class} of this entity. In the most simple case the same as {@link #getClass()} but in case
+   *         of proxy objects {@link #getClass()} may return an artificial {@link Class} object while this method will
+   *         typically return what you expect.
+   */
+  default Class<?> getJavaClass() {
+
+    return getClass();
+  }
+
+  /**
    * Type-safe variant of {@link #getId()}.
    *
-   * @param <B> type of {@link Entity}.
-   * @param bean the {@link Entity} instance. May be {@code null}.
+   * @param <E> type of {@link Entity}.
+   * @param entity the {@link Entity} instance. May be {@code null}.
    * @return the {@link Id} of the given {@link Entity}. May be {@code null} if given {@link Entity} was {@code null} or
    *         its {@link #getId() Id} is {@code null}.
    */
   @SuppressWarnings("unchecked")
-  static <B extends Entity> Id<B> getId(B bean) {
+  static <E extends Entity> Id<E> getId(E entity) {
 
-    if (bean == null) {
+    if (entity == null) {
       return null;
     }
-    return (Id<B>) bean.getId();
+    return (Id<E>) entity.getId();
+  }
+
+  /**
+   * Type-safe variant of {@link #getJavaClass()}.
+   *
+   * @param <E> type of {@link Entity}.
+   * @param entity the {@link Entity} instance. May be {@code null}.
+   * @return the {@link #getJavaClass() Java class} of the given {@link Entity}. May be {@code null} if given
+   *         {@link Entity} was {@code null}.
+   */
+  @SuppressWarnings("unchecked")
+  static <E extends Entity> Class<? extends E> getJavaClass(E entity) {
+
+    if (entity == null) {
+      return null;
+    }
+    return (Class<? extends E>) entity.getJavaClass();
   }
 
 }

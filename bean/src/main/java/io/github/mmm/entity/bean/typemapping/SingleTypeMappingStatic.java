@@ -16,12 +16,6 @@ public class SingleTypeMappingStatic<V> extends SingleTypeMapping<V> {
 
   private final TypeMapper<V, ?> typeMapper;
 
-  @Override
-  public TypeMapper<V, ?> getTypeMapper() {
-
-    return this.typeMapper;
-  }
-
   /**
    * The constructor for an {@link IdentityTypeMapper}.
    *
@@ -43,6 +37,12 @@ public class SingleTypeMappingStatic<V> extends SingleTypeMapping<V> {
 
     super();
     this.typeMapper = sqlType;
+  }
+
+  @Override
+  public TypeMapper<V, ?> getTypeMapper() {
+
+    return this.typeMapper;
   }
 
   @Override

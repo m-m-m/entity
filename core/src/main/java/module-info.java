@@ -4,7 +4,10 @@
  */
 /**
  * Provides the API for (persistent) entities.
+ *
+ * @uses io.github.mmm.entity.repository.EntityRepository
  */
+@SuppressWarnings("rawtypes") //
 module io.github.mmm.entity {
 
   // https://issues.apache.org/jira/browse/SUREFIRE-1563
@@ -12,6 +15,8 @@ module io.github.mmm.entity {
   requires transitive io.github.mmm.marshall;
 
   requires transitive io.github.mmm.value.converter;
+
+  uses io.github.mmm.entity.repository.EntityRepository;
 
   exports io.github.mmm.entity;
 

@@ -20,6 +20,11 @@ import io.github.mmm.entity.link.Link;
 public interface EntityRepository<E extends Entity> {
 
   /**
+   * @return the {@link Class} reflecting the managed {@link Entity}.
+   */
+  Class<E> getEntityClass();
+
+  /**
    * @param id the {@link Id} of the requested {@link Entity entity}.
    * @return the requested {@link Entity entity} or {@code null} if no such entity exists.
    */
@@ -43,6 +48,18 @@ public interface EntityRepository<E extends Entity> {
    * @param entity the {@link Entity} to save. If transient, it will be inserted, otherwise it will be updated.
    */
   void save(E entity);
+
+  /**
+   * @param entities the array of {@link Entity entities} to {@link #save(Entity) save}.
+   */
+  @SuppressWarnings("unchecked")
+  default void saveAll(E... entities) {
+
+    // this is a naive default implementation. Real database backed implementations shall override with bulk operation.
+    for (E entity : entities) {
+      save(entity);
+    }
+  }
 
   /**
    * @param entities the {@link Iterable} of {@link Entity entities} to {@link #save(Entity) save}.
