@@ -4,9 +4,9 @@ package io.github.mmm.entity.bean;
 
 import io.github.mmm.bean.Bean;
 import io.github.mmm.bean.StandardPropertyBuilders;
+import io.github.mmm.entity.bean.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.LongVersionId;
-import io.github.mmm.entity.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.id.PkProperty;
