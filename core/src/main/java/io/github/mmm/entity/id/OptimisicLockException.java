@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
+import io.github.mmm.base.exception.ApplicationException;
 import io.github.mmm.entity.Entity;
 
 /**
@@ -13,7 +14,7 @@ import io.github.mmm.entity.Entity;
  * This will prevent that two users that want to save changes to the same {@link Entity} concurrently may override each
  * others changes.
  */
-public class OptimisicLockException extends RuntimeException {
+public class OptimisicLockException extends ApplicationException {
 
   /**
    * The constructor.
@@ -25,6 +26,12 @@ public class OptimisicLockException extends RuntimeException {
 
     super("Cound not save entity '" + entityName + "' with primary key '" + id.getAsString()
         + "' because the revision '" + id.getRevisionAsString() + "' is outdated!");
+  }
+
+  @Override
+  public String getCode() {
+
+    return "DB-LOCK";
   }
 
 }
