@@ -248,8 +248,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
 
   /**
    * <b>ATTENTION:<b><br>
-   * This is an internal method for framework code like {@link io.github.mmm.entity.repository.EntityRepository}
-   * implementations.
+   * This is an internal method for framework code.
    *
    * @param resolver new resolver {@link Function}.
    * @see IdLink#setResolver(Function)

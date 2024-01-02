@@ -148,11 +148,12 @@ public interface Id<E> extends Supplier<Object> {
    *
    * @param <T> type
    * @param newEntityType the new value of {@link #getEntityClass()}. Exact type should actually be
-   *        {@link Class}{@literal <E>} but this prevents simple generic usage. As the {@link #getEntityClass() type} can
-   *        not actually be changed with this method, this should be fine.
-   * @return a copy of this {@link Id} with the given {@link #getEntityClass() type} or this {@link Id} itself if already
-   *         satisfying.
-   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityClass() type} assigned.
+   *        {@link Class}{@literal <E>} but this prevents simple generic usage. As the {@link #getEntityClass() type}
+   *        can not actually be changed with this method, this should be fine.
+   * @return a copy of this {@link Id} with the given {@link #getEntityClass() type} or this {@link Id} itself if
+   *         already satisfying.
+   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityClass() type}
+   *         assigned.
    */
   <T> Id<T> withEntityType(Class<T> newEntityType);
 
@@ -184,13 +185,11 @@ public interface Id<E> extends Supplier<Object> {
 
   /**
    * @return {@code true} if this {@link Id} is transient if used as {@link Entity#getId() primary key}, {@code false}
-   *         otherwise. Here transient means that the {@link Entity#getId() owning} {@link Entity} has never been
-   *         {@link io.github.mmm.entity.repository.EntityRepository#save(Entity) saved to a persistent store} yet.
-   *         Otherwise the {@link Entity} is persistent and was originally
-   *         {@link io.github.mmm.entity.repository.EntityRepository#findById(Id) received from a persistent store}.
-   *         Please note that the existence of its {@link #get() primary key} is not sufficient as it may be assigned
-   *         already in transient state (e.g. for {@link UuidId} or also for {@link LongId} using negative TX local
-   *         values).
+   *         otherwise. Here transient means that the {@link Entity#getId() owning} {@link Entity} has never been saved
+   *         to a persistent store yet. Otherwise the {@link Entity} is persistent and was received from a persistent
+   *         store. Please note that the existence of its {@link #get() primary key} is not sufficient as it may be
+   *         assigned already in transient state (e.g. for {@link UuidId} or also for {@link LongId} using negative TX
+   *         local values).
    */
   default boolean isTransient() {
 

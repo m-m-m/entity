@@ -22,8 +22,6 @@ module io.github.mmm.entity.bean {
 
   exports io.github.mmm.entity.bean;
 
-  exports io.github.mmm.entity.bean.repository;
-
   exports io.github.mmm.entity.bean.typemapping;
 
   exports io.github.mmm.entity.property.builder;

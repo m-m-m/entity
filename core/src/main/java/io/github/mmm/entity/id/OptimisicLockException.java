@@ -7,10 +7,9 @@ import io.github.mmm.entity.Entity;
 
 /**
  * {@link RuntimeException} thrown if optimistic locking failed. When a persistent {@link io.github.mmm.entity.Entity}
- * is {@link io.github.mmm.entity.repository.EntityRepository#save(io.github.mmm.entity.Entity) updated}, optimistic
- * locking will check that the {@link Id#getRevision() revision} of its {@link Id} matches the one from the
- * {@link Entity} in the persistent store (e.g. database). If they do not match the update will fail with this
- * exception.<br>
+ * is updated, optimistic locking will check that the {@link Id#getRevision() revision} of its {@link Id} matches the
+ * one from the {@link Entity} in the persistent store (e.g. database). If they do not match the update will fail with
+ * this exception.<br>
  * This will prevent that two users that want to save changes to the same {@link Entity} concurrently may override each
  * others changes.
  */
