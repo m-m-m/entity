@@ -13,7 +13,7 @@ package io.github.mmm.entity.id;
 public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
 
   /** {@link #getRevision() Revision} of a newly inserted {@link io.github.mmm.entity.Entity entity}. */
-  public static final Long INSERT_REVISION = Long.valueOf(0);
+  public static final Long INSERT_REVISION = Long.valueOf(1);
 
   private final Long revision;
 
