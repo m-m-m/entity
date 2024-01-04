@@ -47,15 +47,20 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
   public <E> GenericId<E, Object, Comparable<?>> create(Class<E> entityType, Object id, Comparable<?> revision) {
 
     GenericId result;
+    if (revision instanceof Integer i) {
+      revision = Long.valueOf(i.longValue());
+    }
     if (id == null) {
       assert (revision == null);
       return null;
-    } else if (id instanceof Long) {
-      result = LongId.of((Long) id, entityType, revision);
-    } else if (id instanceof UUID) {
-      result = UuidId.of((UUID) id, entityType, revision);
-    } else if (id instanceof String) {
-      result = StringId.of((String) id, entityType, revision);
+    } else if (id instanceof Long l) {
+      result = LongId.of(l, entityType, revision);
+    } else if (id instanceof UUID uuid) {
+      result = UuidId.of(uuid, entityType, revision);
+    } else if (id instanceof String string) {
+      result = StringId.of(string, entityType, revision);
+    } else if (id instanceof Integer i) {
+      result = LongId.of(Long.valueOf(i.longValue()), entityType, revision);
     } else {
       throw new IllegalStateException("Unsupported ID type: " + id.getClass().getName());
     }

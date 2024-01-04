@@ -77,7 +77,7 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
     private PkMapperRevision(GenericId idTemplate) {
 
-      super(idTemplate, "Rev", null);
+      super(idTemplate, Id.COLUMN_REVISION, null);
     }
 
     @Override
