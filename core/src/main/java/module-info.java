@@ -17,6 +17,10 @@ module io.github.mmm.entity {
 
   exports io.github.mmm.entity.id;
 
+  exports io.github.mmm.entity.id.generator;
+
+  exports io.github.mmm.entity.id.sequence;
+
   exports io.github.mmm.entity.link;
 
 }

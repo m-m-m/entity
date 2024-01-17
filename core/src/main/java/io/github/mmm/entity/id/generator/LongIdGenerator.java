@@ -1,23 +1,29 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.mmm.entity.id;
+package io.github.mmm.entity.id.generator;
 
 import java.time.Instant;
-import java.util.function.Function;
+
+import io.github.mmm.entity.id.AbstractVersionId;
+import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.LongId;
+import io.github.mmm.entity.id.LongInstantId;
+import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.sequence.IdSequence;
 
 /**
  * {@link IdGenerator} for {@link LongId}.
  */
 public class LongIdGenerator implements IdGenerator {
 
-  private final Function<Id<?>, Long> sequence;
+  private final IdSequence sequence;
 
   /**
    * The constructor.
    *
-   * @param sequence the {@link Function} doing the actual job. Typically via a sequence.
+   * @param sequence the {@link IdSequence}.
    */
-  public LongIdGenerator(Function<Id<?>, Long> sequence) {
+  public LongIdGenerator(IdSequence sequence) {
 
     super();
     this.sequence = sequence;
@@ -27,7 +33,7 @@ public class LongIdGenerator implements IdGenerator {
   public <E> LongId<E, ?> generate(Id<E> template) {
 
     Class<E> entityType = template.getEntityClass();
-    Long pk = this.sequence.apply(template);
+    Long pk = Long.valueOf(this.sequence.next(template));
     Class<? extends Comparable<?>> revisionType = template.getRevisionType();
     if (revisionType == Long.class) {
       return new LongVersionId<>(entityType, pk, AbstractVersionId.INSERT_REVISION);
