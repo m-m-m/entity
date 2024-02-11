@@ -121,6 +121,19 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   /**
+   * @return the linked {@link EntityBean entity}.
+   * @see Link#getTarget()
+   */
+  public E getEntity() {
+
+    Link<E> link = get();
+    if (link == null) {
+      return null;
+    }
+    return link.getTarget();
+  }
+
+  /**
    * @return the {@link Id#getEntityClass() entity class}.
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
