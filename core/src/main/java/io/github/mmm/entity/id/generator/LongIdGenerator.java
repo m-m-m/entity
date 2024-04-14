@@ -13,6 +13,8 @@ import io.github.mmm.entity.id.sequence.IdSequence;
 
 /**
  * {@link IdGenerator} for {@link LongId}.
+ *
+ * @since 1.0.0
  */
 public class LongIdGenerator implements IdGenerator {
 

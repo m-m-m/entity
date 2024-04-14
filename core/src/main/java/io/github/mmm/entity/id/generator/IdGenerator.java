@@ -6,6 +6,8 @@ import io.github.mmm.entity.id.Id;
 
 /**
  * Interface for a generator of {@link Id}s that are unique (for a type of {@link io.github.mmm.entity.Entity}).
+ *
+ * @since 1.0.0
  */
 public interface IdGenerator {
 

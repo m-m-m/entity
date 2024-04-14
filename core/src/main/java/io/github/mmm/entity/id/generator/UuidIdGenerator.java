@@ -13,6 +13,8 @@ import io.github.mmm.entity.id.UuidVersionId;
 
 /**
  * {@link IdGenerator} for {@link UuidId}.
+ *
+ * @since 1.0.0
  */
 public class UuidIdGenerator implements IdGenerator {
 
