@@ -66,10 +66,11 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
     this.value = newValue;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public V getSafe() {
+  public V getStaticSafeValue() {
 
-    return get();
+    return (V) LongVersionId.getEmpty();
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })

@@ -3,8 +3,8 @@
 package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.bean.EntityBean;
-import io.github.mmm.entity.id.IdMapper;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.IdMapper;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.value.converter.TypeMapper;
 
