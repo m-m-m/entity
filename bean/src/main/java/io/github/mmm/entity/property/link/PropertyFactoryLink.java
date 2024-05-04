@@ -52,4 +52,10 @@ public class PropertyFactoryLink<E extends EntityBean> extends AbstractPropertyF
     return new LinkProperty<>(name, entityClass, metadata);
   }
 
+  @Override
+  public boolean isPolymorphic() {
+
+    return true;
+  }
+
 }
