@@ -1,4 +1,4 @@
-package io.github.mmm.entity.property;
+package io.github.mmm.entity.bean;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

@@ -3,11 +3,14 @@
 package io.github.mmm.entity.property.link;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
+import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.IdMarshalling;
+import io.github.mmm.entity.link.AbstractLink;
 import io.github.mmm.entity.link.IdLink;
 import io.github.mmm.entity.link.Link;
 import io.github.mmm.entity.link.LinkMapper;
@@ -165,6 +168,25 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   @Override
+  public boolean isValueMutable() {
+
+    return true; // IdLink without resolver function is actually immutable but lets keep it simple
+  }
+
+  @Override
+  protected Supplier<? extends Link<E>> createReadOnlyExpression() {
+
+    final ReadOnlyLink readOnlyLink = new ReadOnlyLink();
+    return () -> {
+      Link<E> link = get();
+      if (link == null) {
+        return null;
+      }
+      return readOnlyLink;
+    };
+  }
+
+  @Override
   protected void readValue(StructuredReader reader) {
 
     Id<E> id = IdMarshalling.get().readObject(reader, this.entityClass);
@@ -288,6 +310,31 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
       link = Link.of(link.getId());
     }
     set(link);
+  }
+
+  private class ReadOnlyLink extends AbstractLink<E> {
+    @Override
+    public Id<E> getId() {
+
+      return get().getId();
+    }
+
+    @Override
+    public E getTarget() {
+
+      E target = get().getTarget();
+      if (target != null) {
+        target = WritableBean.getReadOnly(target);
+      }
+      return target;
+    }
+
+    @Override
+    public boolean isResolved() {
+
+      return get().isResolved();
+    }
+
   }
 
 }

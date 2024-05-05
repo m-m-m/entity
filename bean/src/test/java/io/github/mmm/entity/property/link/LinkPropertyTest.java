@@ -1,12 +1,15 @@
 package io.github.mmm.entity.property.link;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
+import io.github.mmm.base.exception.ReadOnlyException;
 import io.github.mmm.bean.BeanFactory;
+import io.github.mmm.entity.bean.PropertyTest;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.LongVersionId;
 import io.github.mmm.entity.link.Link;
-import io.github.mmm.entity.property.PropertyTest;
 import io.github.mmm.property.WritableProperty;
 
 /**
@@ -46,9 +49,16 @@ public class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Ta
     assertThat((Object) readOnlyLinkProperty.get()).isNull();
     linkProperty.set(LINK);
     Link<Target> readOnlyLink = readOnlyLinkProperty.get();
-    readOnlyLink.getTarget().setId(id2);
-    // assertThat(readOnlyLink).isNotNull().isNotSameAs(LINK);
+    assertThrows(ReadOnlyException.class, () -> {
+      readOnlyLink.getTarget().setId(id2);
+    });
+    assertThat(readOnlyLink).isNotNull().isNotSameAs(LINK);
+  }
 
+  @Override
+  protected void verifyReadOnlyValue(LinkProperty<Target> readOnly) {
+
+    assertThat(readOnly.get()).isNotNull().isNotSameAs(LINK);
   }
 
 }
