@@ -6,6 +6,7 @@ import io.github.mmm.bean.AdvancedBean;
 import io.github.mmm.bean.Bean;
 import io.github.mmm.bean.BeanClass;
 import io.github.mmm.bean.StandardPropertyBuilders;
+import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.LongVersionId;
@@ -29,7 +30,18 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    */
   public AdvancedEntityBean() {
 
-    this(null, null);
+    this(null, null, null);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param writable the {@link WritableBean} to wrap as {@link #isReadOnly() read-only} bean or {@code null} to create
+   *        a mutable bean.
+   */
+  public AdvancedEntityBean(WritableBean writable) {
+
+    this(writable, null, null);
   }
 
   /**
@@ -39,7 +51,7 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    */
   public AdvancedEntityBean(PkProperty pkProperty) {
 
-    this(null, pkProperty);
+    this(null, null, pkProperty);
   }
 
   /**
@@ -49,24 +61,31 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
    */
   public AdvancedEntityBean(BeanClass type) {
 
-    this(type, null);
+    this(null, type, null);
   }
 
   /**
    * The constructor.
    *
+   * @param writable the {@link WritableBean} to wrap as {@link #isReadOnly() read-only} bean or {@code null} to create
+   *        a mutable bean.
    * @param type the {@link #getType() type}.
    * @param pkProperty the {@link #Id() ID property}.
    */
-  private AdvancedEntityBean(BeanClass type, PkProperty pkProperty) {
+  private AdvancedEntityBean(WritableBean writable, BeanClass type, PkProperty pkProperty) {
 
-    super(type);
+    super(writable, type);
     if (pkProperty == null) {
-      // default
-      Id<?> id = LongVersionId.getEmpty().withEntityType(getClass());
-      pkProperty = new PkProperty(id, PropertyMetadata.of(this));
+      if (writable == null) {
+        // default
+        Id<?> id = LongVersionId.getEmpty().withEntityType(getClass());
+        pkProperty = new PkProperty(id, PropertyMetadata.of(this));
+      } else {
+        pkProperty = ((AdvancedEntityBean) writable).Id;
+      }
     } else {
       assert pkProperty.getName().equals(PkProperty.NAME);
+      assert (writable == null);
     }
     this.Id = add(pkProperty);
   }
