@@ -68,7 +68,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public V getStaticSafeValue() {
+  public V getFallbackSafeValue() {
 
     return (V) LongVersionId.getEmpty();
   }
