@@ -39,12 +39,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <!-- 3rd party -->
-      <dependency>
-        <groupId>io.projectreactor</groupId>
-        <artifactId>reactor-core</artifactId>
-        <version>3.4.11</version>
-      </dependency>
       <!-- own modules -->
       <dependency>
         <groupId>${project.groupId}</groupId>
