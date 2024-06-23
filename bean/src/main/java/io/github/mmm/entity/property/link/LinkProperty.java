@@ -306,7 +306,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   public void copyValue(ReadableValue<Link<E>> other) {
 
     Link<E> link = other.get();
-    if ((link != null) && link.isResolved()) {
+    if (link != null) {
       link = Link.of(link.getId());
     }
     set(link);
