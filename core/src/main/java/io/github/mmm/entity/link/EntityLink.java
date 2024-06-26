@@ -3,6 +3,7 @@
 package io.github.mmm.entity.link;
 
 import io.github.mmm.entity.Entity;
+import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 
 /**
@@ -36,7 +37,11 @@ public class EntityLink<E extends Entity> extends AbstractLink<E> {
   @Override
   public Id<E> getId() {
 
-    return Id.from(this.entity);
+    Id<E> id = Id.from(this.entity);
+    if (id instanceof GenericId g) {
+      id = g.withoutRevision();
+    }
+    return id;
   }
 
   @Override

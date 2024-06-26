@@ -113,6 +113,17 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
       super(null, "Id", next);
     }
 
+    /**
+     * The constructor.
+     *
+     * @param idTemplate the {@link GenericId} as template.
+     * @param next the {@link PkMapperRevision}.
+     */
+    public PkMapperId(GenericId idTemplate, PkMapperRevision next) {
+
+      super(idTemplate, "Id", next);
+    }
+
     @Override
     public Class<? extends Object> getTargetType() {
 
@@ -123,6 +134,14 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     public String mapName(String name, String separator) {
 
       return name;
+    }
+
+    @Override
+    public Id toSource(Object target) {
+
+      assert (next() == null); // no revision field
+      assert (!this.idTemplate.hasRevisionField());
+      return this.idTemplate.withIdAndRevision(target, null);
     }
 
     @Override
@@ -147,8 +166,11 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
     Objects.requireNonNull(id);
     GenericId genericId = (GenericId) id;
-    PkMapperRevision revMapper = new PkMapperRevision(genericId.withIdAndRevision(null, null));
-    return new PkMapperId(revMapper);
+    PkMapperRevision revMapper = null;
+    if (genericId.hasRevisionField()) {
+      revMapper = new PkMapperRevision(genericId.withIdAndRevision(null, null));
+    }
+    return new PkMapperId(genericId, revMapper);
   }
 
 }

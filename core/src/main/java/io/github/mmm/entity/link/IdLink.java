@@ -32,7 +32,7 @@ public class IdLink<E> extends AbstractLink<E> {
    * @param resolver the {@link Function} to {@link #isResolved() resolve} the {@link #getTarget() link target} (the
    *        entity).
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings({ "rawtypes" })
   protected IdLink(Id<E> id, Function<Id<E>, E> resolver) {
 
     super();
@@ -40,7 +40,7 @@ public class IdLink<E> extends AbstractLink<E> {
     if (id.get() == null) {
       throw new IllegalArgumentException("Cannot create link for empty ID - primary key must be present!");
     }
-    this.id = (GenericId) id;
+    this.id = ((GenericId) id).withoutRevision();
     this.resolver = resolver;
   }
 

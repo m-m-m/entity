@@ -99,7 +99,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
   }
 
   @Override
-  default Id<E> withoutRevision() {
+  default GenericId<E, I, ?> withoutRevision() {
 
     return withRevision(null);
   }
