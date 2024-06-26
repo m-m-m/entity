@@ -63,12 +63,6 @@ public final class StringInstantId<E> extends AbstractInstantId<E, String> imple
   }
 
   @Override
-  public StringInstantId<E> withoutRevision() {
-
-    return withRevision(null);
-  }
-
-  @Override
   public <T> StringInstantId<T> withEntityType(Class<T> newEntityType) {
 
     return (StringInstantId<T>) super.withEntityType(newEntityType);

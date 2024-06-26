@@ -59,11 +59,10 @@ public interface StringId<E, V extends Comparable<?>> extends GenericId<E, Strin
     return (StringId<E, V>) GenericId.super.withRevision(newRevision);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  default StringId<E, V> withoutRevision() {
+  default StringId<E, ?> withoutRevision() {
 
-    return (StringId<E, V>) GenericId.super.withoutRevision();
+    return new StringRevisionlessId<>(getEntityClass(), get());
   }
 
   @Override
@@ -85,12 +84,15 @@ public interface StringId<E, V extends Comparable<?>> extends GenericId<E, Strin
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.
-   * @param entityType the {@link #getEntityClass() entity type}.
+   * @param type the {@link #getEntityClass() entity type}.
    * @return the new {@link StringId}.
    */
-  static <E> StringId<E, ?> of(String id, Class<E> entityType) {
+  static <E> StringId<E, ?> of(String id, Class<E> type) {
 
-    return of(id, entityType, null);
+    if (id == null) {
+      return null;
+    }
+    return new StringRevisionlessId<>(type, id);
   }
 
   /**
@@ -105,10 +107,12 @@ public interface StringId<E, V extends Comparable<?>> extends GenericId<E, Strin
     if (id == null) {
       return null;
     }
-    if ((revision == null) || (revision instanceof Long)) {
-      return new StringVersionId<>(type, id, (Long) revision);
-    } else if (revision instanceof Instant) {
-      return new StringInstantId<>(type, id, (Instant) revision);
+    if (revision == null) {
+      return new StringRevisionlessId<>(type, id);
+    } else if (revision instanceof Long l) {
+      return new StringVersionId<>(type, id, l);
+    } else if (revision instanceof Instant i) {
+      return new StringInstantId<>(type, id, i);
     }
     throw new IllegalStateException("Unsupported revision type: " + revision.getClass().getName());
   }

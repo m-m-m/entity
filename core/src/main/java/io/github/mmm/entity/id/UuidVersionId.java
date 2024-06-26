@@ -62,12 +62,6 @@ public final class UuidVersionId<E> extends AbstractVersionId<E, UUID> implement
   }
 
   @Override
-  public UuidVersionId<E> withoutRevision() {
-
-    return withRevision(null);
-  }
-
-  @Override
   public <T> UuidVersionId<T> withEntityType(Class<T> newEntityType) {
 
     return (UuidVersionId<T>) super.withEntityType(newEntityType);

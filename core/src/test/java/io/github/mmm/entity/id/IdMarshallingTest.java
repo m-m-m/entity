@@ -35,9 +35,9 @@ public class IdMarshallingTest extends Assertions {
     check(new UuidInstantId<>(Entity.class, uuid, ts),
         "{\"u\":\"" + uuid + "\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
     // test flat IDs
-    check(new LongVersionId<>(Entity.class, 42L, null), "42");
-    check(new StringVersionId<>(Entity.class, "MyId", null), "\"MyId\"");
-    check(new UuidVersionId<>(Entity.class, uuid, null), "\"" + uuid + "\"");
+    check(new LongRevisionlessId<>(Entity.class, 42L), "42");
+    check(new StringRevisionlessId<>(Entity.class, "MyId"), "\"MyId\"");
+    check(new UuidRevisionlessId<>(Entity.class, uuid), "\"" + uuid + "\"");
   }
 
   /**
@@ -48,9 +48,22 @@ public class IdMarshallingTest extends Assertions {
   public void testWriteWithZeroVersion() {
 
     UUID uuid = UUID.randomUUID();
-    assertThat(writeJson(new LongVersionId<>(Entity.class, 42L, 0L))).isEqualTo("42");
-    assertThat(writeJson(new StringVersionId<>(Entity.class, "MyId", 0L))).isEqualTo("\"MyId\"");
-    assertThat(writeJson(new UuidVersionId<>(Entity.class, uuid, 0L))).isEqualTo("\"" + uuid + '"');
+    assertThat(writeJson(new LongVersionId<>(Entity.class, 42L, 0L))).isEqualTo("{\"l\":42,\"v\":0}");
+    assertThat(writeJson(new StringVersionId<>(Entity.class, "MyId", 0L))).isEqualTo("{\"s\":\"MyId\",\"v\":0}");
+    assertThat(writeJson(new UuidVersionId<>(Entity.class, uuid, 0L))).isEqualTo("{\"u\":\"" + uuid + "\",\"v\":0}");
+  }
+
+  /**
+   * Test of {@link IdMarshalling} to JSON for all {@link AbstractVersionId}s with
+   * {@link AbstractVersionId#getRevision() revision} of {@code 0}.
+   */
+  @Test
+  public void testWriteWithoutRevision() {
+
+    UUID uuid = UUID.randomUUID();
+    assertThat(writeJson(new LongRevisionlessId<>(Entity.class, 42L))).isEqualTo("42");
+    assertThat(writeJson(new StringRevisionlessId<>(Entity.class, "MyId"))).isEqualTo("\"MyId\"");
+    assertThat(writeJson(new UuidRevisionlessId<>(Entity.class, uuid))).isEqualTo("\"" + uuid + '"');
   }
 
   public static void check(GenericId<Entity, ?, ?> id, String json) {

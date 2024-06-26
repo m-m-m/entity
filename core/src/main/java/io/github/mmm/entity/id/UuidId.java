@@ -68,11 +68,10 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
     return (UuidId<E, V>) GenericId.super.withRevision(newRevision);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  default UuidId<E, V> withoutRevision() {
+  default UuidId<E, ?> withoutRevision() {
 
-    return (UuidId<E, V>) GenericId.super.withoutRevision();
+    return new UuidRevisionlessId<>(getEntityClass(), get());
   }
 
   @Override
@@ -94,12 +93,15 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.
-   * @param entityType the {@link #getEntityClass() entity type}.
+   * @param type the {@link #getEntityClass() entity type}.
    * @return the new {@link UuidId}.
    */
-  static <E> UuidId<E, ?> of(UUID id, Class<E> entityType) {
+  static <E> UuidId<E, ?> of(UUID id, Class<E> type) {
 
-    return of(id, entityType, null);
+    if (id == null) {
+      return null;
+    }
+    return new UuidRevisionlessId<>(type, id);
   }
 
   /**
@@ -114,10 +116,12 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
     if (id == null) {
       return null;
     }
-    if ((revision == null) || (revision instanceof Long)) {
-      return new UuidVersionId<>(type, id, (Long) revision);
-    } else if (revision instanceof Instant) {
-      return new UuidInstantId<>(type, id, (Instant) revision);
+    if (revision == null) {
+      return new UuidRevisionlessId<>(type, id);
+    } else if (revision instanceof Long l) {
+      return new UuidVersionId<>(type, id, l);
+    } else if (revision instanceof Instant i) {
+      return new UuidInstantId<>(type, id, i);
     }
     throw new IllegalStateException("Unsupported revision type: " + revision.getClass().getName());
   }

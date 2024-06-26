@@ -18,19 +18,26 @@ import io.github.mmm.entity.Entity;
  * <li>{@link #getRevision() revision} - the optional revision of the entity.</li>
  * <li>{@link #getEntityClass() type} - is the type of the identified entity.</li>
  * </ul>
- * Just like the {@link #get() primary key} the {@link #getRevision() revision} and {@link #getEntityClass() type} of an
- * object do not change. This allows to use the {@link Id} as globally unique identifier for its corresponding
- * entity.<br>
+ * Just like the {@link #get() primary key} the {@link #getEntityClass() type} of an object does not change. In an
+ * {@link Entity} is updated its {@link #getRevision() revision} may change. In this case a new {@link Id} instance is
+ * created and assigned since {@link Id} is designed as an immutable datatype. To allow using {@link Id} as globally
+ * unique identifier for its corresponding {@link Entity}, regular methods (e.g. {@code EntityRepository.findById} will
+ * ignore the {@link #getRevision() revision}).<br>
+ * Unlike regular JPA design this {@link Id} approach gives you a lot of simplicity without loosing any flexibility. So
+ * your {@code EntityBean} and {@code EntityRepository} does not need any generic type for the primary key and
+ * refactoring the type of the primary key or revision will have minimal impact on your entire code-base.<br>
  * An {@link Id} has a compact {@link #toString() string representation}. However, for structured representation and
  * marshaling use {@link GenericId} and convert to JSON, XML, or other structured format via
  * {@link GenericId#readObject(io.github.mmm.marshall.StructuredReader) readObject} and
  * {@link GenericId#write(io.github.mmm.marshall.StructuredWriter) write} methods.<br>
- * {@link Id} is designed for ultimate flexibility and therefore it also acts as factory. Therefore an {@link Entity}
- * instance shall never return {@code null} for {@link Entity#getId()}. It will hold a {@link #isEmpty() empty} ID that
- * is created at construction time. This way we can support custom {@link Id} types easily. The only requirement is that
- * all instances of {@link Id} are proper implementations of {@link AbstractId}. The class {@link AbstractId} contains
- * additional complexity and generic types for frameworks. Regular API users only need to use this {@link Id} interface
- * that hides some complexity.
+ * {@link Id} is designed for ultimate flexibility and also acts as factory. Therefore an {@link Entity} instance shall
+ * never return {@code null} for {@link Entity#getId()}. It will hold a {@link #isEmpty() empty} ID that is created at
+ * construction time. This way we can support custom {@link Id} types easily. The only requirement is that all instances
+ * of {@link Id} are proper implementations of {@link AbstractId}. The class {@link AbstractId} contains additional
+ * complexity and generic types for frameworks. Regular API users only need to use this {@link Id} interface that hides
+ * some complexity.<br>
+ * In case you need to create an {@link Id} from its primary key e.g. in test-code, you may want to use static factory
+ * methods such as {@link LongId#of(Long)}, {@link UuidId#of(UUID)}, {@link StringId#of(String)}, etc.
  *
  * @param <E> the {@link #getEntityClass() entity type}.
  *
@@ -103,7 +110,8 @@ public interface Id<E> extends Supplier<Object> {
   /**
    * @return a copy of this {@link Id} without a {@link #getRevision() revision} ({@code null}) e.g. to use the
    *         {@link Id} as regular <em>foreign key</em> (pointing to the latest revision and not a historic revision) or
-   *         this {@link Id} itself if already satisfying.
+   *         this {@link Id} itself if already satisfying. <b>ATTENTION</b>: This method may return a different class
+   *         than it was invoked on. To prevent this use {@link GenericId#withRevision(Comparable) withRevision}(null).
    */
   Id<E> withoutRevision();
 

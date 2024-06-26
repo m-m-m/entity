@@ -36,9 +36,9 @@ public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
   }
 
   @Override
-  public boolean hasRevision() {
+  public boolean hasRevisionField() {
 
-    return (this.revision != null) && (this.revision.longValue() != 0);
+    return true;
   }
 
   @Override

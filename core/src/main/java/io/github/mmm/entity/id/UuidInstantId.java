@@ -63,12 +63,6 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
   }
 
   @Override
-  public UuidInstantId<E> withoutRevision() {
-
-    return withRevision(null);
-  }
-
-  @Override
   public <T> UuidInstantId<T> withEntityType(Class<T> newEntityType) {
 
     return (UuidInstantId<T>) super.withEntityType(newEntityType);

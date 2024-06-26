@@ -25,15 +25,19 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
     EMPTY_ID_MAP.put(AbstractId.class, LongVersionId.getEmpty());
     EMPTY_ID_MAP.put(LongId.class, LongVersionId.getEmpty());
     EMPTY_ID_MAP.put(AbstractVersionId.class, LongVersionId.getEmpty());
+    EMPTY_ID_MAP.put(AbstractRevisionlessId.class, LongRevisionlessId.getEmpty());
+    EMPTY_ID_MAP.put(LongRevisionlessId.class, LongRevisionlessId.getEmpty());
     EMPTY_ID_MAP.put(LongVersionId.class, LongVersionId.getEmpty());
     EMPTY_ID_MAP.put(AbstractInstantId.class, LongInstantId.getEmpty());
     EMPTY_ID_MAP.put(LongInstantId.class, LongInstantId.getEmpty());
     EMPTY_ID_MAP.put(StringId.class, StringVersionId.getEmpty());
     EMPTY_ID_MAP.put(StringVersionId.class, StringVersionId.getEmpty());
     EMPTY_ID_MAP.put(StringInstantId.class, StringInstantId.getEmpty());
+    EMPTY_ID_MAP.put(StringRevisionlessId.class, StringRevisionlessId.getEmpty());
     EMPTY_ID_MAP.put(UuidId.class, UuidVersionId.getEmpty());
     EMPTY_ID_MAP.put(UuidVersionId.class, UuidVersionId.getEmpty());
     EMPTY_ID_MAP.put(UuidInstantId.class, UuidInstantId.getEmpty());
+    EMPTY_ID_MAP.put(UuidRevisionlessId.class, UuidRevisionlessId.getEmpty());
   }
 
   static final GenericIdFactory INSTANCE = new GenericIdFactory();

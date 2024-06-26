@@ -70,11 +70,10 @@ public interface LongId<E, V extends Comparable<?>> extends GenericId<E, Long, V
     return (LongId<E, V>) GenericId.super.withRevision(newRevision);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  default LongId<E, V> withoutRevision() {
+  default LongId<E, ?> withoutRevision() {
 
-    return (LongId<E, V>) GenericId.super.withoutRevision();
+    return new LongRevisionlessId<>(getEntityClass(), get());
   }
 
   @Override
@@ -96,30 +95,35 @@ public interface LongId<E, V extends Comparable<?>> extends GenericId<E, Long, V
   /**
    * @param <E> type of the referenced entity.
    * @param id the actual {@link #get() primary key}.
-   * @param entityType the {@link #getEntityClass() entity type}.
+   * @param type the {@link #getEntityClass() entity type}.
    * @return the {@link LongId}.
    */
-  static <E> LongId<E, ?> of(Long id, Class<E> entityType) {
+  static <E> LongId<E, ?> of(Long id, Class<E> type) {
 
-    return of(id, entityType, null);
+    if (id == null) {
+      return null;
+    }
+    return new LongRevisionlessId<>(type, id);
   }
 
   /**
    * @param <E> the generic type of the identified entity.
    * @param id the actual {@link #get() primary key}.
-   * @param entityType the {@link #getEntityClass() entity type}.
+   * @param type the {@link #getEntityClass() entity type}.
    * @param revision the optional {@link #getRevision() revision}.
    * @return the new {@link LongId}.
    */
-  static <E> LongId<E, ?> of(Long id, Class<E> entityType, Object revision) {
+  static <E> LongId<E, ?> of(Long id, Class<E> type, Object revision) {
 
     if (id == null) {
       return null;
     }
-    if ((revision == null) || (revision instanceof Long)) {
-      return new LongVersionId<>(entityType, id, (Long) revision);
-    } else if (revision instanceof Instant) {
-      return new LongInstantId<>(entityType, id, (Instant) revision);
+    if (revision == null) {
+      return new LongRevisionlessId<>(type, id);
+    } else if (revision instanceof Long l) {
+      return new LongVersionId<>(type, id, l);
+    } else if (revision instanceof Instant i) {
+      return new LongInstantId<>(type, id, i);
     }
     throw new IllegalStateException("Unsupported revision type: " + revision.getClass().getName());
   }

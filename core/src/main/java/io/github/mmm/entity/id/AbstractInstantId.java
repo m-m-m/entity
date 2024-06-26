@@ -35,9 +35,9 @@ public abstract class AbstractInstantId<E, I> extends AbstractId<E, I, Instant> 
   }
 
   @Override
-  public boolean hasRevision() {
+  public boolean hasRevisionField() {
 
-    return (this.revision != null);
+    return true;
   }
 
   @Override

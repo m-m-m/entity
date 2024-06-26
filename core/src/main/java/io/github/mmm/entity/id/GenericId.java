@@ -13,7 +13,7 @@ import io.github.mmm.marshall.id.StructuredIdMappingObject;
 /**
  * Interface extending {@link Id} with generic features to be used by frameworks.
  *
- * @param <E> type of the identified entity.
+ * @param <E> type of the identified {@link io.github.mmm.entity.Entity}.
  * @param <I> type of the {@link #get() ID}.
  * @param <R> type of the {@link #getRevision() revision}.
  * @since 1.0.0
@@ -78,10 +78,10 @@ public interface GenericId<E, I, R extends Comparable<?>>
   R getRevision();
 
   /**
-   * @return {@code true} if this {@link Id} has relevant revision information, {@code false} otherwise (revision can be
-   *         omitted because it is {@code null} or zero).
+   * @return {@code true} if this {@link Id} implementation has a field to store the {@link #getRevision() revision},
+   *         {@code false} otherwise (see {@link NoRevision} and {@link AbstractRevisionlessId}).
    */
-  boolean hasRevision();
+  boolean hasRevisionField();
 
   /**
    * @return the {@link Class} reflecting the {@link #getRevision() revision}.
@@ -198,7 +198,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
   default void write(StructuredWriter writer) {
 
     I id = get();
-    if (hasRevision()) {
+    if (hasRevisionField()) {
       R revision = getRevision();
       writer.writeStartObject(this);
       writer.writeName(getMarshalPropertyId());

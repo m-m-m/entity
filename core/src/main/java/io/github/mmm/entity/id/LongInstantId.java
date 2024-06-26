@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Implementation of {@link AbstractInstantId} using {@link Long} as {@link #get() primary key}.
+ * Implementation of {@link AbstractInstantId} as {@link LongId}.
  *
  * @param <E> type of the identified entity.
  * @since 1.0.0
@@ -59,12 +59,6 @@ public final class LongInstantId<E> extends AbstractInstantId<E, Long> implement
       return this;
     }
     return create(getEntityClass(), get(), newRevision);
-  }
-
-  @Override
-  public LongInstantId<E> withoutRevision() {
-
-    return withRevision(null);
   }
 
   @Override

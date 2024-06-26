@@ -61,12 +61,6 @@ public final class StringVersionId<E> extends AbstractVersionId<E, String> imple
   }
 
   @Override
-  public StringVersionId<E> withoutRevision() {
-
-    return withRevision(null);
-  }
-
-  @Override
   public <T> StringVersionId<T> withEntityType(Class<T> newEntityType) {
 
     return (StringVersionId<T>) super.withEntityType(newEntityType);
