@@ -13,41 +13,28 @@ import io.github.mmm.entity.id.Id;
  *
  * @since 1.0.0
  */
-public class EntityLink<E extends Entity> extends AbstractLink<E> {
-
-  private final E entity;
+public class EntityLink<E extends Entity> extends AbstractIdLink<E> {
 
   /**
    * The constructor.
    *
-   * @param entity the {@link #getTarget() target entity}.
+   * @param target the {@link #getTarget() target entity}.
    */
-  protected EntityLink(E entity) {
+  protected EntityLink(E target) {
 
-    super();
-    this.entity = entity;
+    this(null, target);
+  }
+
+  EntityLink(Id<E> id, E target) {
+
+    super(id, target);
   }
 
   @Override
-  public boolean isResolved() {
+  protected AbstractIdLink<E> withId(GenericId<E, ?, ?> newId) {
 
-    return true;
-  }
-
-  @Override
-  public Id<E> getId() {
-
-    Id<E> id = Id.from(this.entity);
-    if (id instanceof GenericId g) {
-      id = g.withoutRevision();
-    }
-    return id;
-  }
-
-  @Override
-  public E getTarget() {
-
-    return this.entity;
+    // should never happen...
+    return new EntityLink<>(newId, getTarget());
   }
 
 }

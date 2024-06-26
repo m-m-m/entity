@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import io.github.mmm.entity.Entity;
+import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 
 /**
@@ -63,17 +64,20 @@ public interface Link<E> {
     if (entity == null) {
       return null;
     }
-    return new EntityLink<>(entity);
+    return new EntityLinkWithoutRevision<>(entity);
   }
 
   /**
    * @param <E> type of the {@link #getTarget() linked} {@link io.github.mmm.entity.Entity}.
    * @param id the {@link #getId() id}.
-   * @return the {@link Link} for the given {@link Id}.
+   * @return the {@link Link} for the given {@link Id} {@link GenericId#withoutRevision() without the revision}.
    */
   public static <E> Link<E> of(Id<E> id) {
 
-    return new IdLink<>(id, null);
+    if (id == null) {
+      return null;
+    }
+    return new IdLinkWithoutRevision<>(id, null);
   }
 
   /**

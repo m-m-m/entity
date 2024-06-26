@@ -2,7 +2,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.link;
 
-import java.util.Objects;
 import java.util.function.Function;
 
 import io.github.mmm.entity.id.GenericId;
@@ -17,13 +16,9 @@ import io.github.mmm.entity.id.Id;
  *
  * @since 1.0.0
  */
-public class IdLink<E> extends AbstractLink<E> {
+public class IdLink<E> extends AbstractIdLink<E> {
 
-  private final GenericId<E, ?, ?> id;
-
-  private transient Function<Id<E>, E> resolver;
-
-  private E entity;
+  transient Function<Id<E>, E> resolver;
 
   /**
    * The constructor.
@@ -32,64 +27,34 @@ public class IdLink<E> extends AbstractLink<E> {
    * @param resolver the {@link Function} to {@link #isResolved() resolve} the {@link #getTarget() link target} (the
    *        entity).
    */
-  @SuppressWarnings({ "rawtypes" })
   protected IdLink(Id<E> id, Function<Id<E>, E> resolver) {
 
-    super();
-    Objects.requireNonNull(id, "id");
-    if (id.get() == null) {
-      throw new IllegalArgumentException("Cannot create link for empty ID - primary key must be present!");
-    }
-    this.id = ((GenericId) id).withoutRevision();
+    this(id, null, resolver);
+  }
+
+  IdLink(Id<E> id, E target, Function<Id<E>, E> resolver) {
+
+    super(id, target);
     this.resolver = resolver;
-  }
-
-  @Override
-  public Id<E> getId() {
-
-    return this.id;
-  }
-
-  @Override
-  public boolean isResolved() {
-
-    return (this.entity != null);
   }
 
   @Override
   public E getTarget() {
 
-    if (this.entity == null) {
-      return resolve();
+    E target = super.getTarget();
+    if ((target == null) && (this.resolver != null)) {
+      target = updateTarget(this.resolver);
+      if (target != null) {
+        this.resolver = null;
+      }
     }
-    return this.entity;
+    return target;
   }
 
-  private synchronized E resolve() {
+  @Override
+  protected IdLink<E> withId(GenericId<E, ?, ?> newId) {
 
-    if ((this.entity == null) && (this.resolver != null)) {
-      this.entity = this.resolver.apply(this.id);
-      this.resolver = null;
-    }
-    return this.entity;
-  }
-
-  /**
-   * @param type the new value of {@link Id#getEntityClass()}. Exact type should actually be {@link Class}{@literal <E>}
-   *        but this prevents simple usage.
-   * @return a copy of this {@link Link} with the given {@link Id#getEntityClass() type} or this {@link Link} itself if
-   *         already satisfying.
-   * @see GenericId#withEntityType(Class)
-   */
-  public IdLink<E> withType(Class<?> type) {
-
-    Id<E> newId = this.id.withEntityTypeGeneric(type);
-    if (newId == this.id) {
-      return this;
-    }
-    IdLink<E> newLink = new IdLink<>(newId, this.resolver);
-    newLink.entity = this.entity;
-    return newLink;
+    return new IdLink<>(newId, super.getTarget(), this.resolver);
   }
 
   /**

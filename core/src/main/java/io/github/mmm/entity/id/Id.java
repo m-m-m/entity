@@ -185,13 +185,17 @@ public interface Id<E> extends Supplier<Object> {
    *         {@link Entity} was {@code null} or {@link Entity#getId() it's ID} is {@code null}.
    * @see Entity#getId()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   static <E extends Entity> Id<E> from(E entity) {
 
     if (entity == null) {
       return null;
     }
-    return (Id<E>) entity.getId();
+    Id<E> id = (Id<E>) entity.getId();
+    if (id.getEntityClass() == null) {
+      id = (Id) id.withEntityType(entity.getJavaClass());
+    }
+    return id;
   }
 
   /**

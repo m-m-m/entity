@@ -50,12 +50,13 @@ public class LinkTest extends Assertions {
     entity.setId(id);
     // act
     Link<DummyEntity> entityLink = Link.of(entity);
-    Link<DummyEntity> idLinkWithoutResolver = Link.of(id);
+    Link<DummyEntity> idLinkWithoutResolver = IdLink.of(id, null);
     Link<DummyEntity> idLinkWithResolver = IdLink.of(id, i -> i == id ? entity : null);
     // assert
     assertThat(entityLink.isResolved()).isTrue();
     assertThat(entityLink.getTarget()).isSameAs(entity);
-    assertThat(entityLink.getId()).isSameAs(id);
+    assertThat(entityLink.getId()).isNotSameAs(id);
+    assertThat(entityLink.getId()).isEqualTo(id.withoutRevision());
     assertThat(idLinkWithResolver.isResolved()).isFalse();
     assertThat(idLinkWithResolver.getId()).isSameAs(id);
     assertThat(idLinkWithResolver.getTarget()).isSameAs(entity);
