@@ -52,13 +52,13 @@ public class PropertyFactoryLinkTest extends Assertions {
 
     // arrange
     Target target = BeanFactory.get().create(Target.class);
-    LongVersionId<Target> id = LongVersionId.getEmpty(Target.class).withIdAndRevision(4711L, 1L);
+    LongVersionId<Target> id = LongVersionId.of(4711L, 1L, Target.class);
     target.setId(id);
     Source source = BeanFactory.get().create(Source.class);
     // act
     source.Target().set(Link.of(target));
     // assert
-    assertThat(source.Target().get().getId()).isSameAs(id);
+    assertThat(source.Target().get().getId()).isEqualTo(id.withoutRevision());
     assertThat(source.Target().get().getTarget()).isSameAs(target);
   }
 

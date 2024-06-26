@@ -91,12 +91,24 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
 
   /**
    * @param <E> type of the identified entity.
-   * @param entityType the {@link #getEntityClass() entity type}.
+   * @param type the {@link #getEntityClass() entity type}.
    * @return the {@link #isEmpty() empty} template of this class.
    */
-  public static <E> LongVersionId<E> getEmpty(Class<E> entityType) {
+  public static <E> LongVersionId<E> getEmpty(Class<E> type) {
 
-    return getEmpty().withEntityType(entityType);
+    return getEmpty().withEntityType(type);
+  }
+
+  /**
+   * @param <E> type of the identified entity.
+   * @param id the {@link #get() primary key}.
+   * @param revision the {@link #getRevision() revision}.
+   * @param type the {@link #getEntityClass() entity type}.
+   * @return the {@link #isEmpty() empty} template of this class.
+   */
+  public static <E> LongVersionId<E> of(Long id, Long revision, Class<E> type) {
+
+    return new LongVersionId<>(type, id, revision);
   }
 
 }
