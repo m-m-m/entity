@@ -8,13 +8,14 @@ import java.time.Instant;
  * An abstract base implementation of {@link Id} using {@link Instant} as type for the {@link #getRevision() revision}.
  *
  * @param <E> type of the identified entity.
- * @param <I> type of the {@link #get() ID}.
+ * @param <P> type of the {@link #getPk() primary key}.
  *
  * @since 1.0.0
  */
-public abstract class AbstractInstantId<E, I> extends AbstractId<E, I, Instant> {
+public abstract class AbstractInstantId<E, P> extends AbstractId<E, P, Instant> {
 
-  private final Instant revision;
+  /** @see #getRevision() */
+  protected final Instant revision;
 
   /**
    * The constructor.

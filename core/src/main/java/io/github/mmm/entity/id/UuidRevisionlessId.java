@@ -16,44 +16,52 @@ public final class UuidRevisionlessId<E> extends AbstractRevisionlessId<E, UUID>
   @SuppressWarnings("rawtypes")
   private static final UuidRevisionlessId EMPTY = new UuidRevisionlessId<>(null, null);
 
-  private final UUID id;
+  private final UUID pk;
 
   /**
    * The constructor.
    *
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}.
+   * @param pk the {@link #getPk() primary key}.
    */
-  public UuidRevisionlessId(Class<E> type, UUID id) {
+  public UuidRevisionlessId(Class<E> type, UUID pk) {
 
     super(type);
-    this.id = id;
+    this.pk = pk;
   }
 
   @Override
-  public UUID get() {
+  public UUID getPk() {
 
-    return this.id;
+    return this.pk;
   }
 
   @Override
-  public <T> UuidRevisionlessId<T> create(Class<T> newEntityType, UUID newId, NoRevision newRevision) {
+  public <T> UuidRevisionlessId<T> create(Class<T> newEntityType, UUID newPk, NoRevision newRevision) {
 
-    return new UuidRevisionlessId<>(newEntityType, newId);
+    return new UuidRevisionlessId<>(newEntityType, newPk);
   }
 
   @Override
-  public UuidRevisionlessId<E> withIdAndRevision(UUID newId, NoRevision newRevision) {
+  public UuidRevisionlessId<E> withPk(UUID newPk) {
 
-    if (Objects.equals(get(), newId)) {
+    if (Objects.equals(getPk(), newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(getEntityClass(), newPk, null);
+  }
+
+  @Override
+  public UuidRevisionlessId<E> withPkAndRevision(UUID newPk, NoRevision newRevision) {
+
+    assert (newRevision == null);
+    return withPk(newPk);
   }
 
   @Override
   public UuidRevisionlessId<E> withRevision(NoRevision newRevision) {
 
+    assert (newRevision == null);
     return this;
   }
 

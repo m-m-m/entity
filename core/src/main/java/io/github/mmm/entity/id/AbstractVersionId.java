@@ -6,16 +6,17 @@ package io.github.mmm.entity.id;
  * An abstract base implementation of {@link Id} using {@link Long} as type for the {@link #getRevision() revision}.
  *
  * @param <E> type of the identified entity.
- * @param <I> type of the {@link #get() ID}.
+ * @param <P> type of the {@link #getPk() primary key}.
  *
  * @since 1.0.0
  */
-public abstract class AbstractVersionId<E, I> extends AbstractId<E, I, Long> {
+public abstract class AbstractVersionId<E, P> extends AbstractId<E, P, Long> {
 
   /** {@link #getRevision() Revision} of a newly inserted {@link io.github.mmm.entity.Entity entity}. */
   public static final Long INSERT_REVISION = Long.valueOf(1);
 
-  private final Long revision;
+  /** @see #getRevision() */
+  protected final Long revision;
 
   /**
    * The constructor.

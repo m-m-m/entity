@@ -17,25 +17,25 @@ public final class StringInstantId<E> extends AbstractInstantId<E, String> imple
   @SuppressWarnings("rawtypes")
   private static final StringInstantId EMPTY = new StringInstantId<>(null, null, null);
 
-  private final String id;
+  private final String pk;
 
   /**
    * The constructor.
    *
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}.
+   * @param pk the {@link #getPk() primary key}.
    * @param revision the {@link #getRevision() revision}.
    */
-  public StringInstantId(Class<E> type, String id, Instant revision) {
+  public StringInstantId(Class<E> type, String pk, Instant revision) {
 
     super(type, revision);
-    this.id = id;
+    this.pk = pk;
   }
 
   @Override
-  public String get() {
+  public String getPk() {
 
-    return this.id;
+    return this.pk;
   }
 
   @Override
@@ -45,21 +45,30 @@ public final class StringInstantId<E> extends AbstractInstantId<E, String> imple
   }
 
   @Override
-  public StringInstantId<E> withIdAndRevision(String newId, Instant newRevision) {
+  public StringInstantId<E> withPk(String newPk) {
 
-    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+    if (Objects.equals(this.pk, newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(this.entityClass, newPk, this.revision);
+  }
+
+  @Override
+  public StringInstantId<E> withPkAndRevision(String newPk, Instant newRevision) {
+
+    if (Objects.equals(this.revision, newRevision) && Objects.equals(this.pk, newPk)) {
+      return this;
+    }
+    return create(this.entityClass, newPk, newRevision);
   }
 
   @Override
   public StringInstantId<E> withRevision(Instant newRevision) {
 
-    if (Objects.equals(getRevision(), newRevision)) {
+    if (Objects.equals(this.revision, newRevision)) {
       return this;
     }
-    return create(getEntityClass(), get(), newRevision);
+    return create(this.entityClass, this.pk, newRevision);
   }
 
   @Override
@@ -77,7 +86,7 @@ public final class StringInstantId<E> extends AbstractInstantId<E, String> imple
   @Override
   public StringInstantId<E> updateRevision() {
 
-    Instant newRevision = updateRevision(getRevision());
+    Instant newRevision = updateRevision(this.revision);
     return withRevision(newRevision);
   }
 

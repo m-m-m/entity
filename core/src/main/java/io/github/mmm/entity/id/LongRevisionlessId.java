@@ -5,7 +5,7 @@ package io.github.mmm.entity.id;
 import java.util.Objects;
 
 /**
- * Implementation of {@link AbstractRevisionlessId} using {@link Long} as {@link #get() primary key}.
+ * Implementation of {@link AbstractRevisionlessId} using {@link Long} as {@link #getPk() primary key}.
  *
  * @param <E> type of the identified entity.
  * @since 1.0.0
@@ -15,24 +15,24 @@ public final class LongRevisionlessId<E> extends AbstractRevisionlessId<E, Long>
   @SuppressWarnings("rawtypes")
   private static final LongRevisionlessId EMPTY = new LongRevisionlessId<>(null, null);
 
-  private final Long id;
+  private final Long pk;
 
   /**
    * The constructor.
    *
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
+   * @param pk the {@link #getPk() primary key}. See {@link #getPkAsLong()}.
    */
-  public LongRevisionlessId(Class<E> type, Long id) {
+  public LongRevisionlessId(Class<E> type, Long pk) {
 
     super(type);
-    this.id = id;
+    this.pk = pk;
   }
 
   @Override
-  public Long get() {
+  public Long getPk() {
 
-    return this.id;
+    return this.pk;
   }
 
   @Override
@@ -42,17 +42,25 @@ public final class LongRevisionlessId<E> extends AbstractRevisionlessId<E, Long>
   }
 
   @Override
-  public LongRevisionlessId<E> withIdAndRevision(Long newId, NoRevision newRevision) {
+  public LongRevisionlessId<E> withPk(Long newPk) {
 
-    if (Objects.equals(get(), newId)) {
+    if (Objects.equals(this.pk, newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(this.entityClass, newPk, null);
+  }
+
+  @Override
+  public LongRevisionlessId<E> withPkAndRevision(Long newPk, NoRevision newRevision) {
+
+    assert (newRevision == null);
+    return withPk(newPk);
   }
 
   @Override
   public LongRevisionlessId<E> withRevision(NoRevision newRevision) {
 
+    assert (newRevision == null);
     return this;
   }
 

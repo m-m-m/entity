@@ -7,11 +7,11 @@ package io.github.mmm.entity.id;
  * optimistic locking nor reading audit trails.
  *
  * @param <E> type of the identified entity.
- * @param <I> type of the {@link #get() ID}.
+ * @param <P> type of the {@link #getPk() primary key}.
  *
  * @since 1.0.0
  */
-public abstract class AbstractRevisionlessId<E, I> extends AbstractId<E, I, NoRevision> {
+public abstract class AbstractRevisionlessId<E, P> extends AbstractId<E, P, NoRevision> {
 
   /**
    * The constructor.

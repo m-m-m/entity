@@ -3,12 +3,11 @@ package io.github.mmm.entity.id;
 import java.util.Objects;
 
 import io.github.mmm.base.lang.Builder;
-import io.github.mmm.entity.link.Link;
 import io.github.mmm.value.converter.CompositeTypeMapper;
 import io.github.mmm.value.converter.ValueMapper;
 
 /**
- * {@link ValueMapper} to convert from {@link Link} to {@link Id} and vice versa.
+ * {@link ValueMapper} to convert from {@link Id} to {@link Id#getPk() primary key} and vice versa.
  *
  * @since 1.0.0
  */
@@ -58,7 +57,7 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
     private void withId(Object newId) {
 
-      this.id = this.id.withIdAndRevision(newId, this.id.getRevision());
+      this.id = this.id.withPk(newId);
     }
 
     private void withRevision(Object newRevision) {
@@ -127,7 +126,7 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     @Override
     public Class<? extends Object> getTargetType() {
 
-      return this.idTemplate.getType();
+      return this.idTemplate.getPkClass();
     }
 
     @Override
@@ -141,13 +140,13 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
       assert (next() == null); // no revision field
       assert (!this.idTemplate.hasRevisionField());
-      return this.idTemplate.withIdAndRevision(target, null);
+      return this.idTemplate.withPkAndRevision(target, null);
     }
 
     @Override
     public Object toTarget(Id id) {
 
-      return id.get();
+      return id.getPk();
     }
 
     @Override
@@ -168,7 +167,7 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     GenericId genericId = (GenericId) id;
     PkMapperRevision revMapper = null;
     if (genericId.hasRevisionField()) {
-      revMapper = new PkMapperRevision(genericId.withIdAndRevision(null, null));
+      revMapper = new PkMapperRevision(genericId.withPkAndRevision(null, null));
     }
     return new PkMapperId(genericId, revMapper);
   }

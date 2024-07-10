@@ -28,7 +28,7 @@ public interface Link<E> {
   /**
    * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getTarget()
    *         entity}. When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
-   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no {@link Id#get() primary key}
+   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no {@link Id#getPk() primary key}
    *         assigned, yet. In such case this method will return an {@link Id#isEmpty() empty} {@link Id}.
    */
   Id<E> getId();

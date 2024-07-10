@@ -7,7 +7,7 @@ import io.github.mmm.entity.id.LongId;
 import io.github.mmm.entity.id.generator.IdGenerator;
 
 /**
- * Interface for a sequence that can generate the next unique {@link Id#get() primary key} of type {@link Long} for a
+ * Interface for a sequence that can generate the next unique {@link Id#getPk() primary key} of type {@link Long} for a
  * new {@link LongId}.
  *
  * @see IdGenerator#generate(Id)

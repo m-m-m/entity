@@ -12,13 +12,13 @@ import io.github.mmm.entity.Entity;
  * {@link #getEntityClass() type} ({@code <E>}). <br>
  * An {@link Id} has the following properties:
  * <ul>
- * <li>{@link #get() primary-key} - the primary key that identifies the entity and is unique for a specific
+ * <li>{@link #getPk() primary-key} - the primary key that identifies the entity and is unique for a specific
  * {@link #getEntityClass() type}. As a best practice it is recommended to make the primary-key even unique for all
  * entities of a database.</li>
  * <li>{@link #getRevision() revision} - the optional revision of the entity.</li>
  * <li>{@link #getEntityClass() type} - is the type of the identified entity.</li>
  * </ul>
- * Just like the {@link #get() primary key} the {@link #getEntityClass() type} of an object does not change. In an
+ * Just like the {@link #getPk() primary key} the {@link #getEntityClass() type} of an object does not change. In an
  * {@link Entity} is updated its {@link #getRevision() revision} may change. In this case a new {@link Id} instance is
  * created and assigned since {@link Id} is designed as an immutable datatype. To allow using {@link Id} as globally
  * unique identifier for its corresponding {@link Entity}, regular methods (e.g. {@code EntityRepository.findById} will
@@ -46,7 +46,7 @@ import io.github.mmm.entity.Entity;
  */
 public interface Id<E> extends Supplier<Object> {
 
-  /** Marshalling property name of the {@link #get() id}. */
+  /** Marshalling property name of the {@link #getPk() id}. */
   String PROPERTY_ID = "id";
 
   /** Marshalling property name of the {@link #getRevision() revision}. */
@@ -72,15 +72,20 @@ public interface Id<E> extends Supplier<Object> {
    * @return the <em>primary key</em> of the identified {@link Entity} as {@link Object} value. It may only be unique
    *         for a particular {@link #getEntityClass() type} of an <em>entity</em> (unless {@link UUID} is used).
    */
+  Object getPk();
+
   @Override
-  Object get();
+  default Object get() {
+
+    return getPk();
+  }
 
   /**
-   * @return the {@link #get() primary key} as {@link String} for marshalling.
+   * @return the {@link #getPk() primary key} as {@link String} for marshalling.
    */
   default String getAsString() {
 
-    Object id = get();
+    Object id = getPk();
     if (id == null) {
       return null;
     }
@@ -88,17 +93,17 @@ public interface Id<E> extends Supplier<Object> {
   }
 
   /**
-   * @return the {@link Class} reflecting the {@link #get() primary key}.
+   * @return the {@link Class} reflecting the {@link #getPk() primary key}.
    */
-  public abstract Class<?> getType();
+  Class<?> getPkClass();
 
   /**
-   * @return {@code true} if both {@link #get() primary key} and {@link #getRevision() revision} are empty (such
+   * @return {@code true} if both {@link #getPk() primary key} and {@link #getRevision() revision} are empty (such
    *         {@link Id} object is used as placeholder and factory), {@code false} otherwise (e.g. if persistent).
    */
   default boolean isEmpty() {
 
-    return (get() == null) && (getRevision() == null);
+    return (getPk() == null) && (getRevision() == null);
   }
 
   /**
@@ -132,7 +137,7 @@ public interface Id<E> extends Supplier<Object> {
   /**
    * @return the {@link Class} reflecting the {@link #getRevision() revision}.
    */
-  public abstract Class<? extends Comparable<?>> getRevisionType();
+  Class<? extends Comparable<?>> getRevisionType();
 
   /**
    * @return the {@link #getRevision() revision} as {@link String} for marshalling.
@@ -169,7 +174,20 @@ public interface Id<E> extends Supplier<Object> {
   <T> Id<T> withEntityType(Class<T> newEntityType);
 
   /**
-   * @return the {@link String} representation of this {@link Id}. Will consist of {@link #get() object-id},
+   * @return {@code true} if this {@link Id} is transient if used as {@link Entity#getId() primary key}, {@code false}
+   *         otherwise. Here transient means that the {@link Entity#getId() owning} {@link Entity} has never been saved
+   *         to a persistent store yet. Otherwise the {@link Entity} is persistent and was received from a persistent
+   *         store. Please note that the existence of its {@link #getPk() primary key} is not sufficient as it may be
+   *         assigned already in transient state (e.g. for {@link UuidId} or also for {@link LongId} using negative TX
+   *         local values).
+   */
+  default boolean isTransient() {
+
+    return (getRevision() == null);
+  }
+
+  /**
+   * @return the {@link String} representation of this {@link Id}. Will consist of {@link #getPk() object-id},
    *         {@link #getEntityClass() type} and {@link #getRevision() revision} separated with a specific separator.
    *         Segments that are {@code null} will typically be omitted in the {@link String} representation.
    */
@@ -199,16 +217,28 @@ public interface Id<E> extends Supplier<Object> {
   }
 
   /**
-   * @return {@code true} if this {@link Id} is transient if used as {@link Entity#getId() primary key}, {@code false}
-   *         otherwise. Here transient means that the {@link Entity#getId() owning} {@link Entity} has never been saved
-   *         to a persistent store yet. Otherwise the {@link Entity} is persistent and was received from a persistent
-   *         store. Please note that the existence of its {@link #get() primary key} is not sufficient as it may be
-   *         assigned already in transient state (e.g. for {@link UuidId} or also for {@link LongId} using negative TX
-   *         local values).
+   * This is a generic convenience method to create a {@link Id#withoutRevision() revision-less} {@link Id} back from
+   * its {@link #getPk() primary key}.
+   *
+   * @param <E> type of {@link Entity}.
+   * @param type the {@link #getEntityClass() entityClass}
+   * @param pk the {@link #getPk() primary key}.
+   * @return the {@link Id#withoutRevision() revision-less} {@link Id} for the given arguments.
    */
-  default boolean isTransient() {
+  static <E extends Entity> Id<E> of(Class<E> type, Object pk) {
 
-    return (getRevision() == null);
+    if (pk == null) {
+      return null;
+    }
+    if (pk instanceof Long l) {
+      return new LongRevisionlessId<>(type, l);
+    } else if (pk instanceof UUID u) {
+      return new UuidRevisionlessId<>(type, u);
+    } else if (pk instanceof String s) {
+      return new StringRevisionlessId<>(type, s);
+    } else {
+      throw new IllegalArgumentException("Unsupported primary key type " + pk.getClass().getName());
+    }
   }
 
 }

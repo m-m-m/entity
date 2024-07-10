@@ -110,7 +110,7 @@ public class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Ta
     Id<Target> id = linkProperty.get().getId();
     linkProperty.write(writer);
     // assert
-    assertThat(id.get()).isEqualTo(pk);
+    assertThat(id.getPk()).isEqualTo(pk);
     assertThat(id.getRevision()).isEqualTo(revision);
     assertThat(id.getEntityClass()).isSameAs(Target.class);
     assertThat(id.getClass()).isSameAs(idClass);

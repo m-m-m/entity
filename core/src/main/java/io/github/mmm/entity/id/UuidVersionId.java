@@ -16,49 +16,58 @@ public final class UuidVersionId<E> extends AbstractVersionId<E, UUID> implement
   @SuppressWarnings("rawtypes")
   private static final UuidVersionId EMPTY = new UuidVersionId<>(null, null, null);
 
-  private final UUID id;
+  private final UUID pk;
 
   /**
    * The constructor.
    *
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}.
+   * @param pk the {@link #getPk() primary key}.
    * @param revision the {@link #getRevision() revision}.
    */
-  public UuidVersionId(Class<E> type, UUID id, Long revision) {
+  public UuidVersionId(Class<E> type, UUID pk, Long revision) {
 
     super(type, revision);
-    this.id = id;
+    this.pk = pk;
   }
 
   @Override
-  public UUID get() {
+  public UUID getPk() {
 
-    return this.id;
+    return this.pk;
   }
 
   @Override
-  public <T> UuidVersionId<T> create(Class<T> newEntityType, UUID newId, Long newRevision) {
+  public <T> UuidVersionId<T> create(Class<T> newEntityType, UUID newPk, Long newRevision) {
 
-    return new UuidVersionId<>(newEntityType, newId, newRevision);
+    return new UuidVersionId<>(newEntityType, newPk, newRevision);
   }
 
   @Override
-  public UuidVersionId<E> withIdAndRevision(UUID newId, Long newRevision) {
+  public UuidVersionId<E> withPk(UUID newPk) {
 
-    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+    if (Objects.equals(this.pk, newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(this.entityClass, newPk, this.revision);
+  }
+
+  @Override
+  public UuidVersionId<E> withPkAndRevision(UUID newPk, Long newRevision) {
+
+    if (Objects.equals(this.revision, newRevision) && Objects.equals(this.pk, newPk)) {
+      return this;
+    }
+    return create(this.entityClass, newPk, newRevision);
   }
 
   @Override
   public UuidVersionId<E> withRevision(Long newRevision) {
 
-    if (Objects.equals(getRevision(), newRevision)) {
+    if (Objects.equals(this.revision, newRevision)) {
       return this;
     }
-    return create(getEntityClass(), get(), newRevision);
+    return create(this.entityClass, this.pk, newRevision);
   }
 
   @Override
@@ -76,7 +85,7 @@ public final class UuidVersionId<E> extends AbstractVersionId<E, UUID> implement
   @Override
   public UuidVersionId<E> updateRevision() {
 
-    Long newRevision = updateRevision(getRevision());
+    Long newRevision = updateRevision(this.revision);
     return withRevision(newRevision);
   }
 

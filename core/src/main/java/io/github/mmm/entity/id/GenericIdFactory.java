@@ -48,38 +48,38 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public <E> GenericId<E, Object, Comparable<?>> create(Class<E> entityType, Object id, Comparable<?> revision) {
+  public <E> GenericId<E, Object, Comparable<?>> create(Class<E> entityType, Object pk, Comparable<?> revision) {
 
     GenericId result;
     if (revision instanceof Integer i) {
       revision = Long.valueOf(i.longValue());
     }
-    if (id == null) {
+    if (pk == null) {
       assert (revision == null);
       return null;
-    } else if (id instanceof Long l) {
+    } else if (pk instanceof Long l) {
       result = LongId.of(l, entityType, revision);
-    } else if (id instanceof UUID uuid) {
+    } else if (pk instanceof UUID uuid) {
       result = UuidId.of(uuid, entityType, revision);
-    } else if (id instanceof String string) {
+    } else if (pk instanceof String string) {
       result = StringId.of(string, entityType, revision);
-    } else if (id instanceof Integer i) {
+    } else if (pk instanceof Integer i) {
       result = LongId.of(Long.valueOf(i.longValue()), entityType, revision);
     } else {
-      throw new IllegalStateException("Unsupported ID type: " + id.getClass().getName());
+      throw new IllegalStateException("Unsupported ID type: " + pk.getClass().getName());
     }
     return result;
   }
 
   @Override
-  public Object parseId(String idString) {
+  public Object parsePk(String pkString) {
 
-    UUID uuid = UuidParser.get().parse(idString);
+    UUID uuid = UuidParser.get().parse(pkString);
     if (uuid != null) {
       return uuid;
     }
     // TODO may be a Long
-    return idString;
+    return pkString;
   }
 
   @Override
@@ -93,12 +93,12 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
   }
 
   @SuppressWarnings("rawtypes")
-  static <E, I extends Id> GenericId<E, ?, ?> empty(Class<E> entityType, Class<I> idClass) {
+  static <E, I extends Id> GenericId<E, ?, ?> empty(Class<E> entityType, Class<I> pkClass) {
 
-    GenericId<E, ?, ?> empty = EMPTY_ID_MAP.get(idClass);
+    GenericId<E, ?, ?> empty = EMPTY_ID_MAP.get(pkClass);
     if (empty == null) {
-      assert false : "" + idClass;
-      empty = EMPTY_ID_MAP.get(idClass);
+      assert false : "" + pkClass;
+      empty = EMPTY_ID_MAP.get(pkClass);
     }
     return empty.withEntityType(entityType);
   }

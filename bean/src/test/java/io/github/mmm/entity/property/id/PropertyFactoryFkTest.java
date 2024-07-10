@@ -28,7 +28,7 @@ public class PropertyFactoryFkTest extends Assertions {
     Id<Target> id = targetProperty.get();
     // assert
     assertThat(id.getEntityClass()).isSameAs(Target.class);
-    assertThat(id.get()).isNull();
+    assertThat(id.getPk()).isNull();
     assertThat(id.getRevision()).isNull();
   }
 

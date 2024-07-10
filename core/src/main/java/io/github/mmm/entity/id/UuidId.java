@@ -8,7 +8,7 @@ import java.util.UUID;
 import io.github.mmm.base.uuid.UuidParser;
 
 /**
- * {@link Id} using {@link UUID} as {@link #get() primary key (ID)}. (e.g. apache cassandra supports this natively).
+ * {@link Id} using {@link UUID} as {@link #getPk() primary key (ID)}. (e.g. apache cassandra supports this natively).
  *
  * @param <E> type of the identified entity.
  * @param <V> type of the {@link #getRevision() revision}.
@@ -17,16 +17,16 @@ import io.github.mmm.base.uuid.UuidParser;
 public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V> {
 
   @Override
-  UUID get();
+  UUID getPk();
 
   @Override
-  default Class<UUID> getType() {
+  default Class<UUID> getPkClass() {
 
     return UUID.class;
   }
 
   @Override
-  default UUID parseId(String idString) {
+  default UUID parsePk(String idString) {
 
     if (idString == null) {
       return null;
@@ -57,9 +57,9 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
   }
 
   @Override
-  default UuidId<E, V> withIdAndRevision(UUID newId, V newRevision) {
+  default UuidId<E, V> withPkAndRevision(UUID newId, V newRevision) {
 
-    return (UuidId<E, V>) GenericId.super.withIdAndRevision(newId, newRevision);
+    return (UuidId<E, V>) GenericId.super.withPkAndRevision(newId, newRevision);
   }
 
   @Override
@@ -71,7 +71,7 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
   @Override
   default UuidId<E, ?> withoutRevision() {
 
-    return new UuidRevisionlessId<>(getEntityClass(), get());
+    return new UuidRevisionlessId<>(getEntityClass(), getPk());
   }
 
   @Override
@@ -82,46 +82,46 @@ public interface UuidId<E, V extends Comparable<?>> extends GenericId<E, UUID, V
 
   /**
    * @param <E> type of the referenced entity.
-   * @param id the actual {@link #get() primary key}.
+   * @param pk the actual {@link #getPk() primary key}.
    * @return the new {@link UuidId}.
    */
-  static <E> UuidId<E, ?> of(UUID id) {
+  static <E> UuidId<E, ?> of(UUID pk) {
 
-    return of(id, null);
+    return of(pk, null);
   }
 
   /**
    * @param <E> type of the referenced entity.
-   * @param id the actual {@link #get() primary key}.
+   * @param pk the actual {@link #getPk() primary key}.
    * @param type the {@link #getEntityClass() entity type}.
    * @return the new {@link UuidId}.
    */
-  static <E> UuidId<E, ?> of(UUID id, Class<E> type) {
+  static <E> UuidId<E, ?> of(UUID pk, Class<E> type) {
 
-    if (id == null) {
+    if (pk == null) {
       return null;
     }
-    return new UuidRevisionlessId<>(type, id);
+    return new UuidRevisionlessId<>(type, pk);
   }
 
   /**
    * @param <E> the generic type of the identified entity.
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}.
+   * @param pk the {@link #getPk() primary key}.
    * @param revision the optional {@link #getRevision() revision}.
    * @return the new {@link UuidId}.
    */
-  static <E> UuidId<E, ?> of(UUID id, Class<E> type, Object revision) {
+  static <E> UuidId<E, ?> of(UUID pk, Class<E> type, Object revision) {
 
-    if (id == null) {
+    if (pk == null) {
       return null;
     }
     if (revision == null) {
-      return new UuidRevisionlessId<>(type, id);
+      return new UuidRevisionlessId<>(type, pk);
     } else if (revision instanceof Long l) {
-      return new UuidVersionId<>(type, id, l);
+      return new UuidVersionId<>(type, pk, l);
     } else if (revision instanceof Instant i) {
-      return new UuidInstantId<>(type, id, i);
+      return new UuidInstantId<>(type, pk, i);
     }
     throw new IllegalStateException("Unsupported revision type: " + revision.getClass().getName());
   }

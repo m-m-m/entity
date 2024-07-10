@@ -8,13 +8,14 @@ import java.util.Objects;
  * This is the abstract base implementation of {@link Id}.
  *
  * @param <E> type of the identified entity.
- * @param <I> type of the {@link #get() ID}.
+ * @param <P> type of the {@link #getPk() primary key}.
  * @param <R> type of the {@link #getRevision() revision}.
  * @since 1.0.0
  */
-public abstract class AbstractId<E, I, R extends Comparable<?>> implements GenericId<E, I, R> {
+public abstract class AbstractId<E, P, R extends Comparable<?>> implements GenericId<E, P, R> {
 
-  private final Class<E> entityType;
+  /** @see #getEntityClass() */
+  protected final Class<E> entityClass;
 
   /**
    * The constructor.
@@ -24,19 +25,19 @@ public abstract class AbstractId<E, I, R extends Comparable<?>> implements Gener
   public AbstractId(Class<E> entityType) {
 
     super();
-    this.entityType = entityType;
+    this.entityClass = entityType;
   }
 
   @Override
   public final Class<E> getEntityClass() {
 
-    return this.entityType;
+    return this.entityClass;
   }
 
   @Override
   public final int hashCode() {
 
-    return ~get().hashCode();
+    return ~getPk().hashCode();
   }
 
   @Override
@@ -49,10 +50,10 @@ public abstract class AbstractId<E, I, R extends Comparable<?>> implements Gener
       return false;
     }
     AbstractId<?, ?, ?> other = (AbstractId<?, ?, ?>) obj;
-    if (!Objects.equals(get(), other.get())) {
+    if (!Objects.equals(getPk(), other.getPk())) {
       return false;
     }
-    if ((this.entityType != null) && (other.entityType != null) && !this.entityType.equals(other.entityType)) {
+    if ((this.entityClass != null) && (other.entityClass != null) && !this.entityClass.equals(other.entityClass)) {
       return false;
     }
     if (!Objects.equals(getRevision(), other.getRevision())) {
@@ -76,7 +77,7 @@ public abstract class AbstractId<E, I, R extends Comparable<?>> implements Gener
    */
   protected void toString(StringBuilder buffer) {
 
-    I id = get();
+    P id = getPk();
     if (id == null) {
       return;
     }

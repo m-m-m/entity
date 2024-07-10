@@ -17,49 +17,58 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
   @SuppressWarnings("rawtypes")
   private static final UuidInstantId EMPTY = new UuidInstantId<>(null, null, null);
 
-  private final UUID id;
+  private final UUID pk;
 
   /**
    * The constructor.
    *
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}.
+   * @param pk the {@link #getPk() primary key}.
    * @param revision the {@link #getRevision() revision}.
    */
-  public UuidInstantId(Class<E> type, UUID id, Instant revision) {
+  public UuidInstantId(Class<E> type, UUID pk, Instant revision) {
 
     super(type, revision);
-    this.id = id;
+    this.pk = pk;
   }
 
   @Override
-  public UUID get() {
+  public UUID getPk() {
 
-    return this.id;
+    return this.pk;
   }
 
   @Override
-  public <T> UuidInstantId<T> create(Class<T> newEntityType, UUID newId, Instant newRevision) {
+  public <T> UuidInstantId<T> create(Class<T> newEntityType, UUID newPk, Instant newRevision) {
 
-    return new UuidInstantId<>(newEntityType, newId, newRevision);
+    return new UuidInstantId<>(newEntityType, newPk, newRevision);
   }
 
   @Override
-  public UuidInstantId<E> withIdAndRevision(UUID newId, Instant newRevision) {
+  public UuidInstantId<E> withPk(UUID newPk) {
 
-    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+    if (Objects.equals(this.pk, newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(getEntityClass(), newPk, this.revision);
+  }
+
+  @Override
+  public UuidInstantId<E> withPkAndRevision(UUID newPk, Instant newRevision) {
+
+    if (Objects.equals(this.revision, newRevision) && Objects.equals(this.pk, newPk)) {
+      return this;
+    }
+    return create(this.entityClass, newPk, newRevision);
   }
 
   @Override
   public UuidInstantId<E> withRevision(Instant newRevision) {
 
-    if (Objects.equals(getRevision(), newRevision)) {
+    if (Objects.equals(this.revision, newRevision)) {
       return this;
     }
-    return create(getEntityClass(), get(), newRevision);
+    return create(this.entityClass, this.pk, newRevision);
   }
 
   @Override
@@ -77,7 +86,7 @@ public final class UuidInstantId<E> extends AbstractInstantId<E, UUID> implement
   @Override
   public UuidInstantId<E> updateRevision() {
 
-    Instant newRevision = updateRevision(getRevision());
+    Instant newRevision = updateRevision(this.revision);
     return withRevision(newRevision);
   }
 

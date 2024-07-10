@@ -2,23 +2,22 @@ package io.github.mmm.entity.id;
 
 import java.util.Objects;
 
-import io.github.mmm.entity.link.Link;
 import io.github.mmm.value.converter.AtomicTypeMapper;
 import io.github.mmm.value.converter.ValueMapper;
 
 /**
- * {@link ValueMapper} to convert from {@link Link} to {@link Id} and vice versa.
+ * {@link ValueMapper} to convert from {@link Id} to {@link Id#getPk() primary key} and vice versa.
  *
  * @since 1.0.0
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class IdMapper extends AtomicTypeMapper<Id, Object> {
+public class FkMapper extends AtomicTypeMapper<Id, Object> {
 
-  private static final IdMapper DEFAULT = new IdMapper(LongVersionId.getEmpty());
+  private static final FkMapper DEFAULT = new FkMapper(LongVersionId.getEmpty());
 
   private final GenericId idTemplate;
 
-  private IdMapper(GenericId idTemplate) {
+  private FkMapper(GenericId idTemplate) {
 
     super();
     this.idTemplate = idTemplate;
@@ -33,38 +32,38 @@ public class IdMapper extends AtomicTypeMapper<Id, Object> {
   @Override
   public Class<? extends Object> getTargetType() {
 
-    return this.idTemplate.getType();
+    return this.idTemplate.getPkClass();
   }
 
   @Override
   public Object toTarget(Id id) {
 
-    return id.get();
+    return id.getPk();
   }
 
   @Override
   public Id toSource(Object id) {
 
-    return this.idTemplate.withIdAndRevision(id, null);
+    return this.idTemplate.withPk(id);
   }
 
   /**
-   * @return the default {@link IdMapper}.
+   * @return the default {@link FkMapper}.
    */
-  public static IdMapper of() {
+  public static FkMapper of() {
 
     return DEFAULT;
   }
 
   /**
    * @param id the {@link Id} to use as template.
-   * @return the {@link IdMapper}.
+   * @return the {@link FkMapper}.
    */
-  public static IdMapper of(Id id) {
+  public static FkMapper of(Id id) {
 
     Objects.requireNonNull(id);
     GenericId genericId = (GenericId) id;
-    return new IdMapper(genericId.withIdAndRevision(null, null));
+    return new FkMapper(genericId.withPk(null));
   }
 
 }

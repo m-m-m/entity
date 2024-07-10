@@ -37,7 +37,7 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
       if (gid == null) {
         throw new IllegalArgumentException("Cannot create link with neither ID nor target entity!");
       }
-      if (gid.get() == null) {
+      if (gid.getPk() == null) {
         throw new IllegalArgumentException("Cannot create link for empty ID - primary key must be present!");
       }
     } else if (gid == null) {

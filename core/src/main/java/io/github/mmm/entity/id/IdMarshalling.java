@@ -43,7 +43,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
 
   /**
    * @param <E> type of the identified entity.
-   * @param <I> type of the {@link GenericId#get() ID}.
+   * @param <I> type of the {@link GenericId#getPk() ID}.
    * @param <V> type of the {@link GenericId#getRevision() revision}.
    * @param reader the {@link StructuredReader} to read from.
    * @param factory the {@link IdFactory} to create {@link Id} instances.

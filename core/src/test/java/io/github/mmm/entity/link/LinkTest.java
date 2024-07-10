@@ -33,7 +33,7 @@ public class LinkTest extends Assertions {
   public void testCreateLinkWithValidIdSucceeds() {
 
     // arrange
-    Id<DummyEntity> id = LongVersionId.getEmpty(DummyEntity.class).withIdAndRevision(4711L, 1L);
+    Id<DummyEntity> id = LongVersionId.getEmpty(DummyEntity.class).withPkAndRevision(4711L, 1L);
     // act
     Link<DummyEntity> link = Link.of(id);
     // assert
@@ -45,7 +45,7 @@ public class LinkTest extends Assertions {
   public void testIsResolved() {
 
     // arrange
-    Id<DummyEntity> id = LongVersionId.getEmpty(DummyEntity.class).withIdAndRevision(4711L, 1L);
+    Id<DummyEntity> id = LongVersionId.getEmpty(DummyEntity.class).withPkAndRevision(4711L, 1L);
     DummyEntity entity = new DummyEntity();
     entity.setId(id);
     // act

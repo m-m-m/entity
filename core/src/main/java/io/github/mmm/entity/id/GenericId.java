@@ -14,16 +14,16 @@ import io.github.mmm.marshall.id.StructuredIdMappingObject;
  * Interface extending {@link Id} with generic features to be used by frameworks.
  *
  * @param <E> type of the identified {@link io.github.mmm.entity.Entity}.
- * @param <I> type of the {@link #get() ID}.
+ * @param <P> type of the {@link #getPk() primary key}.
  * @param <R> type of the {@link #getRevision() revision}.
  * @since 1.0.0
  * @see AbstractId
  */
-public interface GenericId<E, I, R extends Comparable<?>>
-    extends Id<E>, IdFactory<I, R>, MarshallableObject, Unmarshaller<GenericId<E, I, R>>, StructuredIdMappingObject {
+public interface GenericId<E, P, R extends Comparable<?>>
+    extends Id<E>, IdFactory<P, R>, MarshallableObject, Unmarshaller<GenericId<E, P, R>>, StructuredIdMappingObject {
 
   /**
-   * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link Long}.
+   * Name of the {@link #getPk() ID} property (e.g. for JSON or XML) in case of a {@link Long}.
    *
    * @see LongInstantId
    * @see LongVersionId
@@ -31,7 +31,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
   String PROPERTY_LONG_ID = "l";
 
   /**
-   * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link String}.
+   * Name of the {@link #getPk() ID} property (e.g. for JSON or XML) in case of a {@link String}.
    *
    * @see StringInstantId
    * @see StringVersionId
@@ -39,7 +39,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
   String PROPERTY_STRING_ID = "s";
 
   /**
-   * Name of the {@link #get() ID} property (e.g. for JSON or XML) in case of a {@link java.util.UUID}.
+   * Name of the {@link #getPk() ID} property (e.g. for JSON or XML) in case of a {@link java.util.UUID}.
    *
    * @see UuidInstantId
    * @see UuidVersionId
@@ -66,13 +66,10 @@ public interface GenericId<E, I, R extends Comparable<?>>
   String PROPERTY_INSTANT_REVISION = "t";
 
   @Override
-  I get();
+  P getPk();
 
-  /**
-   * @return the {@link Class} reflecting the {@link #get() primary key}.
-   */
   @Override
-  Class<I> getType();
+  Class<P> getPkClass();
 
   @Override
   R getRevision();
@@ -93,13 +90,13 @@ public interface GenericId<E, I, R extends Comparable<?>>
    * @param valueString the {@link #toString() string representation} of this {@link GenericId}.
    * @return the parsed {@link GenericId}.
    */
-  default GenericId<E, I, R> create(String valueString) {
+  default GenericId<E, P, R> create(String valueString) {
 
     return create(getEntityClass(), valueString);
   }
 
   @Override
-  default GenericId<E, I, ?> withoutRevision() {
+  default GenericId<E, P, ?> withoutRevision() {
 
     return withRevision(null);
   }
@@ -109,40 +106,53 @@ public interface GenericId<E, I, R extends Comparable<?>>
    * @return a copy of this {@link Id} with the given {@link #getRevision() revision} or this {@link Id} itself if
    *         already satisfying.
    */
-  default GenericId<E, I, R> withRevision(R newRevision) {
+  default GenericId<E, P, R> withRevision(R newRevision) {
 
     if (Objects.equals(getRevision(), newRevision)) {
       return this;
     }
-    return create(getEntityClass(), get(), newRevision);
+    return create(getEntityClass(), getPk(), newRevision);
   }
 
   /**
-   * @param newId the new value of {@link #get() primary key}.
-   * @param newRevision the new value of {@link #getRevision() revision}.
-   * @return a copy of this {@link Id} with the given {@link #get() primary key} and {@link #getRevision() revision} or
-   *         this {@link Id} itself if already satisfying.
+   * @param newPk the new value of {@link #getPk() primary key}.
+   * @return a copy of this {@link Id} with the given {@link #getPk() primary key} or this {@link Id} itself if already
+   *         satisfying.
    */
-  default GenericId<E, I, R> withIdAndRevision(I newId, R newRevision) {
+  default GenericId<E, P, R> withPk(P newPk) {
 
-    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+    if (Objects.equals(getPk(), newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(getEntityClass(), newPk, getRevision());
+  }
+
+  /**
+   * @param newPk the new value of {@link #getPk() primary key}.
+   * @param newRevision the new value of {@link #getRevision() revision}.
+   * @return a copy of this {@link Id} with the given {@link #getPk() primary key} and {@link #getRevision() revision}
+   *         or this {@link Id} itself if already satisfying.
+   */
+  default GenericId<E, P, R> withPkAndRevision(P newPk, R newRevision) {
+
+    if (Objects.equals(getRevision(), newRevision) && Objects.equals(getPk(), newPk)) {
+      return this;
+    }
+    return create(getEntityClass(), newPk, newRevision);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  default <T> GenericId<T, I, R> withEntityType(Class<T> newEntityType) {
+  default <T> GenericId<T, P, R> withEntityType(Class<T> newEntityType) {
 
     Class<E> entityType = getEntityClass();
     if (entityType == null) {
-      return create(newEntityType, get(), getRevision());
+      return create(newEntityType, getPk(), getRevision());
     } else if (entityType != newEntityType) {
       throw new IllegalArgumentException(
           "Illegal type " + newEntityType + " - already typed to " + entityType.getName() + " at " + toString());
     }
-    return (GenericId<T, I, R>) this;
+    return (GenericId<T, P, R>) this;
   }
 
   /**
@@ -158,9 +168,9 @@ public interface GenericId<E, I, R extends Comparable<?>>
    *         assigned.
    */
   @SuppressWarnings("unchecked")
-  default GenericId<E, I, R> withEntityTypeGeneric(Class<?> newEntityType) {
+  default GenericId<E, P, R> withEntityTypeGeneric(Class<?> newEntityType) {
 
-    return (GenericId<E, I, R>) withEntityType(newEntityType);
+    return (GenericId<E, P, R>) withEntityType(newEntityType);
   }
 
   /**
@@ -173,14 +183,14 @@ public interface GenericId<E, I, R extends Comparable<?>>
    * @return a new {@link GenericId} with an {@link #updateRevision(Comparable) updated} {@link #getRevision()
    *         revision}.
    */
-  default GenericId<E, I, R> updateRevision() {
+  default GenericId<E, P, R> updateRevision() {
 
     R newRevision = updateRevision(getRevision());
     return withRevision(newRevision);
   }
 
   /**
-   * @return the property name of the {@link #get() id} for marshalling.
+   * @return the property name of the {@link #getPk() id} for marshalling.
    * @see #PROPERTY_LONG_ID
    * @see #PROPERTY_UUID
    * @see #PROPERTY_STRING_ID
@@ -197,7 +207,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
   @Override
   default void write(StructuredWriter writer) {
 
-    I id = get();
+    P id = getPk();
     if (hasRevisionField()) {
       R revision = getRevision();
       writer.writeStartObject(this);
@@ -213,7 +223,7 @@ public interface GenericId<E, I, R extends Comparable<?>>
   }
 
   @Override
-  default GenericId<E, I, R> readObject(StructuredReader reader) {
+  default GenericId<E, P, R> readObject(StructuredReader reader) {
 
     return IdMarshalling.readObject(reader, this, getEntityClass());
   }

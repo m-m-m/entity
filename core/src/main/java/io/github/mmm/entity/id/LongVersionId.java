@@ -16,49 +16,58 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
   @SuppressWarnings("rawtypes")
   private static final LongVersionId EMPTY = new LongVersionId<>(null, null, null);
 
-  private final Long id;
+  private final Long pk;
 
   /**
    * The constructor.
    *
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}. See {@link #getIdAsLong()}.
+   * @param pk the {@link #getPk() primary key}. See {@link #getPkAsLong()}.
    * @param revision the {@link #getRevision() revision}.
    */
-  public LongVersionId(Class<E> type, Long id, Long revision) {
+  public LongVersionId(Class<E> type, Long pk, Long revision) {
 
     super(type, revision);
-    this.id = id;
+    this.pk = pk;
   }
 
   @Override
-  public Long get() {
+  public Long getPk() {
 
-    return this.id;
+    return this.pk;
   }
 
   @Override
-  public <T> LongVersionId<T> create(Class<T> newEntityType, Long newId, Long newRevision) {
+  public <T> LongVersionId<T> create(Class<T> newEntityClass, Long newPk, Long newRevision) {
 
-    return new LongVersionId<>(newEntityType, newId, newRevision);
+    return new LongVersionId<>(newEntityClass, newPk, newRevision);
   }
 
   @Override
-  public LongVersionId<E> withIdAndRevision(Long newId, Long newRevision) {
+  public LongVersionId<E> withPk(Long newPk) {
 
-    if (Objects.equals(getRevision(), newRevision) && Objects.equals(get(), newId)) {
+    if (Objects.equals(this.pk, newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(this.entityClass, newPk, this.revision);
+  }
+
+  @Override
+  public LongVersionId<E> withPkAndRevision(Long newPk, Long newRevision) {
+
+    if (Objects.equals(this.revision, newRevision) && Objects.equals(this.pk, newPk)) {
+      return this;
+    }
+    return create(this.entityClass, newPk, newRevision);
   }
 
   @Override
   public LongVersionId<E> withRevision(Long newRevision) {
 
-    if (Objects.equals(getRevision(), newRevision)) {
+    if (Objects.equals(this.revision, newRevision)) {
       return this;
     }
-    return create(getEntityClass(), get(), newRevision);
+    return create(this.entityClass, this.pk, newRevision);
   }
 
   @Override
@@ -76,7 +85,7 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
   @Override
   public LongVersionId<E> updateRevision() {
 
-    Long newRevision = updateRevision(getRevision());
+    Long newRevision = updateRevision(this.revision);
     return withRevision(newRevision);
   }
 
@@ -101,7 +110,7 @@ public final class LongVersionId<E> extends AbstractVersionId<E, Long> implement
 
   /**
    * @param <E> type of the identified entity.
-   * @param id the {@link #get() primary key}.
+   * @param id the {@link #getPk() primary key}.
    * @param revision the {@link #getRevision() revision}.
    * @param type the {@link #getEntityClass() entity type}.
    * @return the {@link #isEmpty() empty} template of this class.

@@ -4,7 +4,7 @@ package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdMapper;
+import io.github.mmm.entity.id.FkMapper;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.value.converter.TypeMapper;
 
@@ -35,7 +35,7 @@ public class FkProperty<E extends EntityBean> extends IdProperty<Id<E>> {
   public TypeMapper<Id<E>, ?> getTypeMapper() {
 
     if (this.typeMapper == null) {
-      this.typeMapper = (TypeMapper) IdMapper.of(get());
+      this.typeMapper = (TypeMapper) FkMapper.of(get());
     }
     return this.typeMapper;
   }

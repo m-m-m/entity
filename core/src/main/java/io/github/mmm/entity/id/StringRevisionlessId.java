@@ -17,44 +17,52 @@ public final class StringRevisionlessId<E> extends AbstractRevisionlessId<E, Str
   @SuppressWarnings("rawtypes")
   private static final StringRevisionlessId EMPTY = new StringRevisionlessId<>(null, null);
 
-  private final String id;
+  private final String pk;
 
   /**
    * The constructor.
    *
    * @param type the {@link #getEntityClass() type}.
-   * @param id the {@link #get() primary key}.
+   * @param pk the {@link #getPk() primary key}.
    */
-  public StringRevisionlessId(Class<E> type, String id) {
+  public StringRevisionlessId(Class<E> type, String pk) {
 
     super(type);
-    this.id = id;
+    this.pk = pk;
   }
 
   @Override
-  public String get() {
+  public String getPk() {
 
-    return this.id;
+    return this.pk;
   }
 
   @Override
-  public <T> StringRevisionlessId<T> create(Class<T> newEntityType, String newId, NoRevision newRevision) {
+  public <T> StringRevisionlessId<T> create(Class<T> newEntityType, String newPk, NoRevision newRevision) {
 
-    return new StringRevisionlessId<>(newEntityType, newId);
+    return new StringRevisionlessId<>(newEntityType, newPk);
   }
 
   @Override
-  public StringRevisionlessId<E> withIdAndRevision(String newId, NoRevision newRevision) {
+  public StringRevisionlessId<E> withPk(String newPk) {
 
-    if (Objects.equals(get(), newId)) {
+    if (Objects.equals(this.pk, newPk)) {
       return this;
     }
-    return create(getEntityClass(), newId, newRevision);
+    return create(this.entityClass, newPk, null);
+  }
+
+  @Override
+  public StringRevisionlessId<E> withPkAndRevision(String newPk, NoRevision newRevision) {
+
+    assert (newRevision == null);
+    return withPk(newPk);
   }
 
   @Override
   public StringRevisionlessId<E> withRevision(NoRevision newRevision) {
 
+    assert (newRevision == null);
     return this;
   }
 
