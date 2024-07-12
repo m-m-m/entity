@@ -12,7 +12,7 @@ import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.RevisionedIdVersion;
 import io.github.mmm.entity.link.IdLink;
 import io.github.mmm.entity.property.id.FkProperty;
 import io.github.mmm.entity.property.id.FkPropertyBuilder;
@@ -95,7 +95,7 @@ public interface EntityPropertyBuilders extends PropertyBuilders {
   private <E> Id<E> safeId(Id<E> id) {
 
     if (id == null) {
-      id = LongVersionId.getEmpty();
+      id = (Id) RevisionedIdVersion.DEFAULT;
     }
     AttributeReadOnly lock = getLock();
     if (lock instanceof EntityBean) {

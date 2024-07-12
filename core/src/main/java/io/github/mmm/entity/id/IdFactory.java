@@ -19,7 +19,7 @@ public interface IdFactory<P, R extends Comparable<?>> {
    * @param revision the {@link Id#getRevision() revision}. May be {@code null}.
    * @return the {@link Id} for the given values.
    */
-  <E> GenericId<E, P, R> create(Class<E> entityType, P pk, R revision);
+  <E> GenericId<E, P, R, ?> create(Class<E> entityType, P pk, R revision);
 
   /**
    * @param <E> type of the identified entity.
@@ -27,7 +27,7 @@ public interface IdFactory<P, R extends Comparable<?>> {
    * @param pkString the {@link Id#getAsString() primary key as string}.
    * @return the parsed {@link Id}.
    */
-  default <E> GenericId<E, P, R> create(Class<E> entityType, String pkString) {
+  default <E> GenericId<E, P, R, ?> create(Class<E> entityType, String pkString) {
 
     String id = null;
     String revision = null;
@@ -51,7 +51,7 @@ public interface IdFactory<P, R extends Comparable<?>> {
    * @return the new {@link AbstractId} for the given values.
    */
   @SuppressWarnings("unchecked")
-  default <E> GenericId<E, P, R> createGeneric(Class<E> entityType, Object pk, Object revision) {
+  default <E> GenericId<E, P, R, ?> createGeneric(Class<E> entityType, Object pk, Object revision) {
 
     if (pk instanceof String) {
       pk = parsePk((String) pk);
@@ -82,7 +82,7 @@ public interface IdFactory<P, R extends Comparable<?>> {
    * @return the {@link Id#isEmpty() empty} {@link GenericId} instance.
    */
   @SuppressWarnings("rawtypes")
-  default <E, ID extends Id> GenericId<E, ?, ?> createEmpty(Class<E> entityType, Class<ID> pkClass) {
+  default <E, ID extends Id> GenericId<E, ?, ?, ?> createEmpty(Class<E> entityType, Class<ID> pkClass) {
 
     return GenericIdFactory.empty(entityType, pkClass);
   }

@@ -37,7 +37,7 @@ final class EntityLinkWithoutRevision<E extends Entity> extends EntityLink<E> {
   }
 
   @Override
-  protected AbstractIdLink<E> withId(GenericId<E, ?, ?> newId) {
+  protected AbstractIdLink<E> withId(GenericId<E, ?, ?, ?> newId) {
 
     // should never happen...
     return new EntityLinkWithoutRevision<>(newId, getTarget());

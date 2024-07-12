@@ -2,7 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-import java.util.UUID;
+import java.time.Instant;
 import java.util.function.Supplier;
 
 import io.github.mmm.entity.Entity;
@@ -12,17 +12,19 @@ import io.github.mmm.entity.Entity;
  * {@link #getEntityClass() type} ({@code <E>}). <br>
  * An {@link Id} has the following properties:
  * <ul>
- * <li>{@link #getPk() primary-key} - the primary key that identifies the entity and is unique for a specific
- * {@link #getEntityClass() type}. As a best practice it is recommended to make the primary-key even unique for all
- * entities of a database.</li>
- * <li>{@link #getRevision() revision} - the optional revision of the entity.</li>
- * <li>{@link #getEntityClass() type} - is the type of the identified entity.</li>
+ * <li>{@link #getPk() primary-key} - identifies the entity and is unique for a specific {@link #getEntityClass() entity
+ * class}. As a best practice it is recommended to make the primary-key even unique for all entities of a database. We
+ * provide out-of-the-box support for the types {@link Long}, {@link java.util.UUID}, and {@link String} as
+ * {@link #getPk() primary-key}.</li>
+ * <li>{@link #getRevision() revision} - optional revision of the entity. We support out-of-the-box support for the
+ * types {@link Long} (sequential modification counter) and {@link Instant} (modification timestamp).</li>
+ * <li>{@link #getEntityClass() entity class} - reflects the identified entity.</li>
  * </ul>
- * Just like the {@link #getPk() primary key} the {@link #getEntityClass() type} of an object does not change. In an
- * {@link Entity} is updated its {@link #getRevision() revision} may change. In this case a new {@link Id} instance is
- * created and assigned since {@link Id} is designed as an immutable datatype. To allow using {@link Id} as globally
- * unique identifier for its corresponding {@link Entity}, regular methods (e.g. {@code EntityRepository.findById} will
- * ignore the {@link #getRevision() revision}).<br>
+ * Just like the {@link #getPk() primary key} the {@link #getEntityClass() entity class} of an object does not change.
+ * If an {@link Entity} is updated its {@link #getRevision() revision} may change. In this case a new {@link Id}
+ * instance is created and assigned since {@link Id} is designed as an immutable datatype. To allow using {@link Id} as
+ * globally unique identifier for its corresponding {@link Entity}, regular methods (e.g.
+ * {@code EntityRepository.findById} will ignore the {@link #getRevision() revision}).<br>
  * Unlike regular JPA design this {@link Id} approach gives you a lot of simplicity without loosing any flexibility. So
  * your {@code EntityBean} and {@code EntityRepository} does not need any generic type for the primary key and
  * refactoring the type of the primary key or revision will have minimal impact on your entire code-base.<br>
@@ -37,7 +39,7 @@ import io.github.mmm.entity.Entity;
  * complexity and generic types for frameworks. Regular API users only need to use this {@link Id} interface that hides
  * some complexity.<br>
  * In case you need to create an {@link Id} from its primary key e.g. in test-code, you may want to use static factory
- * methods such as {@link LongId#of(Long)}, {@link UuidId#of(UUID)}, {@link StringId#of(String)}, etc.
+ * methods such as {@link #of(Class, Object)}.
  *
  * @param <E> the {@link #getEntityClass() entity type}.
  *
@@ -46,8 +48,8 @@ import io.github.mmm.entity.Entity;
  */
 public interface Id<E> extends Supplier<Object> {
 
-  /** Marshalling property name of the {@link #getPk() id}. */
-  String PROPERTY_ID = "id";
+  /** Marshalling property name of the {@link #getPk() primary-key}. */
+  String PROPERTY_PK = "pk";
 
   /** Marshalling property name of the {@link #getRevision() revision}. */
   String PROPERTY_REVISION = "rev";
@@ -65,12 +67,13 @@ public interface Id<E> extends Supplier<Object> {
   char REVISION_SEPARATOR = '@';
 
   /**
-   * @see LongVersionId
-   * @see UuidVersionId
-   * @see StringVersionId
+   * @see PkIdLong
+   * @see PkIdUuid
+   * @see PkIdString
    *
    * @return the <em>primary key</em> of the identified {@link Entity} as {@link Object} value. It may only be unique
-   *         for a particular {@link #getEntityClass() type} of an <em>entity</em> (unless {@link UUID} is used).
+   *         for a particular {@link #getEntityClass() entity class}. However for {@link java.util.UUID} it should
+   *         always be globally unique.
    */
   Object getPk();
 
@@ -122,11 +125,15 @@ public interface Id<E> extends Supplier<Object> {
 
   /**
    * @return the {@code revision} of this entity. Whenever the {@link io.github.mmm.entity.Entity} gets updated (a
-   *         modification is saved and the transaction is committed), this revision is increased. Typically the revision
-   *         is a {@link Number} starting with {@link AbstractVersionId#INSERT_REVISION 0} for a new
-   *         {@link io.github.mmm.entity.Entity} that is increased whenever a modification is committed. However, it may
-   *         also be an {@link java.time.Instant}. The revision acts as a modification sequence for optimistic locking.
-   *         On each update it will be verified that the revision has not been increased already by another transaction.
+   *         modification is saved and the transaction is committed), this revision is increased. It then acts as a
+   *         modification sequence for {@link OptimisicLockException optimistic locking}. On each update it will be
+   *         verified that the revision has not been increased already by another transaction.<br>
+   *         <br>
+   *         By default the revision is a {@link Long} starting with {@link RevisionedIdVersion#INSERT_REVISION 0} for a
+   *         new {@link io.github.mmm.entity.Entity} and is increased whenever a modification is committed. However, it
+   *         may also be an {@link java.time.Instant} set to the {@link Instant#now() current timestamp} on insert or
+   *         update.<br>
+   *         <br>
    *         When linking an {@link io.github.mmm.entity.Entity} ({@link Id} used as foreign key) the revision can act
    *         as version identifier for auditing. If it is {@code null} it points to the latest revision of the
    *         {@link io.github.mmm.entity.Entity}. Otherwise it points to a specific historic revision of the
@@ -152,6 +159,18 @@ public interface Id<E> extends Supplier<Object> {
   }
 
   /**
+   * <b>ATTENTION</b>: This method is designed to ensure and verify the expected {@link #getEntityClass() entity class}.
+   * It will fail if a different type is already assigned.
+   *
+   * @param entityClass the new value of {@link #getEntityClass()}.
+   * @return a copy of this {@link Id} with the given {@link #getEntityClass() entity class} or this {@link Id} itself
+   *         if already satisfying.
+   * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityClass() entity class}
+   *         assigned.
+   */
+  Id<E> withEntityType(Class<E> entityClass);
+
+  /**
    * <b>ATTENTION</b>: This method is designed to ensure and verify the expected {@link #getEntityClass() type}. It will
    * fail if a different type is already assigned. It shall be used to cast from {@code Id<?>} to an {@link Id} with a
    * properly typed generic as illustrated by the following example:
@@ -171,15 +190,14 @@ public interface Id<E> extends Supplier<Object> {
    * @throws IllegalArgumentException if this {@link Id} already has a different {@link #getEntityClass() type}
    *         assigned.
    */
-  <T> Id<T> withEntityType(Class<T> newEntityType);
+  <T> Id<T> withEntityTypeGeneric(Class<T> newEntityType);
 
   /**
    * @return {@code true} if this {@link Id} is transient if used as {@link Entity#getId() primary key}, {@code false}
    *         otherwise. Here transient means that the {@link Entity#getId() owning} {@link Entity} has never been saved
    *         to a persistent store yet. Otherwise the {@link Entity} is persistent and was received from a persistent
    *         store. Please note that the existence of its {@link #getPk() primary key} is not sufficient as it may be
-   *         assigned already in transient state (e.g. for {@link UuidId} or also for {@link LongId} using negative TX
-   *         local values).
+   *         assigned already in transient state (e.g. for {@link java.util.UUID}).
    */
   default boolean isTransient() {
 
@@ -211,7 +229,7 @@ public interface Id<E> extends Supplier<Object> {
     }
     Id<E> id = (Id<E>) entity.getId();
     if (id.getEntityClass() == null) {
-      id = (Id) id.withEntityType(entity.getJavaClass());
+      id = (Id) id.withEntityTypeGeneric(entity.getJavaClass());
     }
     return id;
   }
@@ -224,21 +242,11 @@ public interface Id<E> extends Supplier<Object> {
    * @param type the {@link #getEntityClass() entityClass}
    * @param pk the {@link #getPk() primary key}.
    * @return the {@link Id#withoutRevision() revision-less} {@link Id} for the given arguments.
+   * @see PkId#of(Class, Object)
    */
-  static <E extends Entity> Id<E> of(Class<E> type, Object pk) {
+  static <E> Id<E> of(Class<E> type, Object pk) {
 
-    if (pk == null) {
-      return null;
-    }
-    if (pk instanceof Long l) {
-      return new LongRevisionlessId<>(type, l);
-    } else if (pk instanceof UUID u) {
-      return new UuidRevisionlessId<>(type, u);
-    } else if (pk instanceof String s) {
-      return new StringRevisionlessId<>(type, s);
-    } else {
-      throw new IllegalArgumentException("Unsupported primary key type " + pk.getClass().getName());
-    }
+    return PkId.of(type, pk);
   }
 
 }

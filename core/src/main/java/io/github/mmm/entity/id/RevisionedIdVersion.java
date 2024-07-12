@@ -3,43 +3,46 @@
 package io.github.mmm.entity.id;
 
 /**
- * An abstract base implementation of {@link Id} using {@link Long} as type for the {@link #getRevision() revision}.
+ * Implementation of {@link RevisionedId} with {@link Long} as {@link #getRevisionType() revision type}. With every
+ * {@link #updateRevision() update} the revision is incremented.
  *
  * @param <E> type of the identified entity.
  * @param <P> type of the {@link #getPk() primary key}.
- *
  * @since 1.0.0
  */
-public abstract class AbstractVersionId<E, P> extends AbstractId<E, P, Long> {
+public final class RevisionedIdVersion<E, P> extends RevisionedId<E, P, Long, RevisionedIdVersion<E, P>> {
 
   /** {@link #getRevision() Revision} of a newly inserted {@link io.github.mmm.entity.Entity entity}. */
   public static final Long INSERT_REVISION = Long.valueOf(1);
 
-  /** @see #getRevision() */
-  protected final Long revision;
+  /** The empty default instance using {@link PkIdLong}. */
+  public static final RevisionedIdVersion<Object, Long> DEFAULT = new RevisionedIdVersion<>(PkIdLong.getEmpty(), null);
+
+  private final Long revision;
 
   /**
    * The constructor.
    *
-   * @param type - see {@link #getEntityClass()}.
-   * @param revision - see {@link #getRevision()}.
+   * @param id the wrapped {@link PkId} containing {@link #getEntityClass() entity class} and {@link #getPk() primary
+   *        key}.
+   * @param revision the {@link #getRevision() revision}.
    */
-  public AbstractVersionId(Class<E> type, Long revision) {
+  public RevisionedIdVersion(PkId<E, P, ?> id, Long revision) {
 
-    super(type);
+    super(id);
     this.revision = revision;
+  }
+
+  @Override
+  protected RevisionedIdVersion<E, P> newId(PkId<E, P, ?> newId, Long newRevision) {
+
+    return new RevisionedIdVersion<>(newId, newRevision);
   }
 
   @Override
   public Long getRevision() {
 
     return this.revision;
-  }
-
-  @Override
-  public boolean hasRevisionField() {
-
-    return true;
   }
 
   @Override
@@ -67,7 +70,7 @@ public abstract class AbstractVersionId<E, P> extends AbstractId<E, P, Long> {
   @Override
   public String getMarshalPropertyRevision() {
 
-    return PROPERTY_LONG_REVISION;
+    return PROPERTY_REVISION_VERSION;
   }
 
 }

@@ -4,8 +4,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.github.mmm.bean.BeanFactory;
+import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.PkIdLong;
+import io.github.mmm.entity.id.RevisionedIdVersion;
 import io.github.mmm.entity.link.Link;
 import io.github.mmm.entity.property.link.LinkProperty;
 
@@ -39,9 +41,10 @@ public class PropertyFactoryFkTest extends Assertions {
 
     // arrange
     Source source = BeanFactory.get().create(Source.class);
+    GenericId<Source, Long, Long, ?> sourceId = RevisionedIdVersion.DEFAULT.create(Source.class, 4711L, 1L);
     try {
       // act
-      source.Target().set(new LongVersionId(Source.class, 4711L, 1L)); // doing evil things should fail
+      source.Target().set((Id) sourceId); // doing evil things should fail
       // assert
       failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
@@ -55,7 +58,7 @@ public class PropertyFactoryFkTest extends Assertions {
   public void testSetLinkWithCorrectTypeSucceeds() {
 
     // arrange
-    LongVersionId<Target> id = new LongVersionId<>(Target.class, 4711L, 1L);
+    RevisionedIdVersion<Target, Long> id = new RevisionedIdVersion<>(new PkIdLong<>(Target.class, 4711L), 1L);
     Source source = BeanFactory.get().create(Source.class);
     // act
     source.Target().set(id);

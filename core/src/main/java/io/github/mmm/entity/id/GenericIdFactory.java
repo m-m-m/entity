@@ -19,25 +19,15 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
   private static final Map<Class<? extends Id>, GenericId> EMPTY_ID_MAP = new HashMap<>();
 
   static {
-    EMPTY_ID_MAP.put(null, LongVersionId.getEmpty());
-    EMPTY_ID_MAP.put(Id.class, LongVersionId.getEmpty());
-    EMPTY_ID_MAP.put(GenericId.class, LongVersionId.getEmpty());
-    EMPTY_ID_MAP.put(AbstractId.class, LongVersionId.getEmpty());
-    EMPTY_ID_MAP.put(LongId.class, LongVersionId.getEmpty());
-    EMPTY_ID_MAP.put(AbstractVersionId.class, LongVersionId.getEmpty());
-    EMPTY_ID_MAP.put(AbstractRevisionlessId.class, LongRevisionlessId.getEmpty());
-    EMPTY_ID_MAP.put(LongRevisionlessId.class, LongRevisionlessId.getEmpty());
-    EMPTY_ID_MAP.put(LongVersionId.class, LongVersionId.getEmpty());
-    EMPTY_ID_MAP.put(AbstractInstantId.class, LongInstantId.getEmpty());
-    EMPTY_ID_MAP.put(LongInstantId.class, LongInstantId.getEmpty());
-    EMPTY_ID_MAP.put(StringId.class, StringVersionId.getEmpty());
-    EMPTY_ID_MAP.put(StringVersionId.class, StringVersionId.getEmpty());
-    EMPTY_ID_MAP.put(StringInstantId.class, StringInstantId.getEmpty());
-    EMPTY_ID_MAP.put(StringRevisionlessId.class, StringRevisionlessId.getEmpty());
-    EMPTY_ID_MAP.put(UuidId.class, UuidVersionId.getEmpty());
-    EMPTY_ID_MAP.put(UuidVersionId.class, UuidVersionId.getEmpty());
-    EMPTY_ID_MAP.put(UuidInstantId.class, UuidInstantId.getEmpty());
-    EMPTY_ID_MAP.put(UuidRevisionlessId.class, UuidRevisionlessId.getEmpty());
+    EMPTY_ID_MAP.put(null, PkIdLong.getEmpty());
+    EMPTY_ID_MAP.put(Id.class, PkIdLong.getEmpty());
+    EMPTY_ID_MAP.put(GenericId.class, PkIdLong.getEmpty());
+    EMPTY_ID_MAP.put(AbstractId.class, PkIdLong.getEmpty());
+    EMPTY_ID_MAP.put(PkIdLong.class, PkIdLong.getEmpty());
+    EMPTY_ID_MAP.put(PkId.class, PkIdLong.getEmpty());
+    EMPTY_ID_MAP.put(PkIdLong.class, PkIdLong.getEmpty());
+    EMPTY_ID_MAP.put(PkIdString.class, PkIdString.getEmpty());
+    EMPTY_ID_MAP.put(PkIdUuid.class, PkIdUuid.getEmpty());
   }
 
   static final GenericIdFactory INSTANCE = new GenericIdFactory();
@@ -48,27 +38,17 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public <E> GenericId<E, Object, Comparable<?>> create(Class<E> entityType, Object pk, Comparable<?> revision) {
+  public <E> GenericId<E, Object, Comparable<?>, ?> create(Class<E> entityClass, Object pk, Comparable<?> revision) {
 
-    GenericId result;
     if (revision instanceof Integer i) {
       revision = Long.valueOf(i.longValue());
     }
-    if (pk == null) {
+    PkId pkId = PkId.of(entityClass, pk);
+    if (pkId == null) {
       assert (revision == null);
       return null;
-    } else if (pk instanceof Long l) {
-      result = LongId.of(l, entityType, revision);
-    } else if (pk instanceof UUID uuid) {
-      result = UuidId.of(uuid, entityType, revision);
-    } else if (pk instanceof String string) {
-      result = StringId.of(string, entityType, revision);
-    } else if (pk instanceof Integer i) {
-      result = LongId.of(Long.valueOf(i.longValue()), entityType, revision);
-    } else {
-      throw new IllegalStateException("Unsupported ID type: " + pk.getClass().getName());
     }
-    return result;
+    return pkId.withRevisionGeneric(revision);
   }
 
   @Override
@@ -93,12 +73,11 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
   }
 
   @SuppressWarnings("rawtypes")
-  static <E, I extends Id> GenericId<E, ?, ?> empty(Class<E> entityType, Class<I> pkClass) {
+  static <E, I extends Id> GenericId<E, ?, ?, ?> empty(Class<E> entityType, Class<I> idClass) {
 
-    GenericId<E, ?, ?> empty = EMPTY_ID_MAP.get(pkClass);
+    GenericId<E, ?, ?, ?> empty = EMPTY_ID_MAP.get(idClass);
     if (empty == null) {
-      assert false : "" + pkClass;
-      empty = EMPTY_ID_MAP.get(pkClass);
+      throw new IllegalStateException(idClass.getName());
     }
     return empty.withEntityType(entityType);
   }

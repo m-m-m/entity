@@ -52,7 +52,7 @@ public class IdLink<E> extends AbstractIdLink<E> {
   }
 
   @Override
-  protected IdLink<E> withId(GenericId<E, ?, ?> newId) {
+  protected IdLink<E> withId(GenericId<E, ?, ?, ?> newId) {
 
     return new IdLink<>(newId, super.getTarget(), this.resolver);
   }

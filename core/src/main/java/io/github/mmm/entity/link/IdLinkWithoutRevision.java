@@ -39,7 +39,7 @@ final class IdLinkWithoutRevision<E> extends IdLink<E> {
   }
 
   @Override
-  protected IdLinkWithoutRevision<E> withId(GenericId<E, ?, ?> newId) {
+  protected IdLinkWithoutRevision<E> withId(GenericId<E, ?, ?, ?> newId) {
 
     return new IdLinkWithoutRevision<>(newId, super.getTarget(), this.resolver);
   }

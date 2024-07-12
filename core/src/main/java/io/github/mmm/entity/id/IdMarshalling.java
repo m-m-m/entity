@@ -21,7 +21,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
       writer.writeValueAsNull();
       return;
     }
-    ((GenericId<?, ?, ?>) id).write(writer);
+    ((GenericId<?, ?, ?, ?>) id).write(writer);
   }
 
   @Override
@@ -50,24 +50,24 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
    * @param entityType the {@link GenericId#getEntityClass() entity type}.
    * @return the unmarshalled {@link GenericId}.
    */
-  static <E, I, V extends Comparable<?>> GenericId<E, I, V> readObject(StructuredReader reader, IdFactory<I, V> factory,
-      Class<E> entityType) {
+  static <E, I, V extends Comparable<?>> GenericId<E, I, V, ?> readObject(StructuredReader reader,
+      IdFactory<I, V> factory, Class<E> entityType) {
 
-    Object id = null;
+    Object pk = null;
     Object revision = null;
     try {
-      if (reader.readStartObject(LongVersionId.getEmpty())) {
+      if (reader.readStartObject(RevisionedIdVersion.DEFAULT)) {
         while (!reader.readEnd()) {
           String name = reader.readName();
-          if (GenericId.PROPERTY_LONG_ID.equals(name)) {
-            id = update(id, reader.readValueAsLong(), Id.PROPERTY_ID);
-          } else if (GenericId.PROPERTY_UUID.equals(name)) {
-            id = update(id, UuidParser.get().parse(reader.readValueAsString()), Id.PROPERTY_ID);
-          } else if (GenericId.PROPERTY_STRING_ID.equals(name)) {
-            id = update(id, reader.readValueAsString(), Id.PROPERTY_ID);
-          } else if (GenericId.PROPERTY_LONG_REVISION.equals(name)) {
+          if (GenericId.PROPERTY_PK_LONG.equals(name)) {
+            pk = update(pk, reader.readValueAsLong(), Id.PROPERTY_PK);
+          } else if (GenericId.PROPERTY_PK_UUID.equals(name)) {
+            pk = update(pk, UuidParser.get().parse(reader.readValueAsString()), Id.PROPERTY_PK);
+          } else if (GenericId.PROPERTY_PK_STRING.equals(name)) {
+            pk = update(pk, reader.readValueAsString(), Id.PROPERTY_PK);
+          } else if (GenericId.PROPERTY_REVISION_VERSION.equals(name)) {
             revision = update(revision, reader.readValueAsLong(), Id.PROPERTY_REVISION);
-          } else if (GenericId.PROPERTY_INSTANT_REVISION.equals(name)) {
+          } else if (GenericId.PROPERTY_REVISION_INSTANT.equals(name)) {
             revision = update(revision, reader.readValueAsInstant(), Id.PROPERTY_REVISION);
           } else {
             // ignore unknown property for compatibility and future extensions...
@@ -75,15 +75,15 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
         }
       } else {
         if (reader.isStringValue()) {
-          id = reader.readValueAsString();
+          pk = reader.readValueAsString();
         } else {
-          id = reader.readValueAsLong();
+          pk = reader.readValueAsLong();
         }
       }
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to parse Id.", e);
     }
-    return factory.createGeneric(entityType, id, revision);
+    return factory.createGeneric(entityType, pk, revision);
   }
 
   private static Object update(Object oldValue, Object newValue, String key) {

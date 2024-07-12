@@ -10,28 +10,27 @@ import java.util.Objects;
  * @param <E> type of the identified entity.
  * @param <P> type of the {@link #getPk() primary key}.
  * @param <R> type of the {@link #getRevision() revision}.
+ * @param <SELF> type of this class itself for fluent API calls.
  * @since 1.0.0
  */
-public abstract class AbstractId<E, P, R extends Comparable<?>> implements GenericId<E, P, R> {
-
-  /** @see #getEntityClass() */
-  protected final Class<E> entityClass;
+public abstract class AbstractId<E, P, R extends Comparable<?>, SELF extends AbstractId<E, P, R, SELF>>
+    implements GenericId<E, P, R, SELF> {
 
   /**
    * The constructor.
-   *
-   * @param entityType - see {@link #getEntityClass()}.
    */
-  public AbstractId(Class<E> entityType) {
+  protected AbstractId() {
 
     super();
-    this.entityClass = entityType;
   }
 
-  @Override
-  public final Class<E> getEntityClass() {
+  /**
+   * @return this instance itself as {@code <SELF>}.
+   */
+  @SuppressWarnings("unchecked")
+  protected SELF self() {
 
-    return this.entityClass;
+    return (SELF) this;
   }
 
   @Override
@@ -49,14 +48,15 @@ public abstract class AbstractId<E, P, R extends Comparable<?>> implements Gener
     if ((obj == null) || !(obj instanceof AbstractId)) {
       return false;
     }
-    AbstractId<?, ?, ?> other = (AbstractId<?, ?, ?>) obj;
+    AbstractId<?, ?, ?, ?> other = (AbstractId<?, ?, ?, ?>) obj;
     if (!Objects.equals(getPk(), other.getPk())) {
       return false;
-    }
-    if ((this.entityClass != null) && (other.entityClass != null) && !this.entityClass.equals(other.entityClass)) {
+    } else if (!Objects.equals(getRevision(), other.getRevision())) {
       return false;
     }
-    if (!Objects.equals(getRevision(), other.getRevision())) {
+    Class<E> entityClass = getEntityClass();
+    Class<?> otherEntityClass = other.getEntityClass();
+    if ((entityClass != null) && (otherEntityClass != null) && !entityClass.equals(otherEntityClass)) {
       return false;
     }
     return true;

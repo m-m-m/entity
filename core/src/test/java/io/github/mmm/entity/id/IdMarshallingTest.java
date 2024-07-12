@@ -25,19 +25,21 @@ public class IdMarshallingTest extends Assertions {
 
     UUID uuid = UUID.randomUUID();
     // test version IDs
-    check(new LongVersionId<>(Entity.class, 42L, 5L), "{\"l\":42,\"v\":5}");
-    check(new StringVersionId<>(Entity.class, "MyId", 5L), "{\"s\":\"MyId\",\"v\":5}");
-    check(new UuidVersionId<>(Entity.class, uuid, 5L), "{\"u\":\"" + uuid + "\",\"v\":5}");
+    check(new RevisionedIdVersion<>(new PkIdLong<>(Entity.class, 42L), 5L), "{\"l\":42,\"v\":5}");
+    check(new RevisionedIdVersion<>(new PkIdString<>(Entity.class, "MyId"), 5L), "{\"s\":\"MyId\",\"v\":5}");
+    check(new RevisionedIdVersion<>(new PkIdUuid<>(Entity.class, uuid), 5L), "{\"u\":\"" + uuid + "\",\"v\":5}");
     // test timestamp IDs
     Instant ts = Instant.parse("1999-12-31T23:59:59.123456789Z");
-    check(new LongInstantId<>(Entity.class, 42L, ts), "{\"l\":42,\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
-    check(new StringInstantId<>(Entity.class, "MyId", ts), "{\"s\":\"MyId\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
-    check(new UuidInstantId<>(Entity.class, uuid, ts),
+    check(new RevisionedIdInstant<>(new PkIdLong<>(Entity.class, 42L), ts),
+        "{\"l\":42,\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
+    check(new RevisionedIdInstant<>(new PkIdString<>(Entity.class, "MyId"), ts),
+        "{\"s\":\"MyId\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
+    check(new RevisionedIdInstant<>(new PkIdUuid<>(Entity.class, uuid), ts),
         "{\"u\":\"" + uuid + "\",\"t\":\"1999-12-31T23:59:59.123456789Z\"}");
     // test flat IDs
-    check(new LongRevisionlessId<>(Entity.class, 42L), "42");
-    check(new StringRevisionlessId<>(Entity.class, "MyId"), "\"MyId\"");
-    check(new UuidRevisionlessId<>(Entity.class, uuid), "\"" + uuid + "\"");
+    check(new PkIdLong<>(Entity.class, 42L), "42");
+    check(new PkIdString<>(Entity.class, "MyId"), "\"MyId\"");
+    check(new PkIdUuid<>(Entity.class, uuid), "\"" + uuid + "\"");
   }
 
   /**
@@ -48,9 +50,12 @@ public class IdMarshallingTest extends Assertions {
   public void testWriteWithZeroVersion() {
 
     UUID uuid = UUID.randomUUID();
-    assertThat(writeJson(new LongVersionId<>(Entity.class, 42L, 0L))).isEqualTo("{\"l\":42,\"v\":0}");
-    assertThat(writeJson(new StringVersionId<>(Entity.class, "MyId", 0L))).isEqualTo("{\"s\":\"MyId\",\"v\":0}");
-    assertThat(writeJson(new UuidVersionId<>(Entity.class, uuid, 0L))).isEqualTo("{\"u\":\"" + uuid + "\",\"v\":0}");
+    assertThat(writeJson(new RevisionedIdVersion<>(new PkIdLong<>(Entity.class, 42L), 0L)))
+        .isEqualTo("{\"l\":42,\"v\":0}");
+    assertThat(writeJson(new RevisionedIdVersion<>(new PkIdString<>(Entity.class, "MyId"), 0L)))
+        .isEqualTo("{\"s\":\"MyId\",\"v\":0}");
+    assertThat(writeJson(new RevisionedIdVersion<>(new PkIdUuid<>(Entity.class, uuid), 0L)))
+        .isEqualTo("{\"u\":\"" + uuid + "\",\"v\":0}");
   }
 
   /**
@@ -61,29 +66,29 @@ public class IdMarshallingTest extends Assertions {
   public void testWriteWithoutRevision() {
 
     UUID uuid = UUID.randomUUID();
-    assertThat(writeJson(new LongRevisionlessId<>(Entity.class, 42L))).isEqualTo("42");
-    assertThat(writeJson(new StringRevisionlessId<>(Entity.class, "MyId"))).isEqualTo("\"MyId\"");
-    assertThat(writeJson(new UuidRevisionlessId<>(Entity.class, uuid))).isEqualTo("\"" + uuid + '"');
+    assertThat(writeJson(new PkIdLong<>(Entity.class, 42L))).isEqualTo("42");
+    assertThat(writeJson(new PkIdString<>(Entity.class, "MyId"))).isEqualTo("\"MyId\"");
+    assertThat(writeJson(new PkIdUuid<>(Entity.class, uuid))).isEqualTo("\"" + uuid + '"');
   }
 
-  public static void check(GenericId<Entity, ?, ?> id, String json) {
+  public static void check(GenericId<Entity, ?, ?, ?> id, String json) {
 
     assertThat(id.getEntityClass()).isSameAs(Entity.class);
     assertThat(writeJson(id)).isEqualTo(json);
     assertThat(readJson(id.withPkAndRevision(null, null), json)).isEqualTo(id);
   }
 
-  public static String writeJson(GenericId<?, ?, ?> id) {
+  public static String writeJson(GenericId<?, ?, ?, ?> id) {
 
     StringBuilder sb = new StringBuilder();
     id.write(StandardFormat.json(MarshallingConfig.NO_INDENTATION).writer(sb));
     return sb.toString();
   }
 
-  public static GenericId<Entity, ?, ?> readJson(GenericId<Entity, ?, ?> id, String json) {
+  public static GenericId<Entity, ?, ?, ?> readJson(GenericId<Entity, ?, ?, ?> id, String json) {
 
     StructuredReader reader = StandardFormat.json().reader(json);
-    GenericId<Entity, ?, ?> newId = id.readObject(reader);
+    GenericId<Entity, ?, ?, ?> newId = id.readObject(reader);
     assertThat(newId.getEntityClass()).isSameAs(Entity.class);
     return newId;
   }

@@ -4,7 +4,7 @@ package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.RevisionedIdVersion;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.PropertyMetadata;
@@ -34,7 +34,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
 
     super(name, metadata);
     if (id == null) {
-      this.value = (V) LongVersionId.getEmpty();
+      this.value = (V) RevisionedIdVersion.DEFAULT;
     } else {
       doSet(id);
     }
@@ -56,7 +56,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
         this.entityClass = newEntityClass;
       } else {
         if (newEntityClass == null) {
-          newValue = (V) ((GenericId<?, ?, ?>) newValue).withEntityType(this.entityClass);
+          newValue = (V) ((GenericId<?, ?, ?, ?>) newValue).withEntityTypeGeneric(this.entityClass);
         } else if (!this.entityClass.isAssignableFrom(newEntityClass)) {
           throw new IllegalArgumentException("Cannot set ID of type " + newEntityClass.getName() + " to "
               + getClass().getSimpleName() + " " + getName() + " with incompatible type " + this.entityClass.getName());
@@ -70,7 +70,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
   @Override
   public V getFallbackSafeValue() {
 
-    return (V) LongVersionId.getEmpty();
+    return (V) RevisionedIdVersion.DEFAULT;
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -84,21 +84,21 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
   @SuppressWarnings("unchecked")
   public V parse(String valueAsString) {
 
-    return (V) ((GenericId<?, ?, ?>) this.value).create(valueAsString);
+    return (V) ((GenericId<?, ?, ?, ?>) this.value).create(valueAsString);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   protected void readValue(StructuredReader reader) {
 
-    V id = (V) ((GenericId<?, ?, ?>) this.value).readObject(reader);
+    V id = (V) ((GenericId<?, ?, ?, ?>) this.value).readObject(reader);
     set(id);
   }
 
   @Override
   public void write(StructuredWriter writer) {
 
-    ((GenericId<?, ?, ?>) this.value).write(writer);
+    ((GenericId<?, ?, ?, ?>) this.value).write(writer);
   }
 
 }

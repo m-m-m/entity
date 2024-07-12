@@ -31,7 +31,7 @@ public class EntityLink<E extends Entity> extends AbstractIdLink<E> {
   }
 
   @Override
-  protected AbstractIdLink<E> withId(GenericId<E, ?, ?> newId) {
+  protected AbstractIdLink<E> withId(GenericId<E, ?, ?, ?> newId) {
 
     // should never happen...
     return new EntityLink<>(newId, getTarget());

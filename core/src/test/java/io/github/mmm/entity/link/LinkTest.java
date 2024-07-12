@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import io.github.mmm.entity.DummyEntity;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.PkIdLong;
+import io.github.mmm.entity.id.RevisionedIdVersion;
 
 /**
  * Test of {@link Link}.
@@ -17,7 +18,7 @@ public class LinkTest extends Assertions {
   public void testCreateLinkWithEmptyIdFails() {
 
     // arrange
-    Id<DummyEntity> id = LongVersionId.getEmpty(DummyEntity.class);
+    Id<DummyEntity> id = PkIdLong.getEmpty(DummyEntity.class);
     // act
     try {
       Link<DummyEntity> link = Link.of(id);
@@ -33,11 +34,11 @@ public class LinkTest extends Assertions {
   public void testCreateLinkWithValidIdSucceeds() {
 
     // arrange
-    Id<DummyEntity> id = LongVersionId.getEmpty(DummyEntity.class).withPkAndRevision(4711L, 1L);
+    Id<DummyEntity> id = RevisionedIdVersion.DEFAULT.create(DummyEntity.class, 4711L, 1L);
     // act
     Link<DummyEntity> link = Link.of(id);
     // assert
-    assertThat(link.getId()).isSameAs(id);
+    assertThat(link.getId()).isSameAs(id.withoutRevision());
   }
 
   /** Test of {@link Link#isResolved()}. */
@@ -45,7 +46,7 @@ public class LinkTest extends Assertions {
   public void testIsResolved() {
 
     // arrange
-    Id<DummyEntity> id = LongVersionId.getEmpty(DummyEntity.class).withPkAndRevision(4711L, 1L);
+    Id<DummyEntity> id = RevisionedIdVersion.DEFAULT.create(DummyEntity.class, 4711L, 1L);
     DummyEntity entity = new DummyEntity();
     entity.setId(id);
     // act

@@ -1,7 +1,8 @@
 package io.github.mmm.entity;
 
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.PkIdLong;
+import io.github.mmm.entity.id.RevisionedIdVersion;
 
 /**
  * Abstract base implementation of {@link Entity}. Intentionally not in {@code src/main/java} as we want to propagate
@@ -17,7 +18,7 @@ public abstract class AbstractEntity implements Entity {
   public AbstractEntity() {
 
     super();
-    this.id = LongVersionId.getEmpty(getClass());
+    this.id = new RevisionedIdVersion<>(new PkIdLong<>(getClass(), null), null);
   }
 
   @Override

@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.github.mmm.bean.BeanFactory;
-import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.link.Link;
 
 /**
@@ -52,13 +52,13 @@ public class PropertyFactoryLinkTest extends Assertions {
 
     // arrange
     Target target = BeanFactory.get().create(Target.class);
-    LongVersionId<Target> id = LongVersionId.of(4711L, 1L, Target.class);
+    Id<Target> id = Id.of(Target.class, 4711L);
     target.setId(id);
     Source source = BeanFactory.get().create(Source.class);
     // act
     source.Target().set(Link.of(target));
     // assert
-    assertThat(source.Target().get().getId()).isEqualTo(id.withoutRevision());
+    assertThat(source.Target().get().getId()).isEqualTo(id);
     assertThat(source.Target().get().getTarget()).isSameAs(target);
   }
 

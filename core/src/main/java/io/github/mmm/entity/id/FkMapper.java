@@ -13,7 +13,7 @@ import io.github.mmm.value.converter.ValueMapper;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class FkMapper extends AtomicTypeMapper<Id, Object> {
 
-  private static final FkMapper DEFAULT = new FkMapper(LongVersionId.getEmpty());
+  private static final FkMapper DEFAULT = new FkMapper(RevisionedIdVersion.DEFAULT);
 
   private final GenericId idTemplate;
 

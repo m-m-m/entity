@@ -17,7 +17,7 @@ import io.github.mmm.entity.id.Id;
  */
 public abstract class AbstractIdLink<E> extends AbstractLink<E> {
 
-  private /* final */ GenericId<E, ?, ?> id;
+  private /* final */ GenericId<E, ?, ?, ?> id;
 
   /** @see #getTarget() */
   private E target;
@@ -32,7 +32,7 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
   protected AbstractIdLink(Id<E> id, E target) {
 
     super();
-    GenericId<E, ?, ?> gid = (GenericId<E, ?, ?>) id;
+    GenericId<E, ?, ?, ?> gid = (GenericId<E, ?, ?, ?>) id;
     if (target == null) {
       if (gid == null) {
         throw new IllegalArgumentException("Cannot create link with neither ID nor target entity!");
@@ -41,12 +41,12 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
         throw new IllegalArgumentException("Cannot create link for empty ID - primary key must be present!");
       }
     } else if (gid == null) {
-      gid = (GenericId<E, ?, ?>) Id.from((Entity) this.target);
+      gid = (GenericId<E, ?, ?, ?>) Id.from((Entity) this.target);
     }
     if ((gid != null) && isRemoveRevision()) {
       gid = gid.withoutRevision();
     }
-    this.id = (GenericId<E, ?, ?>) id;
+    this.id = gid;
     this.target = target;
   }
 
@@ -63,7 +63,7 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
   private synchronized Id<E> updateId() {
 
     if (this.id == null) {
-      GenericId<E, ?, ?> gid = (GenericId<E, ?, ?>) Id.from((Entity) this.target);
+      GenericId<E, ?, ?, ?> gid = (GenericId<E, ?, ?, ?>) Id.from((Entity) this.target);
       if ((gid != null) && isRemoveRevision()) {
         gid = gid.withoutRevision();
       }
@@ -113,9 +113,10 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
    *         already satisfying.
    * @see GenericId#withEntityType(Class)
    */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public AbstractIdLink<E> withType(Class<?> type) {
 
-    GenericId<E, ?, ?> newId = this.id.withEntityTypeGeneric(type);
+    GenericId newId = this.id.withEntityTypeGeneric(type);
     if (newId == this.id) {
       return this;
     }
@@ -126,5 +127,5 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
    * @param newId the new {@link #getId()}.
    * @return a copy of this link with the given {@link Id}.
    */
-  protected abstract AbstractIdLink<E> withId(GenericId<E, ?, ?> newId);
+  protected abstract AbstractIdLink<E> withId(GenericId<E, ?, ?, ?> newId);
 }

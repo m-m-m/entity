@@ -6,7 +6,7 @@ import io.github.mmm.bean.AbstractInterface;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.LongVersionId;
+import io.github.mmm.entity.id.RevisionedIdVersion;
 import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.id.PkProperty;
 
@@ -55,7 +55,7 @@ public interface EntityBean extends WritableBean, Entity {
    */
   default PkProperty Id() {
 
-    return new PkProperty(LongVersionId.getEmpty().withEntityType(getType().getJavaClass()));
+    return new PkProperty(RevisionedIdVersion.DEFAULT.withEntityTypeGeneric(getType().getJavaClass()));
   }
 
   @Override
