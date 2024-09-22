@@ -50,7 +50,7 @@ public class FkMapper extends AtomicTypeMapper<Id, Object> {
   /**
    * @return the default {@link FkMapper}.
    */
-  public static FkMapper of() {
+  public static FkMapper get() {
 
     return DEFAULT;
   }

@@ -32,6 +32,8 @@ public interface EntityBean extends WritableBean, Entity {
    *   // ...
    * }
    * </pre>
+   *
+   * For further details see {@code io.github.mmm.orm.naming.DbNamingStrategy}.
    */
   public static final String META_KEY_TABLE = "table";
 
@@ -47,6 +49,8 @@ public interface EntityBean extends WritableBean, Entity {
    * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("column=DATE_OF_BIRTH")
    * LocalDateProperty Birthday();
    * </pre>
+   *
+   * For further details see {@code io.github.mmm.orm.naming.DbNamingStrategy}.
    */
   public static final String META_KEY_COLUMN = "column";
 
@@ -75,5 +79,4 @@ public interface EntityBean extends WritableBean, Entity {
 
     return WritableBean.super.getJavaClass();
   }
-
 }
