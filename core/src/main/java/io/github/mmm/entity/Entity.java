@@ -70,12 +70,12 @@ public interface Entity {
    *         {@link Entity} was {@code null}.
    */
   @SuppressWarnings("unchecked")
-  static <E extends Entity> Class<? extends E> getJavaClass(E entity) {
+  static <E extends Entity> Class<E> getJavaClass(E entity) {
 
     if (entity == null) {
       return null;
     }
-    return (Class<? extends E>) entity.getJavaClass();
+    return (Class<E>) entity.getJavaClass();
   }
 
 }
