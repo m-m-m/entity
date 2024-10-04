@@ -137,6 +137,15 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   /**
+   * @param entity the new value of {@link #getEntity()}.
+   */
+  public void setEntity(E entity) {
+
+    Link<E> link = Link.of(entity);
+    set(link);
+  }
+
+  /**
    * @return the {@link Id#getEntityClass() entity class}.
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -150,7 +159,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
           this.entityClass = id.getEntityClass();
         } else if (link.isResolved()) {
           E target = link.getTarget();
-          this.entityClass = (Class) ((EntityBean) target).getType().getJavaClass();
+          this.entityClass = (Class) target.getType().getJavaClass();
         }
       }
     }
