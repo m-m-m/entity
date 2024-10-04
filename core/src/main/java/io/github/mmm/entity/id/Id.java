@@ -3,6 +3,7 @@
 package io.github.mmm.entity.id;
 
 import java.time.Instant;
+import java.util.function.Supplier;
 
 import io.github.mmm.entity.Entity;
 
@@ -45,7 +46,7 @@ import io.github.mmm.entity.Entity;
  * @see AbstractId
  * @since 1.0.0
  */
-public interface Id<E> {
+public interface Id<E> extends Supplier<Object> {
 
   /** Marshalling property name of the {@link #getPk() primary-key}. */
   String PROPERTY_PK = "pk";
@@ -75,6 +76,12 @@ public interface Id<E> {
    *         always be globally unique.
    */
   Object getPk();
+
+  @Override
+  default Object get() {
+
+    return getPk();
+  }
 
   /**
    * @return the {@link #getPk() primary key} as {@link String} for marshalling.
