@@ -34,9 +34,9 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
   }
 
   @Override
-  public String mapName(String name, String separator) {
+  public NameMode getNameMode() {
 
-    return getSuffix();
+    return NameMode.SUFFIX;
   }
 
   @Override
@@ -130,9 +130,9 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     }
 
     @Override
-    public String mapName(String name, String separator) {
+    public NameMode getNameMode() {
 
-      return name;
+      return NameMode.NAME;
     }
 
     @Override
