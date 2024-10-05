@@ -196,18 +196,20 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   @Override
-  protected void readValue(StructuredReader reader) {
+  protected Link<E> readValue(StructuredReader reader, boolean apply) {
 
     Id<E> id = IdMarshalling.get().readObject(reader, this.entityClass);
     IdLink<E> link = IdLink.of(id, this.resolver);
-    setValue(link);
+    if (apply) {
+      setValue(link);
+    }
+    return link;
   }
 
   @Override
-  public void write(StructuredWriter writer) {
+  public void writeValue(StructuredWriter writer, Link<E> link) {
 
     Id<E> id = null;
-    Link<E> link = getValue();
     if (link != null) {
       id = link.getId();
     }
