@@ -55,6 +55,19 @@ public interface EntityBean extends WritableBean, Entity {
   public static final String META_KEY_COLUMN = "column";
 
   /**
+   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
+   * annotate} {@link io.github.mmm.property.Property} methods (e.g.
+   * {@link io.github.mmm.entity.bean.property.EntityWithTitle#Title() title} or
+   * {@link io.github.mmm.entity.bean.property.EntityWithName#Name() name}) with a score. Such score is a double value
+   * in the range [0, 1] to rank the property for full-text-search. To activate full-text search you typically annotate
+   * a score on the {@link EntityBean} itself that defines the default score for all
+   * {@link io.github.mmm.property.string.StringProperty String properties}. A reasonable default score is e.g.
+   * {@code 0.5} or {@code 0.8} allowing to override specific properties to boost them using a higher score or to reduce
+   * their impact with a lower score. A score of zero ({@code 0}) excludes the property from indexing.
+   */
+  public static final String META_KEY_SCORE = "score";
+
+  /**
    * @return the {@link IdProperty property} with the {@link Id} (primary key) of this entity.
    */
   default PkProperty Id() {
