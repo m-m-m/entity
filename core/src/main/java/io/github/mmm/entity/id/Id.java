@@ -55,7 +55,7 @@ public interface Id<E> extends Supplier<Object> {
   String PROPERTY_REVISION = "rev";
 
   /** Column name of the {@link #getRevision() revision}. */
-  String COLUMN_REVISION = "Rev";
+  String COLUMN_REVISION = "REV";
 
   /**
    * The value used as {@link #getRevision() revision} if it unspecified. If you are using an {@link Id} as link to an
