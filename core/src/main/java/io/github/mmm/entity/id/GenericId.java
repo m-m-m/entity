@@ -153,7 +153,9 @@ public interface GenericId<E, P, R extends Comparable<?>, SELF extends GenericId
   default void write(StructuredWriter writer) {
 
     P id = getPk();
-    if (hasRevisionField()) {
+    if (id == null) {
+      writer.writeValueAsNull();
+    } else if (hasRevisionField()) {
       R revision = getRevision();
       writer.writeStartObject(this);
       writer.writeName(getMarshalPropertyId());
