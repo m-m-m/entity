@@ -35,9 +35,9 @@ public interface Entity {
   void setId(Id<?> id);
 
   /**
-   * @return the Java {@link Class} of this entity. In the most simple case the same as {@link #getClass()} but in case
-   *         of proxy objects {@link #getClass()} may return an artificial {@link Class} object while this method will
-   *         typically return what you expect.
+   * @return the Java {@link Class} of this entity. In the most simple case the same as {@link Object#getClass()} but in
+   *         case of proxy objects {@link Object#getClass()} may return an artificial {@link Class} object while this
+   *         method will typically return what you expect.
    */
   default Class<?> getJavaClass() {
 
