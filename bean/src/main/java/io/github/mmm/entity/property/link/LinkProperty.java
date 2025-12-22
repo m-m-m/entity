@@ -9,7 +9,6 @@ import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.IdMarshalling;
 import io.github.mmm.entity.link.AbstractLink;
 import io.github.mmm.entity.link.IdLink;
 import io.github.mmm.entity.link.Link;
@@ -198,8 +197,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   @Override
   protected Link<E> readValue(StructuredReader reader, boolean apply) {
 
-    Id<E> id = IdMarshalling.get().readObject(reader, this.entityClass);
-    IdLink<E> link = IdLink.of(id, this.resolver);
+    Link<E> link = LinkMarshalling.get().readObject(reader, this.entityClass, this.resolver);
     if (apply) {
       setValue(link);
     }
@@ -209,11 +207,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   @Override
   public void writeValue(StructuredWriter writer, Link<E> link) {
 
-    Id<E> id = null;
-    if (link != null) {
-      id = link.getId();
-    }
-    IdMarshalling.get().writeObject(writer, id);
+    LinkMarshalling.get().writeObject(writer, link);
   }
 
   /**

@@ -15,9 +15,6 @@ public final class RevisionedIdVersion<E, P> extends RevisionedId<E, P, Long, Re
   /** {@link #getRevision() Revision} of a newly inserted {@link io.github.mmm.entity.Entity entity}. */
   public static final Long INSERT_REVISION = Long.valueOf(1);
 
-  /** The empty default instance using {@link PkIdLong}. */
-  public static final RevisionedIdVersion<Object, Long> DEFAULT = new RevisionedIdVersion<>(PkIdLong.getEmpty(), null);
-
   private final Long revision;
 
   /**

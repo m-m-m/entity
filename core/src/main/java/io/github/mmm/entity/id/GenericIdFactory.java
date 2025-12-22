@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import io.github.mmm.base.number.LongParser;
 import io.github.mmm.base.temporal.InstantParser;
 import io.github.mmm.base.uuid.UuidParser;
 
@@ -54,11 +55,14 @@ final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
   @Override
   public Object parsePk(String pkString) {
 
+    Long idLong = LongParser.get().parse(pkString);
+    if (idLong != null) {
+      return idLong;
+    }
     UUID uuid = UuidParser.get().parse(pkString);
     if (uuid != null) {
       return uuid;
     }
-    // TODO may be a Long
     return pkString;
   }
 

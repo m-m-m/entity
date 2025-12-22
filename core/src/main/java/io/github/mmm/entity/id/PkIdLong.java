@@ -46,15 +46,23 @@ public final class PkIdLong<E> extends PkId<E, Long, PkIdLong<E>> {
   }
 
   /**
-   * @return the {@link #getPk() primary key} as primitve {@code long} value.
+   * @return the {@link #getPk() primary key} as primitive {@code long} value.
    */
   public long getPkAsLong() {
 
-    Long id = getPk();
-    if (id == null) {
+    if (this.pk == null) {
       return -1;
     }
-    return id.longValue();
+    return this.pk.longValue();
+  }
+
+  @Override
+  public boolean isTransient() {
+
+    if (this.pk != null) {
+      return false;
+    }
+    return super.isTransient();
   }
 
   @Override

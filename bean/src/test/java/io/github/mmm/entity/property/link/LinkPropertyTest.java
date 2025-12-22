@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import io.github.mmm.base.exception.ReadOnlyException;
 import io.github.mmm.bean.BeanFactory;
 import io.github.mmm.entity.bean.PropertyTest;
+import io.github.mmm.entity.bean.example.Target;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.PkIdLong;
 import io.github.mmm.entity.id.PkIdString;
@@ -73,20 +74,21 @@ public class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Ta
     Instant instant = Instant.parse(TEST_INSTANT);
     // LongId variants
     checkMapJson("4711", 4711L, null, PkIdLong.class);
-    checkMapJson("{\"l\":4711,\"v\":42}", 4711L, 42L, RevisionedIdVersion.class);
-    checkMapJson("{\"l\":4711,\"t\":\"" + TEST_INSTANT + "\"}", 4711L, instant, RevisionedIdInstant.class);
+    checkMapJson("{\"id\":{\"l\":4711,\"v\":42}}", 4711L, 42L, RevisionedIdVersion.class);
+    checkMapJson("{\"id\":{\"l\":4711,\"t\":\"" + TEST_INSTANT + "\"}}", 4711L, instant, RevisionedIdInstant.class);
     // UuidId variants
     UUID uuid = UUID.randomUUID();
     String uuidString = uuid.toString();
     checkMapJson("\"" + uuidString + "\"", uuid, null, PkIdUuid.class);
-    checkMapJson("{\"u\":\"" + uuidString + "\",\"v\":43}", uuid, 43L, RevisionedIdVersion.class);
-    checkMapJson("{\"u\":\"" + uuidString + "\",\"t\":\"" + TEST_INSTANT + "\"}", uuid, instant,
+    checkMapJson("{\"id\":{\"u\":\"" + uuidString + "\",\"v\":43}}", uuid, 43L, RevisionedIdVersion.class);
+    checkMapJson("{\"id\":{\"u\":\"" + uuidString + "\",\"t\":\"" + TEST_INSTANT + "\"}}", uuid, instant,
         RevisionedIdInstant.class);
     // String variants
     String pk = "primary-key";
     checkMapJson("\"" + pk + "\"", pk, null, PkIdString.class);
-    checkMapJson("{\"s\":\"" + pk + "\",\"v\":44}", pk, 44L, RevisionedIdVersion.class);
-    checkMapJson("{\"s\":\"" + pk + "\",\"t\":\"" + TEST_INSTANT + "\"}", pk, instant, RevisionedIdInstant.class);
+    checkMapJson("{\"id\":{\"s\":\"" + pk + "\",\"v\":44}}", pk, 44L, RevisionedIdVersion.class);
+    checkMapJson("{\"id\":{\"s\":\"" + pk + "\",\"t\":\"" + TEST_INSTANT + "\"}}", pk, instant,
+        RevisionedIdInstant.class);
   }
 
   @SuppressWarnings("rawtypes")
@@ -108,6 +110,30 @@ public class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Ta
     assertThat(id.getEntityClass()).isSameAs(Target.class);
     assertThat(id.getClass()).isSameAs(idClass);
     assertThat(sb.toString()).isEqualTo(json);
+  }
+
+  @Test
+  void testTargetMapJson() {
+
+    // arrange
+    Target target = Target.of();
+    target.Key().set("key");
+    target.Name().set("name");
+    target.Title().set("title");
+    target.Id().set(PkIdString.of("primary-key", Target.class));
+    LinkProperty<Target> linkProperty = new LinkProperty<>("target", Target.class, null);
+    LinkProperty<Target> linkProperty2 = new LinkProperty<>("target", Target.class, null);
+    linkProperty.set(Link.of(target));
+    StructuredTextFormat jsonFormat = StandardFormat.json(MarshallingConfig.NO_INDENTATION);
+
+    // act
+    String json = jsonFormat.write(linkProperty);
+    jsonFormat.read(json, linkProperty2);
+
+    // assert
+    assertThat(json)
+        .isEqualTo("{\"t\":{\"Id\":\"primary-key\",\"Key\":\"key\",\"Name\":\"name\",\"Title\":\"title\"}}");
+    assertThat(linkProperty).isEqualTo(linkProperty2);
   }
 
   @Override

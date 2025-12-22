@@ -249,4 +249,44 @@ public interface Id<E> extends Supplier<Object> {
     return PkId.of(type, pk);
   }
 
+  /**
+   * @param <E> type of {@link Entity}.
+   * @param type the {@link #getEntityClass() entityClass}
+   * @param pk the {@link #getPk() primary key}.
+   * @param revision
+   * @return the {@link Id} for the given arguments.
+   * @see IdFactory#create(Class, Object, Comparable)
+   */
+  static <E> Id<E> of(Class<E> type, Object pk, Comparable<?> revision) {
+
+    return IdFactory.get().create(type, pk, revision);
+  }
+
+  /**
+   * @param <E> type of {@link Entity}.
+   * @param type the {@link #getEntityClass() entityClass}
+   * @param pkType the {@link #getPkClass() type} of the {@link #getPk() primary key} as short {@link String} ("long",
+   *        "uuid", or "string").
+   * @param revisionType the {@link #getRevisionType() type} of the {@link #getRevision() revision} as short
+   *        {@link String} ("long" or "instant").
+   * @return the {@link Id} for the given arguments.
+   */
+  static <E> Id<E> ofEmpty(Class<E> type, String pkType, String revisionType) {
+
+    PkId<E, ?, ?> pkId = switch (pkType) {
+      case null -> PkIdLong.getEmpty();
+      case "long" -> PkIdLong.getEmpty();
+      case "uuid" -> PkIdUuid.getEmpty();
+      case "string" -> PkIdString.getEmpty();
+      default -> throw new IllegalStateException(pkType);
+    };
+    pkId = pkId.withEntityType(type);
+    return switch (revisionType) {
+      case null -> new RevisionedIdVersion<>(pkId, null);
+      case "long" -> new RevisionedIdVersion<>(pkId, null);
+      case "instant" -> new RevisionedIdInstant<>(pkId, null);
+      default -> throw new IllegalStateException(revisionType);
+    };
+  }
+
 }

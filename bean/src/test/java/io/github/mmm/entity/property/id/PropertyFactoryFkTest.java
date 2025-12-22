@@ -4,7 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.github.mmm.bean.BeanFactory;
-import io.github.mmm.entity.id.GenericId;
+import io.github.mmm.entity.bean.example.FkSource;
+import io.github.mmm.entity.bean.example.Target;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.PkIdLong;
 import io.github.mmm.entity.id.RevisionedIdVersion;
@@ -25,7 +26,7 @@ public class PropertyFactoryFkTest extends Assertions {
 
     // arrange
     // act
-    Source source = BeanFactory.get().create(Source.class);
+    FkSource source = BeanFactory.get().create(FkSource.class);
     FkProperty<Target> targetProperty = source.Target();
     Id<Target> id = targetProperty.get();
     // assert
@@ -40,15 +41,15 @@ public class PropertyFactoryFkTest extends Assertions {
   public void testSetFkOfWrongTypeFails() {
 
     // arrange
-    Source source = BeanFactory.get().create(Source.class);
-    GenericId<Source, Long, Long, ?> sourceId = RevisionedIdVersion.DEFAULT.create(Source.class, 4711L, 1L);
+    FkSource source = BeanFactory.get().create(FkSource.class);
+    Id<FkSource> sourceId = Id.of(FkSource.class, 4711L, 1L);
     try {
       // act
       source.Target().set((Id) sourceId); // doing evil things should fail
       // assert
       failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
-      assertThat(e).hasMessage("Cannot set ID of type " + Source.class.getName()
+      assertThat(e).hasMessage("Cannot set ID of type " + FkSource.class.getName()
           + " to FkProperty Target with incompatible type " + Target.class.getName());
     }
   }
@@ -59,7 +60,7 @@ public class PropertyFactoryFkTest extends Assertions {
 
     // arrange
     RevisionedIdVersion<Target, Long> id = new RevisionedIdVersion<>(new PkIdLong<>(Target.class, 4711L), 1L);
-    Source source = BeanFactory.get().create(Source.class);
+    FkSource source = BeanFactory.get().create(FkSource.class);
     // act
     source.Target().set(id);
     // assert

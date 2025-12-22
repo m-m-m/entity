@@ -12,6 +12,9 @@ import java.util.Set;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.marshall.id.StructuredIdMapping;
+import io.github.mmm.marshall.id.StructuredIdMappingMap;
+import io.github.mmm.marshall.id.StructuredIdMappingObject;
 
 /**
  * This is the interface for a link to a persistent entity. It acts as a reference that can be evaluated lazily. It will
@@ -23,13 +26,19 @@ import io.github.mmm.entity.id.Id;
  *
  * @since 1.0.0
  */
-public interface Link<E> {
+public interface Link<E> extends StructuredIdMappingObject {
+
+  /** Name of the {@link #getId() ID} property (e.g. for JSON or XML). */
+  String PROPERTY_ID = "id";
+
+  /** Name of the {@link #getTarget() target} property (e.g. for JSON or XML). */
+  String PROPERTY_TARGET = "t";
 
   /**
    * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getTarget()
    *         entity}. When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
-   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no {@link Id#getPk() primary key}
-   *         assigned, yet. In such case this method will return an {@link Id#isEmpty() empty} {@link Id}.
+   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no {@link Id#getPk() primary
+   *         key} assigned, yet. In such case this method will return an {@link Id#isEmpty() empty} {@link Id}.
    */
   Id<E> getId();
 
@@ -45,13 +54,19 @@ public interface Link<E> {
    * A {@link Link} can be evaluated lazily. In such case the first call of this method will resolve the linked entity
    * from the database. That can be a relatively expensive operation and requires an open transaction. Use
    * {@link #isResolved()} to distinguish and prevent undesired link resolving.<br>
-   * Further, after serialization (e.g. mapping to JSON and back) maybe only the {@link #getId() ID} was transferred and
+   * Further, after serialisation (e.g. mapping to JSON and back) maybe only the {@link #getId() ID} was transferred and
    * this link can not be resolved. In that case this method may return {@code null}. Please note that {@link #getId()
    * id} and {@link #getTarget() target} can not both be {@code null}.
    *
    * @return the link target or {@code null} if the link can not be resolved.
    */
   E getTarget();
+
+  @Override
+  default StructuredIdMapping defineIdMapping() {
+
+    return StructuredIdMappingMap.of(PROPERTY_ID, PROPERTY_TARGET);
+  }
 
   /**
    * @param <E> type of {@link Entity}.

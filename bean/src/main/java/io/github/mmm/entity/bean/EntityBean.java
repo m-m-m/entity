@@ -3,10 +3,10 @@
 package io.github.mmm.entity.bean;
 
 import io.github.mmm.bean.AbstractInterface;
+import io.github.mmm.bean.BeanType;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.RevisionedIdVersion;
 import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.id.PkProperty;
 
@@ -68,11 +68,46 @@ public interface EntityBean extends WritableBean, Entity {
   public static final String META_KEY_SCORE = "score";
 
   /**
+   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
+   * annotate} {@link EntityBean} interface with the {@link Id#getPkClass() type of the primary key}. Possible values
+   * are "long", "string", or "uuid". If not defined via annotation, the type defaults to "long". The value of this
+   * constant will never change. You do not have to use this constant to build your annotated key-value pairs.<br>
+   * Example:
+   *
+   * <pre>
+   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("pk=uuid")
+   * public interface ContactEntity extends EntityBean {
+   *   // ...
+   * }
+   * </pre>
+   */
+  public static final String META_KEY_PK = "pk";
+
+  /**
+   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
+   * annotate} {@link EntityBean} interface with the {@link Id#getRevisionType() type of the revision}. Possible values
+   * are "long" or "instant". If not defined via annotation, the type defaults to "long". The value of this constant
+   * will never change. You do not have to use this constant to build your annotated key-value pairs.<br>
+   * Example:
+   *
+   * <pre>
+   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("revision=instant")
+   * public interface ContactEntity extends EntityBean {
+   *   // ...
+   * }
+   * </pre>
+   */
+  public static final String META_KEY_REVISION = "revision";
+
+  /**
    * @return the {@link IdProperty property} with the {@link Id} (primary key) of this entity.
    */
   default PkProperty Id() {
 
-    return new PkProperty(RevisionedIdVersion.DEFAULT.withEntityTypeGeneric(getType().getJavaClass()));
+    BeanType type = getType();
+    String pkType = type.getMetaInfo().get(META_KEY_PK);
+    String revType = type.getMetaInfo().get(META_KEY_REVISION);
+    return new PkProperty(Id.ofEmpty(type.getJavaClass(), pkType, revType));
   }
 
   @Override

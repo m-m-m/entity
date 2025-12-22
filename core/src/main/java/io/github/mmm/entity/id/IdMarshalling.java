@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
+import java.util.UUID;
+
 import io.github.mmm.base.exception.DuplicateObjectException;
 import io.github.mmm.base.uuid.UuidParser;
 import io.github.mmm.marshall.Marshalling;
@@ -9,7 +11,7 @@ import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 
 /**
- * Helper class to read and write {@link Id} values.
+ * {@link Marshalling} to read and write {@link Id} values.
  */
 // ID classes and factory work fine without marshalling on module-path
 public interface IdMarshalling extends Marshalling<Id<?>> {
@@ -43,20 +45,21 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
 
   /**
    * @param <E> type of the identified entity.
-   * @param <I> type of the {@link GenericId#getPk() ID}.
-   * @param <V> type of the {@link GenericId#getRevision() revision}.
+   * @param <P> type of the {@link GenericId#getPk() ID}.
+   * @param <R> type of the {@link GenericId#getRevision() revision}.
    * @param reader the {@link StructuredReader} to read from.
    * @param factory the {@link IdFactory} to create {@link Id} instances.
    * @param entityType the {@link GenericId#getEntityClass() entity type}.
    * @return the unmarshalled {@link GenericId}.
    */
-  static <E, I, V extends Comparable<?>> GenericId<E, I, V, ?> readObject(StructuredReader reader,
-      IdFactory<I, V> factory, Class<E> entityType) {
+  @SuppressWarnings("unchecked")
+  static <E, P, R extends Comparable<?>> GenericId<E, P, R, ?> readObject(StructuredReader reader,
+      IdFactory<P, R> factory, Class<E> entityType) {
 
     Object pk = null;
     Object revision = null;
     try {
-      if (reader.readStartObject(RevisionedIdVersion.DEFAULT)) {
+      if (reader.readStartObject(PkIdEmpty.EMPTY)) {
         while (!reader.readEnd()) {
           String name = reader.readName();
           if (GenericId.PROPERTY_PK_LONG.equals(name)) {
@@ -70,12 +73,18 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
           } else if (GenericId.PROPERTY_REVISION_INSTANT.equals(name)) {
             revision = update(revision, reader.readValueAsInstant(), Id.PROPERTY_REVISION);
           } else {
-            // ignore unknown property for compatibility and future extensions...
+            reader.skipValue(); // ignore unknown property for compatibility and future extensions...
           }
         }
       } else {
         if (reader.isStringValue()) {
-          pk = reader.readValueAsString();
+          String string = reader.readValueAsString();
+          UUID uuid = UuidParser.get().parse(string);
+          if (uuid == null) {
+            pk = string;
+          } else {
+            pk = uuid;
+          }
         } else {
           pk = reader.readValueAsLong();
         }
@@ -83,7 +92,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to parse Id.", e);
     }
-    return factory.createGeneric(entityType, pk, revision);
+    return factory.create(entityType, (P) pk, (R) revision);
   }
 
   private static Object update(Object oldValue, Object newValue, String key) {

@@ -43,7 +43,9 @@ public class ComposedTypeMapping implements TypeMapping {
    */
   private void remap(Class<?> source, Class<?> target) {
 
-    assert (source != target);
+    if (source == target) {
+      throw new IllegalArgumentException(source + "==" + target);
+    }
     Objects.requireNonNull(source);
     Objects.requireNonNull(target);
     Class<?> duplicate = this.classMap.put(source, target);

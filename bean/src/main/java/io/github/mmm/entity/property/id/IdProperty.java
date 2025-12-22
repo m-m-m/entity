@@ -4,7 +4,9 @@ package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.RevisionedIdVersion;
+import io.github.mmm.entity.id.IdFactory;
+import io.github.mmm.entity.id.IdMarshalling;
+import io.github.mmm.entity.id.PkIdEmpty;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.PropertyMetadata;
@@ -29,12 +31,11 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
    * @param id the initial {@link #get() value}.
    * @param metadata the {@link #getMetadata() metadata}.
    */
-  @SuppressWarnings("unchecked")
   public IdProperty(String name, V id, PropertyMetadata<V> metadata) {
 
     super(name, metadata);
     if (id == null) {
-      this.value = (V) RevisionedIdVersion.DEFAULT;
+      this.value = (V) PkIdEmpty.EMPTY;
     } else {
       doSet(id);
     }
@@ -66,11 +67,10 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
     this.value = newValue;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public V getFallbackSafeValue() {
 
-    return (V) RevisionedIdVersion.DEFAULT;
+    return (V) PkIdEmpty.EMPTY;
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -91,7 +91,7 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
   @SuppressWarnings("unchecked")
   protected V readValue(StructuredReader reader, boolean apply) {
 
-    V id = (V) ((GenericId<?, ?, ?, ?>) this.value).readObject(reader);
+    V id = (V) IdMarshalling.readObject(reader, IdFactory.get(), this.entityClass);
     if (apply) {
       set(id);
     }

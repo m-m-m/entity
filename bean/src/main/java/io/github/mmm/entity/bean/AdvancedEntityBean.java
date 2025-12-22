@@ -9,7 +9,6 @@ import io.github.mmm.bean.StandardPropertyBuilders;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.bean.impl.EntityPropertyBuildersImpl;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.id.RevisionedIdVersion;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.id.PkProperty;
@@ -78,7 +77,7 @@ public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
     if (pkProperty == null) {
       if (writable == null) {
         // default
-        Id<?> id = RevisionedIdVersion.DEFAULT.withEntityTypeGeneric(getClass());
+        Id<?> id = io.github.mmm.entity.id.Id.of(getClass(), null);
         pkProperty = new PkProperty(id, PropertyMetadata.of(this));
       } else {
         pkProperty = ((AdvancedEntityBean) writable).Id;
