@@ -14,7 +14,7 @@ import io.github.mmm.property.factory.PropertyTypeInfo;
 /**
  * Implementation of {@link PropertyFactory} for {@link LinkProperty}.
  *
- * @param <E> the generic type of the {@link Link#getTarget() linked} {@link EntityBean}.
+ * @param <E> the generic type of the {@link Link#getEntity() linked entity}.
  *
  * @since 1.0.0
  */

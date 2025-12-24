@@ -95,7 +95,7 @@ public interface EntityPropertyBuilders extends PropertyBuilders {
   private <E> Id<E> safeId(Id<E> id) {
 
     if (id == null) {
-      id = PkIdEmpty.EMPTY;
+      id = PkIdEmpty.getEmpty();
     }
     AttributeReadOnly lock = getLock();
     if (lock instanceof EntityBean) {

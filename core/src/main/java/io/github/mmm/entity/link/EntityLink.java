@@ -7,9 +7,9 @@ import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 
 /**
- * Implementation of {@link AbstractLink} based on an already resolved {@link Entity}.
+ * Implementation of {@link AbstractLink} based on an already {@link #isResolved() resolved} {@link Entity}.
  *
- * @param <E> the generic type of the {@link #getTarget() linked} {@link Entity}.
+ * @param <E> the generic type of the {@link #getEntity() linked entity}.
  *
  * @since 1.0.0
  */
@@ -18,23 +18,23 @@ public class EntityLink<E extends Entity> extends AbstractIdLink<E> {
   /**
    * The constructor.
    *
-   * @param target the {@link #getTarget() target entity}.
+   * @param entity the {@link #getEntity() linked entity}.
    */
-  protected EntityLink(E target) {
+  protected EntityLink(E entity) {
 
-    this(null, target);
+    this(null, entity);
   }
 
-  EntityLink(Id<E> id, E target) {
+  EntityLink(Id<E> id, E entity) {
 
-    super(id, target);
+    super(id, entity);
   }
 
   @Override
   protected AbstractIdLink<E> withId(GenericId<E, ?, ?, ?> newId) {
 
     // should never happen...
-    return new EntityLink<>(newId, getTarget());
+    return new EntityLink<>(newId, getEntity());
   }
 
 }

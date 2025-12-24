@@ -13,7 +13,7 @@ public final class PkIdEmpty<E, SELF extends PkId<E, Object, SELF>> extends PkId
 
   /** The empty instance. */
   @SuppressWarnings("rawtypes")
-  public static final PkIdEmpty EMPTY = new PkIdEmpty<>(null);
+  private static final PkIdEmpty EMPTY = new PkIdEmpty<>(null);
 
   /**
    * The constructor.
@@ -69,6 +69,15 @@ public final class PkIdEmpty<E, SELF extends PkId<E, Object, SELF>> extends PkId
   public String getMarshalPropertyId() {
 
     return null;
+  }
+
+  /**
+   * @param <E> type of the identified entity.
+   * @return the {@link #isEmpty() empty} instance of this class.
+   */
+  public static <E> PkIdEmpty<E, ?> getEmpty() {
+
+    return EMPTY;
   }
 
 }

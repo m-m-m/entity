@@ -9,7 +9,7 @@ import io.github.mmm.entity.id.Id;
 /**
  * Abstract base implementation of {@link Link}.
  *
- * @param <E> the generic type of the {@link #getTarget() linked} entity.
+ * @param <E> the generic type of the {@link #getEntity() linked entity}.
  *
  * @since 1.0.0
  */

@@ -1,7 +1,5 @@
 package io.github.mmm.entity.id;
 
-import java.util.Objects;
-
 import io.github.mmm.value.converter.AtomicTypeMapper;
 import io.github.mmm.value.converter.ValueMapper;
 
@@ -13,7 +11,7 @@ import io.github.mmm.value.converter.ValueMapper;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class FkMapper extends AtomicTypeMapper<Id, Object> {
 
-  private static final FkMapper DEFAULT = new FkMapper(PkIdLong.getEmpty());
+  private static final FkMapper DEFAULT = new FkMapper(PkIdEmpty.getEmpty());
 
   private final GenericId idTemplate;
 
@@ -61,7 +59,9 @@ public class FkMapper extends AtomicTypeMapper<Id, Object> {
    */
   public static FkMapper of(Id id) {
 
-    Objects.requireNonNull(id);
+    if (id == null) {
+      return get();
+    }
     GenericId genericId = (GenericId) id;
     return new FkMapper(genericId.withPk(null));
   }

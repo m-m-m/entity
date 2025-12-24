@@ -11,7 +11,7 @@ import io.github.mmm.entity.id.Id;
 /**
  * Extends {@link AbstractLink} with the {@link Id} property.
  *
- * @param <E> the generic type of the {@link #getTarget() linked} entity.
+ * @param <E> the generic type of the {@link #getEntity() linked} entity.
  *
  * @since 1.0.0
  */
@@ -19,35 +19,32 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
 
   private /* final */ GenericId<E, ?, ?, ?> id;
 
-  /** @see #getTarget() */
-  private E target;
+  /** @see #getEntity() */
+  private E entity;
 
   /**
    * The constructor.
    *
    * @param id - see {@link #getId()}.
-   * @param target - see {@link #getTarget()}.
+   * @param entity - see {@link #getEntity()}.
    */
   @SuppressWarnings("unchecked")
-  protected AbstractIdLink(Id<E> id, E target) {
+  protected AbstractIdLink(Id<E> id, E entity) {
 
     super();
     GenericId<E, ?, ?, ?> gid = (GenericId<E, ?, ?, ?>) id;
-    if (target == null) {
+    if (entity == null) {
       if (gid == null) {
         throw new IllegalArgumentException("Cannot create link with neither ID nor target entity!");
       }
-      if (gid.getPk() == null) {
-        throw new IllegalArgumentException("Cannot create link for empty ID - primary key must be present!");
-      }
     } else if (gid == null) {
-      gid = (GenericId<E, ?, ?, ?>) Id.from((Entity) this.target);
+      gid = (GenericId<E, ?, ?, ?>) Id.from((Entity) this.entity);
     }
     if ((gid != null) && isRemoveRevision()) {
       gid = gid.withoutRevision();
     }
     this.id = gid;
-    this.target = target;
+    this.entity = entity;
   }
 
   @Override
@@ -63,7 +60,7 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
   private synchronized Id<E> updateId() {
 
     if (this.id == null) {
-      GenericId<E, ?, ?, ?> gid = (GenericId<E, ?, ?, ?>) Id.from((Entity) this.target);
+      GenericId<E, ?, ?, ?> gid = (GenericId<E, ?, ?, ?>) Id.from((Entity) this.entity);
       if ((gid != null) && isRemoveRevision()) {
         gid = gid.withoutRevision();
       }
@@ -84,25 +81,25 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
   @Override
   public boolean isResolved() {
 
-    return (this.target != null);
+    return (this.entity != null);
   }
 
   @Override
-  public E getTarget() {
+  public E getEntity() {
 
-    return this.target;
+    return this.entity;
   }
 
   /**
    * @param resolver the resolver {@link Function}.
-   * @return the {@link #getTarget() target entity}.
+   * @return the {@link #getEntity() target entity}.
    */
   protected synchronized E updateTarget(Function<Id<E>, E> resolver) {
 
-    if ((this.target == null) && (resolver != null)) {
-      this.target = resolver.apply(getId());
+    if ((this.entity == null) && (resolver != null)) {
+      this.entity = resolver.apply(getId());
     }
-    return this.target;
+    return this.entity;
 
   }
 

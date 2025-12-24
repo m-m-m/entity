@@ -59,7 +59,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
     Object pk = null;
     Object revision = null;
     try {
-      if (reader.readStartObject(PkIdEmpty.EMPTY)) {
+      if (reader.readStartObject(PkIdEmpty.getEmpty())) {
         while (!reader.readEnd()) {
           String name = reader.readName();
           if (GenericId.PROPERTY_PK_LONG.equals(name)) {

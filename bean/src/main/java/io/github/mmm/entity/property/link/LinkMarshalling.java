@@ -36,7 +36,7 @@ public interface LinkMarshalling extends Marshalling<Link<?>> {
     }
     Object target = null;
     if (includeTarget) {
-      target = link.getTarget();
+      target = link.getEntity();
     }
     if (target == null) {
       if (id == null) {

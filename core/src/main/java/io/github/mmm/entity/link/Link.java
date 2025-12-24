@@ -20,7 +20,7 @@ import io.github.mmm.marshall.id.StructuredIdMappingObject;
  * This is the interface for a link to a persistent entity. It acts as a reference that can be evaluated lazily. It will
  * hold the {@link #getId() primary key} of the linked entity.
  *
- * @param <E> type of the {@link #getTarget() linked} entity.
+ * @param <E> type of the {@link #getEntity() linked entity}.
  *
  * @see io.github.mmm.entity.Entity
  *
@@ -31,20 +31,20 @@ public interface Link<E> extends StructuredIdMappingObject {
   /** Name of the {@link #getId() ID} property (e.g. for JSON or XML). */
   String PROPERTY_ID = "id";
 
-  /** Name of the {@link #getTarget() target} property (e.g. for JSON or XML). */
+  /** Name of the {@link #getEntity() target} property (e.g. for JSON or XML). */
   String PROPERTY_TARGET = "t";
 
   /**
-   * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getTarget()
+   * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getEntity()
    *         entity}. When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
-   *         {@link io.github.mmm.entity.Entity} as {@link #getTarget() target} that has no {@link Id#getPk() primary
+   *         {@link io.github.mmm.entity.Entity} as {@link #getEntity() target} that has no {@link Id#getPk() primary
    *         key} assigned, yet. In such case this method will return an {@link Id#isEmpty() empty} {@link Id}.
    */
   Id<E> getId();
 
   /**
-   * @return {@code true} if the {@link #getTarget() link target} is already resolved, {@code false} otherwise (if
-   *         {@link #getTarget()} may trigger lazy loading and could also fail if called without an open transaction).
+   * @return {@code true} if the {@link #getEntity() link target} is already resolved, {@code false} otherwise (if
+   *         {@link #getEntity()} may trigger lazy loading and could also fail if called without an open transaction).
    */
   boolean isResolved();
 
@@ -56,11 +56,30 @@ public interface Link<E> extends StructuredIdMappingObject {
    * {@link #isResolved()} to distinguish and prevent undesired link resolving.<br>
    * Further, after serialisation (e.g. mapping to JSON and back) maybe only the {@link #getId() ID} was transferred and
    * this link can not be resolved. In that case this method may return {@code null}. Please note that {@link #getId()
-   * id} and {@link #getTarget() target} can not both be {@code null}.
+   * id} and {@link #getEntity() target} can not both be {@code null}.
    *
    * @return the link target or {@code null} if the link can not be resolved.
    */
-  E getTarget();
+  E getEntity();
+
+  /**
+   * @return {@code true} if this link is empty, {@code false} otherwise.
+   * @see Id#isEmpty()
+   */
+  default boolean isEmpty() {
+
+    Id<E> id = getId();
+    if ((id != null) && !id.isEmpty()) {
+      return false;
+    }
+    if (isResolved()) {
+      E entity = getEntity();
+      if (entity != null) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   @Override
   default StructuredIdMapping defineIdMapping() {
@@ -83,7 +102,7 @@ public interface Link<E> extends StructuredIdMappingObject {
   }
 
   /**
-   * @param <E> type of the {@link #getTarget() linked} {@link io.github.mmm.entity.Entity}.
+   * @param <E> type of the {@link #getEntity() linked} {@link io.github.mmm.entity.Entity}.
    * @param id the {@link #getId() id}.
    * @return the {@link Link} for the given {@link Id} {@link GenericId#withoutRevision() without the revision}.
    */
@@ -252,7 +271,7 @@ public interface Link<E> extends StructuredIdMappingObject {
   /**
    * Null-safe variant of {@link Link#getId()}.
    *
-   * @param <E> type of the {@link #getTarget() linked} entity.
+   * @param <E> type of the {@link #getEntity() linked} entity.
    * @param link the {@link Link} to get the {@link Id} from. May be {@code null}.
    * @return the {@link Link#getId() ID} contained in the given {@link Link} or {@code null} if {@link Link} was
    *         {@code null}.

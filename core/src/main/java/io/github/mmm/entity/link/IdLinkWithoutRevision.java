@@ -10,7 +10,7 @@ import io.github.mmm.entity.id.Id;
 /**
  * {@link IdLink} but {@link IdLink#isRemoveRevision() without revision}.
  *
- * @param <E> the generic type of the {@link Link#getTarget() linked} entity.
+ * @param <E> the generic type of the {@link Link#getEntity() linked entity}.
  *
  * @since 1.0.0
  */
@@ -41,7 +41,7 @@ final class IdLinkWithoutRevision<E> extends IdLink<E> {
   @Override
   protected IdLinkWithoutRevision<E> withId(GenericId<E, ?, ?, ?> newId) {
 
-    return new IdLinkWithoutRevision<>(newId, super.getTarget(), this.resolver);
+    return new IdLinkWithoutRevision<>(newId, super.getEntity(), this.resolver);
   }
 
 }

@@ -31,11 +31,12 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
    * @param id the initial {@link #get() value}.
    * @param metadata the {@link #getMetadata() metadata}.
    */
+  @SuppressWarnings("unchecked")
   public IdProperty(String name, V id, PropertyMetadata<V> metadata) {
 
     super(name, metadata);
     if (id == null) {
-      this.value = (V) PkIdEmpty.EMPTY;
+      this.value = (V) PkIdEmpty.getEmpty();
     } else {
       doSet(id);
     }
@@ -67,10 +68,11 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
     this.value = newValue;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public V getFallbackSafeValue() {
 
-    return (V) PkIdEmpty.EMPTY;
+    return (V) PkIdEmpty.getEmpty();
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -102,6 +104,12 @@ public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
   public void writeValue(StructuredWriter writer, V id) {
 
     ((GenericId<?, ?, ?, ?>) id).write(writer);
+  }
+
+  @Override
+  public boolean isEmpty() {
+
+    return (this.value == null) || this.value.isEmpty();
   }
 
 }

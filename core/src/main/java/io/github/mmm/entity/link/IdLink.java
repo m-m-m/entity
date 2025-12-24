@@ -9,10 +9,10 @@ import io.github.mmm.entity.id.Id;
 
 /**
  * Implementation of {@link Link} that carries the {@link Id} of an entity. It optionally allows lazy loading on the
- * first call of {@link #getTarget()} via an externally given resolver {@link Function}. This approach is easier, less
+ * first call of {@link #getEntity()} via an externally given resolver {@link Function}. This approach is easier, less
  * invasive and more lightweight as using proxy objects for entities.
  *
- * @param <E> the generic type of the {@link #getTarget() linked} entity.
+ * @param <E> the generic type of the {@link #getEntity() linked entity}.
  *
  * @since 1.0.0
  */
@@ -24,41 +24,40 @@ public class IdLink<E> extends AbstractIdLink<E> {
    * The constructor.
    *
    * @param id - see {@link #getId()}.
-   * @param resolver the {@link Function} to {@link #isResolved() resolve} the {@link #getTarget() link target} (the
-   *        entity).
+   * @param resolver the {@link Function} to {@link #isResolved() resolve} the {@link #getEntity() entity}.
    */
   protected IdLink(Id<E> id, Function<Id<E>, E> resolver) {
 
     this(id, null, resolver);
   }
 
-  IdLink(Id<E> id, E target, Function<Id<E>, E> resolver) {
+  IdLink(Id<E> id, E entity, Function<Id<E>, E> resolver) {
 
-    super(id, target);
+    super(id, entity);
     this.resolver = resolver;
   }
 
   @Override
-  public E getTarget() {
+  public E getEntity() {
 
-    E target = super.getTarget();
-    if ((target == null) && (this.resolver != null)) {
-      target = updateTarget(this.resolver);
-      if (target != null) {
+    E entity = super.getEntity();
+    if ((entity == null) && (this.resolver != null)) {
+      entity = updateTarget(this.resolver);
+      if (entity != null) {
         this.resolver = null;
       }
     }
-    return target;
+    return entity;
   }
 
   @Override
   protected IdLink<E> withId(GenericId<E, ?, ?, ?> newId) {
 
-    return new IdLink<>(newId, super.getTarget(), this.resolver);
+    return new IdLink<>(newId, super.getEntity(), this.resolver);
   }
 
   /**
-   * @param resolver the new {@link Function} to {@link #isResolved() resolve} the {@link #getTarget() target}.
+   * @param resolver the new {@link Function} to {@link #isResolved() resolve} the {@link #getEntity() target}.
    */
   public void setResolver(Function<Id<E>, E> resolver) {
 
@@ -66,7 +65,7 @@ public class IdLink<E> extends AbstractIdLink<E> {
   }
 
   /**
-   * @param <E> type of the {@link #getTarget() linked} {@link io.github.mmm.entity.Entity}.
+   * @param <E> type of the {@link #getEntity() linked} {@link io.github.mmm.entity.Entity}.
    * @param id the {@link #getId() id}.
    * @param resolver the {@link Function} to {@link Function#apply(Object) resolve} the {@link Id}.
    * @return the {@link IdLink} instance.

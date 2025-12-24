@@ -27,7 +27,7 @@ public class PropertyFactoryLinkTest extends Assertions {
     LinkProperty<Target> targetProperty = source.Target();
     // assert
     assertThat(targetProperty.getEntityClass()).isSameAs(Target.class);
-    assertThat(targetProperty.get()).isNull();
+    assertThat(targetProperty.get().isEmpty()).isTrue();
   }
 
   /** Test of {@link LinkProperty#set(Object)} with {@link Link} of wrong entity type. */
@@ -61,7 +61,7 @@ public class PropertyFactoryLinkTest extends Assertions {
     source.Target().set(Link.of(target));
     // assert
     assertThat(source.Target().get().getId()).isEqualTo(id);
-    assertThat(source.Target().get().getTarget()).isSameAs(target);
+    assertThat(source.Target().get().getEntity()).isSameAs(target);
   }
 
 }

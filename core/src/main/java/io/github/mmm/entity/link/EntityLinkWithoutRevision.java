@@ -9,7 +9,7 @@ import io.github.mmm.entity.id.Id;
 /**
  * {@link EntityLink} but {@link EntityLink#isRemoveRevision() without revision}.
  *
- * @param <E> the generic type of the {@link Link#getTarget() linked} {@link Entity}.
+ * @param <E> the generic type of the {@link Link#getEntity() linked entity}.
  *
  * @since 1.0.0
  */
@@ -18,16 +18,16 @@ final class EntityLinkWithoutRevision<E extends Entity> extends EntityLink<E> {
   /**
    * The constructor.
    *
-   * @param target the {@link Link#getTarget() target entity}.
+   * @param entity the {@link Link#getEntity() linked entity}.
    */
-  public EntityLinkWithoutRevision(E target) {
+  public EntityLinkWithoutRevision(E entity) {
 
-    this(null, target);
+    this(null, entity);
   }
 
-  private EntityLinkWithoutRevision(Id<E> id, E target) {
+  private EntityLinkWithoutRevision(Id<E> id, E entity) {
 
-    super(id, target);
+    super(id, entity);
   }
 
   @Override
@@ -40,7 +40,7 @@ final class EntityLinkWithoutRevision<E extends Entity> extends EntityLink<E> {
   protected AbstractIdLink<E> withId(GenericId<E, ?, ?, ?> newId) {
 
     // should never happen...
-    return new EntityLinkWithoutRevision<>(newId, getTarget());
+    return new EntityLinkWithoutRevision<>(newId, getEntity());
   }
 
 }

@@ -12,6 +12,7 @@ import io.github.mmm.bean.BeanFactory;
 import io.github.mmm.entity.bean.PropertyTest;
 import io.github.mmm.entity.bean.example.Target;
 import io.github.mmm.entity.id.Id;
+import io.github.mmm.entity.id.PkIdEmpty;
 import io.github.mmm.entity.id.PkIdLong;
 import io.github.mmm.entity.id.PkIdString;
 import io.github.mmm.entity.id.PkIdUuid;
@@ -52,24 +53,25 @@ public class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Ta
 
   /** Test of {@link LinkProperty#getReadOnly()}. */
   @Test
-  public void testReadOnly() {
+  void testReadOnly() {
 
     // arrange
     LinkProperty<Target> linkProperty = new LinkProperty<>("target", Target.class, null);
     // act
     LinkProperty<Target> readOnlyLinkProperty = WritableProperty.getReadOnly(linkProperty);
     // assert
-    assertThat((Object) readOnlyLinkProperty.get()).isNull();
+    assertThat(readOnlyLinkProperty.isEmpty()).isTrue();
+    assertThat(readOnlyLinkProperty.get().getId()).isEqualTo(PkIdEmpty.getEmpty());
     linkProperty.set(LINK);
     Link<Target> readOnlyLink = readOnlyLinkProperty.get();
     assertThrows(ReadOnlyException.class, () -> {
-      readOnlyLink.getTarget().setId(ID);
+      readOnlyLink.getEntity().setId(ID);
     });
     assertThat(readOnlyLink).isNotNull().isNotSameAs(LINK);
   }
 
   @Test
-  public void testMapJson() {
+  void testMapJson() {
 
     Instant instant = Instant.parse(TEST_INSTANT);
     // LongId variants
