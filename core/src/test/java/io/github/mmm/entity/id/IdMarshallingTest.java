@@ -17,11 +17,11 @@ import io.github.mmm.marshall.StructuredReader;
  * Test of {@link IdMarshalling}.
  */
 @SuppressWarnings("javadoc")
-public class IdMarshallingTest extends Assertions {
+class IdMarshallingTest extends Assertions {
 
   /** Test of {@link IdMarshalling} from/to JSON for all types of {@link Id}s. */
   @Test
-  public void testAllIdTypes() {
+  void testAllIdTypes() {
 
     UUID uuid = UUID.randomUUID();
     // test version IDs
@@ -47,7 +47,7 @@ public class IdMarshallingTest extends Assertions {
    * {@link AbstractVersionId#getRevision() revision} of {@code 0}.
    */
   @Test
-  public void testWriteWithZeroVersion() {
+  void testWriteWithZeroVersion() {
 
     UUID uuid = UUID.randomUUID();
     assertThat(writeJson(new RevisionedIdVersion<>(new PkIdLong<>(Entity.class, 42L), 0L)))
@@ -63,7 +63,7 @@ public class IdMarshallingTest extends Assertions {
    * {@link AbstractVersionId#getRevision() revision} of {@code 0}.
    */
   @Test
-  public void testWriteWithoutRevision() {
+  void testWriteWithoutRevision() {
 
     UUID uuid = UUID.randomUUID();
     assertThat(writeJson(new PkIdLong<>(Entity.class, 42L))).isEqualTo("42");

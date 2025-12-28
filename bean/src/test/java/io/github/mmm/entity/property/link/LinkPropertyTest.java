@@ -29,7 +29,7 @@ import io.github.mmm.property.WritableProperty;
 /**
  * Test of {@link LinkProperty}.
  */
-public class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Target>> {
+class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Target>> {
 
   private static final String TEST_INSTANT = "1999-12-31T23:59:59.123456789Z";
 

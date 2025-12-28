@@ -15,14 +15,14 @@ import io.github.mmm.entity.property.link.LinkProperty;
 /**
  * Test of {@link PropertyFactoryFk} and {@link FkProperty}.
  */
-public class PropertyFactoryFkTest extends Assertions {
+class PropertyFactoryFkTest extends Assertions {
 
   /**
    * Test of that {@link BeanFactory#create(Class) bean creation} using {@link PropertyFactoryFk} will determine and
    * assign {@link Id#getEntityClass()} correctly.
    */
   @Test
-  public void testLinkCreationWithEntityType() {
+  void testLinkCreationWithEntityType() {
 
     // arrange
     // act
@@ -38,7 +38,7 @@ public class PropertyFactoryFkTest extends Assertions {
   /** Test of {@link LinkProperty#set(Object)} with {@link Link} of wrong entity type. */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Test
-  public void testSetFkOfWrongTypeFails() {
+  void testSetFkOfWrongTypeFails() {
 
     // arrange
     FkSource source = BeanFactory.get().create(FkSource.class);
@@ -56,7 +56,7 @@ public class PropertyFactoryFkTest extends Assertions {
 
   /** Test of {@link LinkProperty#set(Object)} with {@link Link} of correct entity type. */
   @Test
-  public void testSetLinkWithCorrectTypeSucceeds() {
+  void testSetLinkWithCorrectTypeSucceeds() {
 
     // arrange
     RevisionedIdVersion<Target, Long> id = new RevisionedIdVersion<>(new PkIdLong<>(Target.class, 4711L), 1L);

@@ -9,11 +9,11 @@ import io.github.mmm.entity.id.Id;
 /**
  * Test of {@link Link}.
  */
-public class LinkTest extends Assertions {
+class LinkTest extends Assertions {
 
   /** Test that creation via {@link Link#of(Id)} with empty {@link Id} fails. */
   @Test
-  public void testCreateLinkWithEmptyIdFails() {
+  void testCreateLinkWithEmptyIdFails() {
 
     // arrange
     Id<DummyEntity> id = null;
@@ -29,7 +29,7 @@ public class LinkTest extends Assertions {
 
   /** Test that creation via {@link Link#of(Id)} with valid {@link Id} succeeds. */
   @Test
-  public void testCreateLinkWithValidIdSucceeds() {
+  void testCreateLinkWithValidIdSucceeds() {
 
     // arrange
     Id<DummyEntity> id = Id.of(DummyEntity.class, 4711L, 1L);
@@ -41,7 +41,7 @@ public class LinkTest extends Assertions {
 
   /** Test of {@link Link#isResolved()}. */
   @Test
-  public void testIsResolved() {
+  void testIsResolved() {
 
     // arrange
     Id<DummyEntity> id = Id.of(DummyEntity.class, 4711L, 1L);
