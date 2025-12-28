@@ -95,7 +95,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   protected LinkProperty(String name, Class<E> entityClass, Link<E> value, PropertyMetadata<Link<E>> metadata,
       Function<Id<E>, E> resolver) {
 
-    super(name, (Class) Link.class, getOrCreateValue(entityClass, value), metadata);
+    super(name, (Class) Link.class, value, metadata);
     if (entityClass == null) {
       if (value != null) {
         this.entityClass = value.getId().getEntityClass();
@@ -108,16 +108,16 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  private static <E extends EntityBean> Link<E> getOrCreateValue(Class<E> entityClass, Link<E> value) {
+  @Override
+  protected Link<E> doGet() {
 
-    if (value != null) {
-      return value;
+    Link<E> link = super.doGet();
+    if ((link == null) && (this.entityClass != null)) { // lazy init
+      E entity = BeanFactory.get().getEmpty(this.entityClass);
+      link = (Link) Link.of(entity.Id().get());
+      doSet(link);
     }
-    if (entityClass == null) {
-      return null;
-    }
-    E entity = BeanFactory.get().getEmpty(entityClass);
-    return (Link) Link.of(entity.Id().get());
+    return link;
   }
 
   @Override
