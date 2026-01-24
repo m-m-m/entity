@@ -22,7 +22,7 @@ module io.github.mmm.entity.bean {
 
   exports io.github.mmm.entity.bean;
 
-  exports io.github.mmm.entity.bean.property;
+  exports io.github.mmm.entity.bean.attribute;
 
   exports io.github.mmm.entity.bean.typemapping;
 

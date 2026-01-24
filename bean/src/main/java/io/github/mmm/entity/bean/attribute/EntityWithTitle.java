@@ -1,4 +1,4 @@
-package io.github.mmm.entity.bean.property;
+package io.github.mmm.entity.bean.attribute;
 
 import io.github.mmm.base.metainfo.MetaInfos;
 import io.github.mmm.bean.AbstractInterface;
