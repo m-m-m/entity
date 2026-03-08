@@ -33,7 +33,7 @@ public interface EntityBean extends WritableBean, Entity {
    * }
    * </pre>
    *
-   * For further details see {@code io.github.mmm.orm.naming.DbNamingStrategy}.
+   * For further details see {@code io.github.mmm.db.naming.DbNamingStrategy}.
    */
   public static final String META_KEY_TABLE = "table";
 
@@ -50,9 +50,40 @@ public interface EntityBean extends WritableBean, Entity {
    * LocalDateProperty Birthday();
    * </pre>
    *
-   * For further details see {@code io.github.mmm.orm.naming.DbNamingStrategy}.
+   * For further details see {@code io.github.mmm.db.naming.DbNamingStrategy}.
    */
   public static final String META_KEY_COLUMN = "column";
+
+  /**
+   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
+   * annotate} {@link io.github.mmm.property.Property} methods with the database column size. Value has to be an
+   * {@link Integer} indicating the size (e.g. maximum length or number of digits of the value).<br>
+   * Example:
+   *
+   * <pre>
+   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("column_size=32")
+   * StringProperty Name();
+   * </pre>
+   *
+   * For further details see {@code io.github.mmm.db.type.DbType.getSize()}.
+   */
+  public static final String META_KEY_COLUMN_SIZE = "column_size";
+
+  /**
+   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
+   * annotate} {@link io.github.mmm.property.Property} methods with the database column scale. Value has to be an
+   * {@link Integer} indicating the number of fraction digits after decimal sign. Should only be used in combination
+   * with {@link #META_KEY_COLUMN_SIZE column size} and will be ignored otherwise.<br>
+   * Example:
+   *
+   * <pre>
+   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}({"column_size=64", "column_scale=16"})
+   * BigDecimalProperty Value();
+   * </pre>
+   *
+   * For further details see {@code io.github.mmm.db.type.DbType.getScale()}.
+   */
+  public static final String META_KEY_COLUMN_SCALE = "column_scale";
 
   /**
    * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
