@@ -4,7 +4,7 @@ package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.property.AttributeReadOnly;
+import io.github.mmm.property.PropertyLock;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
 import io.github.mmm.validation.main.ValidatorBuilderObject;
@@ -25,7 +25,7 @@ public final class FkPropertyBuilder<E extends EntityBean> extends
    *
    * @param lock the {@link #getLock() lock}.
    */
-  public FkPropertyBuilder(AttributeReadOnly lock) {
+  public FkPropertyBuilder(PropertyLock lock) {
 
     super(lock);
   }
@@ -36,7 +36,7 @@ public final class FkPropertyBuilder<E extends EntityBean> extends
    * @param lock the {@link #getLock() lock}.
    * @param idTemplate the {@link Class} reflecting the entity.
    */
-  public FkPropertyBuilder(AttributeReadOnly lock, Id<E> idTemplate) {
+  public FkPropertyBuilder(PropertyLock lock, Id<E> idTemplate) {
 
     super(lock);
     this.id = idTemplate;

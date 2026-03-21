@@ -3,7 +3,7 @@
 package io.github.mmm.entity.property.id;
 
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.property.AttributeReadOnly;
+import io.github.mmm.property.PropertyLock;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
 import io.github.mmm.validation.main.ValidatorBuilderObject;
@@ -23,7 +23,7 @@ public final class PkPropertyBuilder
    *
    * @param lock the {@link #getLock() lock}.
    */
-  public PkPropertyBuilder(AttributeReadOnly lock) {
+  public PkPropertyBuilder(PropertyLock lock) {
 
     super(lock);
   }
@@ -34,7 +34,7 @@ public final class PkPropertyBuilder
    * @param lock the {@link #getLock() lock}.
    * @param idTemplate the {@link Class} reflecting the entity.
    */
-  public PkPropertyBuilder(AttributeReadOnly lock, Id<?> idTemplate) {
+  public PkPropertyBuilder(PropertyLock lock, Id<?> idTemplate) {
 
     super(lock);
     this.id = idTemplate;

@@ -158,4 +158,5 @@ public interface EntityBean extends WritableBean, Entity {
 
     return WritableBean.super.getJavaClass();
   }
+
 }

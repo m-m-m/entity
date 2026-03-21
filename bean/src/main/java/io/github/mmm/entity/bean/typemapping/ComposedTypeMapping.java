@@ -56,23 +56,14 @@ public class ComposedTypeMapping implements TypeMapping {
   }
 
   /**
-   * @param singleMapper the {@link SingleTypeMapping} to register.
+   * @param mapping the {@link SingleTypeMapping} to register.
    */
-  protected void add(SingleTypeMapping<?> singleMapper) {
+  protected void add(SingleTypeMapping<?> mapping) {
 
-    SingleTypeMapping<?> duplicate = this.typeMap.put(singleMapper.getTypeMapper().getSourceType(), singleMapper);
+    SingleTypeMapping<?> duplicate = this.typeMap.put(mapping.getTypeMapper().getSourceType(), mapping);
     if (duplicate != null) {
-      LOG.warn("Overriding " + duplicate + " with " + singleMapper);
+      LOG.warn("Overriding " + duplicate + " with " + mapping);
     }
-  }
-
-  /**
-   * @param type the {@link TypeMapper#getSourceType() source type} to map.
-   * @param declaration the {@link TypeMapper#getDeclaration() declaration}.
-   */
-  protected void add(Class<?> type, String declaration) {
-
-    add(new SingleTypeMappingStatic<>(type, declaration));
   }
 
   /**

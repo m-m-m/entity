@@ -7,7 +7,7 @@ import java.util.function.Function;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.link.Link;
-import io.github.mmm.property.AttributeReadOnly;
+import io.github.mmm.property.PropertyLock;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
 import io.github.mmm.validation.main.ValidatorBuilderObject;
@@ -30,7 +30,7 @@ public final class LinkPropertyBuilder<E extends EntityBean> extends
    *
    * @param lock the {@link #getLock() lock}.
    */
-  public LinkPropertyBuilder(AttributeReadOnly lock) {
+  public LinkPropertyBuilder(PropertyLock lock) {
 
     this(lock, null);
   }
@@ -41,7 +41,7 @@ public final class LinkPropertyBuilder<E extends EntityBean> extends
    * @param lock the {@link #getLock() lock}.
    * @param entityClass the {@link Class} reflecting the entity.
    */
-  public LinkPropertyBuilder(AttributeReadOnly lock, Class<E> entityClass) {
+  public LinkPropertyBuilder(PropertyLock lock, Class<E> entityClass) {
 
     super(lock);
     this.entityClass = entityClass;

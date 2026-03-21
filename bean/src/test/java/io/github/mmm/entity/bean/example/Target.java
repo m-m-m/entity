@@ -11,6 +11,9 @@ import io.github.mmm.entity.bean.attribute.EntityWithTitle;
  */
 public interface Target extends EntityWithTitle, EntityWithKey, EntityWithName {
 
+  /**
+   * @return new {@link Target}.
+   */
   static Target of() {
 
     return BeanFactory.get().create(Target.class);

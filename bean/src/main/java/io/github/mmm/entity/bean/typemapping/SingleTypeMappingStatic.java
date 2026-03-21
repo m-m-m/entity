@@ -20,11 +20,10 @@ public class SingleTypeMappingStatic<V> extends SingleTypeMapping<V> {
    * The constructor for an {@link IdentityTypeMapper}.
    *
    * @param type the {@link IdentityTypeMapper#getSourceType() source and target type}.
-   * @param declaration the {@link TypeMapper#getDeclaration() type declaration}.
    */
-  public SingleTypeMappingStatic(Class<V> type, String declaration) {
+  public SingleTypeMappingStatic(Class<V> type) {
 
-    this(new IdentityTypeMapper<>(type, declaration));
+    this(new IdentityTypeMapper<>(type));
   }
 
   /**
