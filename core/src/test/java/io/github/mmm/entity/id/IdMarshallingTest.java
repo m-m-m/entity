@@ -16,7 +16,6 @@ import io.github.mmm.marshall.StructuredReader;
 /**
  * Test of {@link IdMarshalling}.
  */
-@SuppressWarnings("javadoc")
 class IdMarshallingTest extends Assertions {
 
   /** Test of {@link IdMarshalling} from/to JSON for all types of {@link Id}s. */
