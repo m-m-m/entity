@@ -283,6 +283,7 @@ public interface Id<E> extends Supplier<Object> {
     pkId = pkId.withEntityType(type);
     return switch (revisionType) {
       case null -> new RevisionedIdVersion<>(pkId, null);
+      case "none" -> pkId;
       case "long" -> new RevisionedIdVersion<>(pkId, null);
       case "instant" -> new RevisionedIdInstant<>(pkId, null);
       default -> throw new IllegalStateException(revisionType);
