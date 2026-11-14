@@ -11,29 +11,23 @@ import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.id.PkProperty;
 import io.github.mmm.property.PropertyMetadata;
 
-/**
- * Implementation of {@link EntityBean} as simple {@link Bean}.
- *
- * @since 1.0.0
- */
+/// Implementation of [EntityBean] as simple [Bean].
+///
+/// @since 1.0.0
 public class SimpleEntityBean extends Bean implements EntityBean {
 
-  /** The {@link IdProperty property} with the {@link Id primary key}. */
+  /// The [property][IdProperty] with the [primary key][Id].
   public final PkProperty Id;
 
-  /**
-   * The constructor.
-   */
+  /// The constructor.
   public SimpleEntityBean() {
 
     this(null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param idProperty the {@link #Id() ID property}.
-   */
+  /// The constructor.
+  ///
+  /// @param idProperty the [ID property][#Id()].
   public SimpleEntityBean(PkProperty idProperty) {
 
     super();

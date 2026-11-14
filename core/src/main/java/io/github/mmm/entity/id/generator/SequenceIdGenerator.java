@@ -7,20 +7,16 @@ import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.PkIdLong;
 import io.github.mmm.entity.id.sequence.IdSequence;
 
-/**
- * {@link IdGenerator} based on an {@link IdSequence} for {@link PkIdLong}.
- *
- * @since 1.0.0
- */
+/// [IdGenerator] based on an [IdSequence] for [PkIdLong].
+///
+/// @since 1.0.0
 public class SequenceIdGenerator implements IdGenerator {
 
   private final IdSequence sequence;
 
-  /**
-   * The constructor.
-   *
-   * @param sequence the {@link IdSequence}.
-   */
+  /// The constructor.
+  ///
+  /// @param sequence the [IdSequence].
   public SequenceIdGenerator(IdSequence sequence) {
 
     super();

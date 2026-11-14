@@ -6,15 +6,13 @@ import io.github.mmm.base.lang.Builder;
 import io.github.mmm.value.converter.CompositeTypeMapper;
 import io.github.mmm.value.converter.ValueMapper;
 
-/**
- * {@link ValueMapper} to convert from {@link Id} to {@link Id#getPk() primary key} and vice versa.
- *
- * @since 1.0.0
- */
+/// [ValueMapper] to convert from [Id] to [primary key][Id#getPk()] and vice versa.
+///
+/// @since 1.0.0
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
-  /** {@link GenericId} to use as template for {@link Builder}. */
+  /// [GenericId] to use as template for [Builder].
   protected final GenericId idTemplate;
 
   PkMapper(GenericId idTemplate, String suffix, PkMapper next) {
@@ -102,22 +100,18 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
 
   private static class PkMapperId extends PkMapper {
 
-    /**
-     * The constructor.
-     *
-     * @param next the {@link PkMapperRevision}.
-     */
+    /// The constructor.
+    ///
+    /// @param next the [PkMapperRevision].
     public PkMapperId(PkMapperRevision next) {
 
       super(null, "Id", next);
     }
 
-    /**
-     * The constructor.
-     *
-     * @param idTemplate the {@link GenericId} as template.
-     * @param next the {@link PkMapperRevision}.
-     */
+    /// The constructor.
+    ///
+    /// @param idTemplate the [GenericId] as template.
+    /// @param next the [PkMapperRevision].
     public PkMapperId(GenericId idTemplate, PkMapperRevision next) {
 
       super(idTemplate, "Id", next);
@@ -157,10 +151,8 @@ public abstract class PkMapper extends CompositeTypeMapper<Id, Object> {
     }
   }
 
-  /**
-   * @param id the {@link Id} to use as template.
-   * @return the {@link PkMapper}.
-   */
+  /// @param id the [Id] to use as template.
+  /// @return the [PkMapper].
   public static PkMapper of(Id<?> id) {
 
     Objects.requireNonNull(id);

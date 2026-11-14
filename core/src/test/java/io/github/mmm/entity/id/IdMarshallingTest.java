@@ -13,12 +13,10 @@ import io.github.mmm.marshall.MarshallingConfig;
 import io.github.mmm.marshall.StandardFormat;
 import io.github.mmm.marshall.StructuredReader;
 
-/**
- * Test of {@link IdMarshalling}.
- */
+/// Test of [IdMarshalling].
 class IdMarshallingTest extends Assertions {
 
-  /** Test of {@link IdMarshalling} from/to JSON for all types of {@link Id}s. */
+  /// Test of [IdMarshalling] from/to JSON for all types of [Id]s.
   @Test
   void testAllIdTypes() {
 
@@ -41,10 +39,8 @@ class IdMarshallingTest extends Assertions {
     check(new PkIdUuid<>(Entity.class, uuid), "\"" + uuid + "\"");
   }
 
-  /**
-   * Test of {@link IdMarshalling} to JSON for all {@link AbstractVersionId}s with
-   * {@link AbstractVersionId#getRevision() revision} of {@code 0}.
-   */
+  /// Test of [IdMarshalling] to JSON for all [AbstractVersionId]s with
+  /// [revision][AbstractVersionId#getRevision()] of `0`.
   @Test
   void testWriteWithZeroVersion() {
 
@@ -57,10 +53,8 @@ class IdMarshallingTest extends Assertions {
         .isEqualTo("{\"u\":\"" + uuid + "\",\"v\":0}");
   }
 
-  /**
-   * Test of {@link IdMarshalling} to JSON for all {@link AbstractVersionId}s with
-   * {@link AbstractVersionId#getRevision() revision} of {@code 0}.
-   */
+  /// Test of [IdMarshalling] to JSON for all [AbstractVersionId]s with
+  /// [revision][AbstractVersionId#getRevision()] of `0`.
   @Test
   void testWriteWithoutRevision() {
 

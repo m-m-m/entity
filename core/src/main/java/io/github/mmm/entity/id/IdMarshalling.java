@@ -10,9 +10,7 @@ import io.github.mmm.marshall.Marshalling;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 
-/**
- * {@link Marshalling} to read and write {@link Id} values.
- */
+/// [Marshalling] to read and write [Id] values.
 // ID classes and factory work fine without marshalling on module-path
 public interface IdMarshalling extends Marshalling<Id<?>> {
 
@@ -32,26 +30,22 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
     return readObject(reader, null);
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param reader the {@link StructuredReader}.
-   * @param type the {@link Id#getEntityClass() entity type}.
-   * @return the unmarshalled {@link Id}.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param reader the [StructuredReader].
+  /// @param type the [entity type][Id#getEntityClass()].
+  /// @return the unmarshalled [Id].
   default <E> Id<E> readObject(StructuredReader reader, Class<E> type) {
 
     return readObject(reader, IdFactory.get(), type);
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param <P> type of the {@link GenericId#getPk() ID}.
-   * @param <R> type of the {@link GenericId#getRevision() revision}.
-   * @param reader the {@link StructuredReader} to read from.
-   * @param factory the {@link IdFactory} to create {@link Id} instances.
-   * @param entityType the {@link GenericId#getEntityClass() entity type}.
-   * @return the unmarshalled {@link GenericId}.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param <P> type of the [ID][GenericId#getPk()].
+  /// @param <R> type of the [revision][GenericId#getRevision()].
+  /// @param reader the [StructuredReader] to read from.
+  /// @param factory the [IdFactory] to create [Id] instances.
+  /// @param entityType the [entity type][GenericId#getEntityClass()].
+  /// @return the unmarshalled [GenericId].
   @SuppressWarnings("unchecked")
   static <E, P, R extends Comparable<?>> GenericId<E, P, R, ?> readObject(StructuredReader reader,
       IdFactory<P, R> factory, Class<E> entityType) {
@@ -106,9 +100,7 @@ public interface IdMarshalling extends Marshalling<Id<?>> {
     }
   }
 
-  /**
-   * @return the singleton instance of this {@link IdMarshalling}.
-   */
+  /// @return the singleton instance of this [IdMarshalling].
   static IdMarshalling get() {
 
     return IdMarshallingImpl.INSTANCE;

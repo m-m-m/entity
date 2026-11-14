@@ -8,32 +8,26 @@ import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
 import io.github.mmm.validation.main.ValidatorBuilderObject;
 
-/**
- * {@link PropertyBuilder} for {@link IdProperty}.
- *
- * @since 1.0.0
- */
+/// [PropertyBuilder] for [IdProperty].
+///
+/// @since 1.0.0
 public final class PkPropertyBuilder
     extends PropertyBuilder<Id<?>, PkProperty, ValidatorBuilderObject<Id<?>, PkPropertyBuilder>, PkPropertyBuilder> {
 
   private Id<?> id;
 
-  /**
-   * The constructor.
-   *
-   * @param lock the {@link #getLock() lock}.
-   */
+  /// The constructor.
+  ///
+  /// @param lock the [lock][#getLock()].
   public PkPropertyBuilder(PropertyLock lock) {
 
     super(lock);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param lock the {@link #getLock() lock}.
-   * @param idTemplate the {@link Class} reflecting the entity.
-   */
+  /// The constructor.
+  ///
+  /// @param lock the [lock][#getLock()].
+  /// @param idTemplate the [Class] reflecting the entity.
   public PkPropertyBuilder(PropertyLock lock, Id<?> idTemplate) {
 
     super(lock);

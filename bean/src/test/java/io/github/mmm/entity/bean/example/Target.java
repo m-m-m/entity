@@ -6,14 +6,10 @@ import io.github.mmm.entity.bean.attribute.EntityWithKey;
 import io.github.mmm.entity.bean.attribute.EntityWithName;
 import io.github.mmm.entity.bean.attribute.EntityWithTitle;
 
-/**
- * {@link EntityBean} for testing.
- */
+/// [EntityBean] for testing.
 public interface Target extends EntityWithTitle, EntityWithKey, EntityWithName {
 
-  /**
-   * @return new {@link Target}.
-   */
+  /// @return new [Target].
   static Target of() {
 
     return BeanFactory.get().create(Target.class);

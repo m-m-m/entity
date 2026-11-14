@@ -7,132 +7,113 @@ import io.github.mmm.bean.BeanType;
 import io.github.mmm.bean.WritableBean;
 import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.Id;
-import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.id.PkProperty;
 
-/**
- * {@link WritableBean} for an entity that can be loaded from or saved to a database. Can be identified uniquely by its
- * {@link #Id() primary key}.
- *
- * @since 1.0.0
- */
+/// [WritableBean] for an entity that can be loaded from or saved to a database. Can be identified uniquely by its
+/// [primary key][#Id()].
+/// 
+/// @since 1.0.0
 @AbstractInterface
 public interface EntityBean extends WritableBean, Entity {
 
-  /**
-   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
-   * annotate} {@link EntityBean} interface with the name of the database table. If not defined via annotation, the
-   * table name defaults to the {@link Class#getSimpleName() simple name} of the interface. The value of this constant
-   * will never change. You do not have to use this constant to build your annotated key-value pairs.<br>
-   * Example:
-   *
-   * <pre>
-   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("table=CONTACT")
-   * public interface ContactEntity extends EntityBean {
-   *   // ...
-   * }
-   * </pre>
-   *
-   * For further details see {@code io.github.mmm.db.naming.DbNamingStrategy}.
-   */
+  /// [Meta-key][io.github.mmm.base.metainfo.MetaInfo#get(String)] to
+  /// [annotate][io.github.mmm.base.metainfo.MetaInfos] [EntityBean] interface with the name of the database table. If
+  /// not defined via annotation, the table name defaults to the [simple name][Class#getSimpleName()] of the interface.
+  /// The value of this constant will never change. You do not have to use this constant to build your annotated
+  /// key-value pairs. Example:
+  ///
+  /// ```java
+  /// `@`[MetaInfos][io.github.mmm.base.metainfo.MetaInfos]("table=CONTACT")
+  /// public interface ContactEntity extends EntityBean {
+  ///   // ...
+  /// }
+  /// ```
+  ///
+  /// For further details see `io.github.mmm.db.naming.DbNamingStrategy`.
   public static final String META_KEY_TABLE = "table";
 
-  /**
-   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
-   * annotate} {@link io.github.mmm.property.Property} methods (such as {@link #Id()}) with the name of the database
-   * column. If not defined via annotation, the column name defaults to the
-   * {@link io.github.mmm.property.Property#getName() property name}. The value of this constant will never change. You
-   * do not have to use this constant to build your annotated key-value pairs.<br>
-   * Example:
-   *
-   * <pre>
-   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("column=DATE_OF_BIRTH")
-   * LocalDateProperty Birthday();
-   * </pre>
-   *
-   * For further details see {@code io.github.mmm.db.naming.DbNamingStrategy}.
-   */
+  /// [Meta-key][io.github.mmm.base.metainfo.MetaInfo#get(String)] to
+  /// [annotate][io.github.mmm.base.metainfo.MetaInfos] [io.github.mmm.property.Property] methods (such as [#Id()]) with
+  /// the name of the database column. If not defined via annotation, the column name defaults to the
+  /// [property name][io.github.mmm.property.Property#getName()]. The value of this constant will never change. You do
+  /// not have to use this constant to build your annotated key-value pairs. Example:
+  ///
+  /// ```java
+  /// `@`[MetaInfos][io.github.mmm.base.metainfo.MetaInfos]("column=DATE_OF_BIRTH")
+  /// LocalDateProperty Birthday();
+  /// ```
+  ///
+  /// For further details see `io.github.mmm.db.naming.DbNamingStrategy`.
   public static final String META_KEY_COLUMN = "column";
 
-  /**
-   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
-   * annotate} {@link io.github.mmm.property.Property} methods with the database column size. Value has to be an
-   * {@link Integer} indicating the size (e.g. maximum length or number of digits of the value).<br>
-   * Example:
-   *
-   * <pre>
-   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("column_size=32")
-   * StringProperty Name();
-   * </pre>
-   *
-   * For further details see {@code io.github.mmm.db.type.DbType.getSize()}.
-   */
+  /// [Meta-key][io.github.mmm.base.metainfo.MetaInfo#get(String)] to
+  /// [annotate][io.github.mmm.base.metainfo.MetaInfos] [io.github.mmm.property.Property] methods with the database
+  /// column size. Value has to be an [Integer] indicating the size (e.g. maximum length or number of digits of the
+  /// value). Example:
+  ///
+  /// ```java
+  /// `@`[MetaInfos][io.github.mmm.base.metainfo.MetaInfos]("column_size=32")
+  /// StringProperty Name();
+  /// ```
+  ///
+  /// For further details see `io.github.mmm.db.type.DbType.getSize()`.
   public static final String META_KEY_COLUMN_SIZE = "column_size";
 
-  /**
-   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
-   * annotate} {@link io.github.mmm.property.Property} methods with the database column scale. Value has to be an
-   * {@link Integer} indicating the number of fraction digits after decimal sign. Should only be used in combination
-   * with {@link #META_KEY_COLUMN_SIZE column size} and will be ignored otherwise.<br>
-   * Example:
-   *
-   * <pre>
-   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}({"column_size=64", "column_scale=16"})
-   * BigDecimalProperty Value();
-   * </pre>
-   *
-   * For further details see {@code io.github.mmm.db.type.DbType.getScale()}.
-   */
+  /// [Meta-key][io.github.mmm.base.metainfo.MetaInfo#get(String)] to
+  /// [annotate][io.github.mmm.base.metainfo.MetaInfos] [io.github.mmm.property.Property] methods with the database
+  /// column scale. Value has to be an [Integer] indicating the number of fraction digits after decimal sign. Should only
+  /// be used in combination with [column size][#META_KEY_COLUMN_SIZE] and will be ignored otherwise. Example:
+  ///
+  /// ```java
+  /// `@`[MetaInfos][io.github.mmm.base.metainfo.MetaInfos]({"column_size=64", "column_scale=16"})
+  /// BigDecimalProperty Value();
+  /// ```
+  ///
+  /// For further details see `io.github.mmm.db.type.DbType.getScale()`.
   public static final String META_KEY_COLUMN_SCALE = "column_scale";
 
-  /**
-   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
-   * annotate} {@link io.github.mmm.property.Property} methods (e.g.
-   * {@link io.github.mmm.entity.bean.attribute.EntityWithTitle#Title() title} or
-   * {@link io.github.mmm.entity.bean.attribute.EntityWithName#Name() name}) with a score. Such score is a double value
-   * in the range [0, 1] to rank the property for full-text-search. To activate full-text search you typically annotate
-   * a score on the {@link EntityBean} itself that defines the default score for all
-   * {@link io.github.mmm.property.string.StringProperty String properties}. A reasonable default score is e.g.
-   * {@code 0.5} or {@code 0.8} allowing to override specific properties to boost them using a higher score or to reduce
-   * their impact with a lower score. A score of zero ({@code 0}) excludes the property from indexing.
-   */
+  /// [Meta-key][io.github.mmm.base.metainfo.MetaInfo#get(String)] to
+  /// [annotate][io.github.mmm.base.metainfo.MetaInfos] [io.github.mmm.property.Property] methods (e.g.
+  /// [title][io.github.mmm.entity.bean.attribute.EntityWithTitle#Title()] or
+  /// [name][io.github.mmm.entity.bean.attribute.EntityWithName#Name()]) with a score. Such score is a double value in
+  /// the range [0, 1] to rank the property for full-text-search. To activate full-text search you typically annotate a
+  /// score on the [EntityBean] itself that defines the default score for all
+  /// [String properties][io.github.mmm.property.string.StringProperty]. A reasonable default score is e.g. `0.5` or
+  /// `0.8` allowing to override specific properties to boost them using a higher score or to reduce their impact with a
+  /// lower score. A score of zero (`0`) excludes the property from indexing.
   public static final String META_KEY_SCORE = "score";
 
-  /**
-   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
-   * annotate} {@link EntityBean} interface with the {@link Id#getPkClass() type of the primary key}. Possible values
-   * are "long", "string", or "uuid". If not defined via annotation, the type defaults to "long". The value of this
-   * constant will never change. You do not have to use this constant to build your annotated key-value pairs.<br>
-   * Example:
-   *
-   * <pre>
-   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("pk=uuid")
-   * public interface ContactEntity extends EntityBean {
-   *   // ...
-   * }
-   * </pre>
-   */
+  /// [Meta-key][io.github.mmm.base.metainfo.MetaInfo#get(String)] to
+  /// [annotate][io.github.mmm.base.metainfo.MetaInfos] [EntityBean] interface with the [type of the primary
+  /// key][Id#getPkClass()]. Possible values are "long", "string", or "uuid". If not defined via annotation, the type
+  /// defaults to "long". The value of this constant will never change. You do not have to use this constant to build
+  /// your annotated key-value pairs. Example:
+  ///
+  /// ```java
+  /// `@`[MetaInfos][io.github.mmm.base.metainfo.MetaInfos]("pk=uuid")
+  /// public interface ContactEntity extends EntityBean {
+  ///   // ...
+  /// }
+  /// ```
+  ///
   public static final String META_KEY_PK = "pk";
 
-  /**
-   * {@link io.github.mmm.base.metainfo.MetaInfo#get(String) Meta-key} to {@link io.github.mmm.base.metainfo.MetaInfos
-   * annotate} {@link EntityBean} interface with the {@link Id#getRevisionType() type of the revision}. Possible values
-   * are "long" or "instant". If not defined via annotation, the type defaults to "long". The value of this constant
-   * will never change. You do not have to use this constant to build your annotated key-value pairs.<br>
-   * Example:
-   *
-   * <pre>
-   * {@code @}{@link io.github.mmm.base.metainfo.MetaInfos MetaInfos}("revision=instant")
-   * public interface ContactEntity extends EntityBean {
-   *   // ...
-   * }
-   * </pre>
-   */
+  /// [Meta-key][io.github.mmm.base.metainfo.MetaInfo#get(String)] to
+  /// [annotate][io.github.mmm.base.metainfo.MetaInfos] [EntityBean] interface with the [type of the
+  /// revision][Id#getRevisionType()]. Possible values are "long" or "instant". If not defined via annotation, the type
+  /// defaults to "long". The value of this constant will never change. You do not have to use this constant to build
+  /// your annotated key-value pairs. Example:
+  ///
+  /// ```java
+  /// `@`[MetaInfos][io.github.mmm.base.metainfo.MetaInfos]("revision=instant")
+  /// public interface ContactEntity extends EntityBean {
+  ///   // ...
+  /// }
+  /// ```
+  ///
   public static final String META_KEY_REVISION = "revision";
 
-  /**
-   * @return the {@link IdProperty property} with the {@link Id} (primary key) of this entity.
-   */
+  /// @return the [property][PkProperty] with the [Id] (primary key) of this entity.
   default PkProperty Id() {
 
     BeanType type = getType();

@@ -4,28 +4,23 @@ package io.github.mmm.entity.id;
 
 import java.util.Objects;
 
-/**
- * Implementation of {@link AbstractId} that has a {@link #getRevisionType() typed} {@link #getRevision() revision}. It
- * combines a {@link PkId} with the actual {@link #getRevision() revision} for better flexibility.
- *
- * @param <E> type of the identified entity.
- * @param <P> type of the {@link #getPk() primary key}.
- * @param <R> type of the {@link #getRevision() revision}.
- * @param <SELF> type of this class itself for fluent API calls.
- * @since 1.0.0
- */
+/// Implementation of [AbstractId] that has a [typed][#getRevisionType()] [revision][#getRevision()]. It combines a
+/// [PkId] with the actual [revision][#getRevision()] for better flexibility.
+///
+/// @param <E> type of the identified entity.
+/// @param <P> type of the [primary key][#getPk()].
+/// @param <R> type of the [revision][#getRevision()].
+/// @param <SELF> type of this class itself for fluent API calls.
+/// @since 1.0.0
 public abstract class RevisionedId<E, P, R extends Comparable<?>, SELF extends RevisionedId<E, P, R, SELF>>
     extends AbstractId<E, P, R, SELF> {
 
-  /** @see #withoutRevision() */
+  /// @see #withoutRevision()
   protected final PkId<E, P, ?> id;
 
-  /**
-   * The constructor.
-   *
-   * @param id the wrapped {@link PkId} containing {@link #getEntityClass() entity class} and {@link #getPk() primary
-   *        key}.
-   */
+  /// The constructor.
+  ///
+  /// @param id the wrapped [PkId] containing [entity class][#getEntityClass()] and [primary key][#getPk()].
   protected RevisionedId(PkId<E, P, ?> id) {
 
     super();
@@ -76,13 +71,11 @@ public abstract class RevisionedId<E, P, R extends Comparable<?>, SELF extends R
     return newId(newId, revision);
   }
 
-  /**
-   * Internal factory method.
-   *
-   * @param newId the new internal {@link PkId}.
-   * @param newRevision the new {@link #getRevision() revision}.
-   * @return a new instance of this type with the given arguments.
-   */
+  /// Internal factory method.
+  ///
+  /// @param newId the new internal [PkId].
+  /// @param newRevision the new [revision][#getRevision()].
+  /// @return a new instance of this type with the given arguments.
   protected abstract SELF newId(PkId<E, P, ?> newId, R newRevision);
 
   @Override

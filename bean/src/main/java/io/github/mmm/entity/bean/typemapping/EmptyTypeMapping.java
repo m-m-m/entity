@@ -5,11 +5,9 @@ package io.github.mmm.entity.bean.typemapping;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.converter.TypeMapper;
 
-/**
- * Empty implementation of {@link TypeMapping}.
- *
- * @since 1.0.0
- */
+/// Empty implementation of [TypeMapping].
+///
+/// @since 1.0.0
 public class EmptyTypeMapping implements TypeMapping {
 
   private static final EmptyTypeMapping INSTANCE = new EmptyTypeMapping();
@@ -25,9 +23,7 @@ public class EmptyTypeMapping implements TypeMapping {
     return null;
   }
 
-  /**
-   * @return the singleton instance.
-   */
+  /// @return the singleton instance.
   public static TypeMapping get() {
 
     return INSTANCE;

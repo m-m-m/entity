@@ -5,14 +5,12 @@ package io.github.mmm.entity.bean.attribute;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.property.string.StringProperty;
 
-/**
- * {@link EntityBean} that has a {@link #Code()}.
- *
- * @since 1.0.0
- */
+/// [EntityBean] that has a [#Code()].
+///
+/// @since 1.0.0
 public abstract interface EntityWithCode extends EntityBean {
 
-  /** @return the code that acts as an externally given identifier. */
+  /// @return the code that acts as an externally given identifier.
   StringProperty Code();
 
 }

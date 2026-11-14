@@ -2,31 +2,25 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-/**
- * Factory to #create
- *
- * @param <P> type of the {@link Id#getPk() primary key}.
- * @param <R> type of the {@link Id#getRevision() revision}.
- *
- * @since 1.0.0
- */
+/// Factory to #create
+///
+/// @param <P> type of the [primary key][Id#getPk()].
+/// @param <R> type of the [revision][Id#getRevision()].
+///
+/// @since 1.0.0
 public interface IdFactory<P, R extends Comparable<?>> {
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param entityType the {@link Id#getEntityClass() entity type}.
-   * @param pk the {@link Id#getPk() primary key}.
-   * @param revision the {@link Id#getRevision() revision}. May be {@code null}.
-   * @return the {@link Id} for the given values.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param entityType the [entity type][Id#getEntityClass()].
+  /// @param pk the [primary key][Id#getPk()].
+  /// @param revision the [revision][Id#getRevision()]. May be `null`.
+  /// @return the [Id] for the given values.
   <E> GenericId<E, P, R, ?> create(Class<E> entityType, P pk, R revision);
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param entityType the {@link Id#getEntityClass() entity type}.
-   * @param pkString the {@link Id#getAsString() primary key as string}.
-   * @return the parsed {@link Id}.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param entityType the [entity type][Id#getEntityClass()].
+  /// @param pkString the [primary key as string][Id#getAsString()].
+  /// @return the parsed [Id].
   default <E> GenericId<E, P, R, ?> create(Class<E> entityType, String pkString) {
 
     String id = null;
@@ -43,13 +37,11 @@ public interface IdFactory<P, R extends Comparable<?>> {
     return createGeneric(entityType, id, revision);
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param entityType the {@link Id#getEntityClass() entity type}.
-   * @param pk the {@link Id#getPk() primary key}.
-   * @param revision the {@link Id#getRevision() revision}. May be {@code null}.
-   * @return the new {@link AbstractId} for the given values.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param entityType the [entity type][Id#getEntityClass()].
+  /// @param pk the [primary key][Id#getPk()].
+  /// @param revision the [revision][Id#getRevision()]. May be `null`.
+  /// @return the new [AbstractId] for the given values.
   @SuppressWarnings("unchecked")
   default <E> GenericId<E, P, R, ?> createGeneric(Class<E> entityType, Object pk, Object revision) {
 
@@ -62,34 +54,26 @@ public interface IdFactory<P, R extends Comparable<?>> {
     return create(entityType, (P) pk, (R) revision);
   }
 
-  /**
-   * @param idString the {@link Id#getAsString() ID as string}.
-   * @return the parsed {@link Id#getPk() ID}.
-   */
+  /// @param idString the [ID as string][Id#getAsString()].
+  /// @return the parsed [ID][Id#getPk()].
   P parsePk(String idString);
 
-  /**
-   * @param revisionString the {@link Id#getRevisionAsString() revision as string}.
-   * @return the parsed {@link Id#getRevision() revision}.
-   */
+  /// @param revisionString the [revision as string][Id#getRevisionAsString()].
+  /// @return the parsed [revision][Id#getRevision()].
   R parseRevision(String revisionString);
 
-  /**
-   * @param <E> type of the identified {@link io.github.mmm.entity.Entity entity}.
-   * @param <ID> type of {@code idClass}.
-   * @param entityType the {@link Id#getEntityClass() entity type}. May be {@code null}.
-   * @param pkClass {@link Class} reflecting the {@link Id} implementation. the May be {@code null} or abstract.
-   * @return the {@link Id#isEmpty() empty} {@link GenericId} instance.
-   */
+  /// @param <E> type of the identified [entity][io.github.mmm.entity.Entity].
+  /// @param <ID> type of `idClass`.
+  /// @param entityType the [entity type][Id#getEntityClass()]. May be `null`.
+  /// @param pkClass [Class] reflecting the [Id] implementation. the May be `null` or abstract.
+  /// @return the [empty][Id#isEmpty()] [GenericId] instance.
   @SuppressWarnings("rawtypes")
   default <E, ID extends Id> GenericId<E, ?, ?, ?> createEmpty(Class<E> entityType, Class<ID> pkClass) {
 
     return GenericIdFactory.empty(entityType, pkClass);
   }
 
-  /**
-   * @return a generic instance of {@link IdFactory}.
-   */
+  /// @return a generic instance of [IdFactory].
   static IdFactory<Object, Comparable<?>> get() {
 
     return GenericIdFactory.INSTANCE;

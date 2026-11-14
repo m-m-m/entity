@@ -9,15 +9,11 @@ import io.github.mmm.entity.bean.example.Target;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.link.Link;
 
-/**
- * Test of {@link PropertyFactoryLink} and {@link LinkProperty}.
- */
+/// Test of [PropertyFactoryLink] and [LinkProperty].
 class PropertyFactoryLinkTest extends Assertions {
 
-  /**
-   * Test of that {@link BeanFactory#create(Class) bean creation} using {@link PropertyFactoryLink} will determine and
-   * assign {@link LinkProperty#getEntityClass()} correctly.
-   */
+  /// Test of that [bean creation][BeanFactory#create(Class)] using [PropertyFactoryLink] will determine and
+  /// assign [LinkProperty#getEntityClass()] correctly.
   @Test
   void testLinkCreationWithEntityType() {
 
@@ -30,7 +26,7 @@ class PropertyFactoryLinkTest extends Assertions {
     assertThat(targetProperty.get().isEmpty()).isTrue();
   }
 
-  /** Test of {@link LinkProperty#set(Object)} with {@link Link} of wrong entity type. */
+  /// Test of [LinkProperty#set(Object)] with [Link] of wrong entity type.
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Test
   void testSetLinkOfWrongTypeFails() {
@@ -48,7 +44,7 @@ class PropertyFactoryLinkTest extends Assertions {
     }
   }
 
-  /** Test of {@link LinkProperty#set(Object)} with {@link Link} of correct entity type. */
+  /// Test of [LinkProperty#set(Object)] with [Link] of correct entity type.
   @Test
   void testSetLinkWithCorrectTypeSucceeds() {
 

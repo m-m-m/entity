@@ -6,18 +6,14 @@ import io.github.mmm.bean.AbstractBean;
 import io.github.mmm.bean.StandardPropertyBuilders;
 import io.github.mmm.entity.property.builder.EntityPropertyBuilders;
 
-/**
- * Implementation of {@link EntityPropertyBuilders}.
- * 
- * @since 1.0.0
- */
+/// Implementation of [EntityPropertyBuilders].
+///
+/// @since 1.0.0
 public class EntityPropertyBuildersImpl extends StandardPropertyBuilders implements EntityPropertyBuilders {
 
-  /**
-   * The constructor.
-   *
-   * @param bean the
-   */
+  /// The constructor.
+  ///
+  /// @param bean the
   public EntityPropertyBuildersImpl(AbstractBean bean) {
 
     super(bean);

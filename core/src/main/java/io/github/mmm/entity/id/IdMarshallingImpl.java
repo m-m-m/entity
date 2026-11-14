@@ -2,12 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-/**
- * Default implementation of {@link IdMarshalling}.
- */
+/// Default implementation of [IdMarshalling].
 final class IdMarshallingImpl implements IdMarshalling {
 
-  /** The signleton instance. */
+  /// The signleton instance.
   static final IdMarshallingImpl INSTANCE = new IdMarshallingImpl();
 
   private IdMarshallingImpl() {

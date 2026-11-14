@@ -6,26 +6,20 @@ import io.github.mmm.bean.AbstractInterface;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.property.link.LinkProperty;
 
-/**
- * An {@link Edge} connects two {@link EntityBean entities} as a directed many-to-many relation. It links from an
- * {@link #In() incoming} to an {@link #Out() outgoing} {@link EntityBean entity}.
- *
- * @param <I> type of {@link #In()}.
- * @param <O> type of {@link #Out()}.
- *
- * @since 1.0.0
- */
+/// An [Edge] connects two [entities][EntityBean] as a directed many-to-many relation. It links from an
+/// [incoming][#In()] to an [outgoing][#Out()] [entity][EntityBean].
+///
+/// @param <I> type of [#In()].
+/// @param <O> type of [#Out()].
+///
+/// @since 1.0.0
 @AbstractInterface
 public interface Edge<I extends EntityBean, O extends EntityBean> extends EntityBean {
 
-  /**
-   * @return {@link Id} of the incoming {@link EntityBean entity} (source).
-   */
+  /// @return the [Id] of the incoming [entity][EntityBean] (source).
   LinkProperty<I> In();
 
-  /**
-   * @return {@link Id} of the outgoing {@link EntityBean entity} (target).
-   */
+  /// @return the [Id] of the outgoing [entity][EntityBean] (target).
   LinkProperty<O> Out();
 
 }

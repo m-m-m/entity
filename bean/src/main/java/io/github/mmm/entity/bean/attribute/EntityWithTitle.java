@@ -5,15 +5,11 @@ import io.github.mmm.bean.AbstractInterface;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.property.string.StringProperty;
 
-/**
- * Interface for an {@link EntityBean} having a {@link #Title()}.
- */
+/// Interface for an [EntityBean] having a [#Title()].
 @AbstractInterface
 public abstract interface EntityWithTitle extends EntityBean {
 
-  /**
-   * @return the title (display name) of this entity.
-   */
+  /// @return the title (display name) of this entity.
   @MetaInfos("score=1")
   StringProperty Title();
 

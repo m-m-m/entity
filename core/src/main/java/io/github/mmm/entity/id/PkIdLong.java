@@ -2,12 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-/**
- * Implementation of {@link PkId} using {@link Long} as type for the {@link #getPk() primary key}.
- *
- * @param <E> type of the identified entity.
- * @since 1.0.0
- */
+/// Implementation of [PkId] using [Long] as type for the [primary key][#getPk()].
+///
+/// @param <E> type of the identified entity.
+/// @since 1.0.0
 public final class PkIdLong<E> extends PkId<E, Long, PkIdLong<E>> {
 
   @SuppressWarnings("rawtypes")
@@ -15,12 +13,10 @@ public final class PkIdLong<E> extends PkId<E, Long, PkIdLong<E>> {
 
   private final Long pk;
 
-  /**
-   * The constructor.
-   *
-   * @param type the {@link #getEntityClass() type}.
-   * @param pk the {@link #getPk() primary key}. See {@link #getPkAsLong()}.
-   */
+  /// The constructor.
+  ///
+  /// @param type the [type][#getEntityClass()].
+  /// @param pk the [primary key][#getPk()]. See [#getPkAsLong()].
   public PkIdLong(Class<E> type, Long pk) {
 
     super(type);
@@ -45,9 +41,7 @@ public final class PkIdLong<E> extends PkId<E, Long, PkIdLong<E>> {
     return Long.class;
   }
 
-  /**
-   * @return the {@link #getPk() primary key} as primitive {@code long} value.
-   */
+  /// @return the [primary key][#getPk()] as primitive `long` value.
   public long getPkAsLong() {
 
     if (this.pk == null) {
@@ -77,42 +71,34 @@ public final class PkIdLong<E> extends PkId<E, Long, PkIdLong<E>> {
     return PROPERTY_PK_LONG;
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @return the {@link #isEmpty() empty} template of this class.
-   */
+  /// @param <E> type of the identified entity.
+  /// @return the [empty][#isEmpty()] template of this class.
   public static <E> PkIdLong<E> getEmpty() {
 
     return EMPTY;
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param entityType the {@link #getEntityClass() entity type}.
-   * @return the {@link #isEmpty() empty} template of this class.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param entityType the [entity type][#getEntityClass()].
+  /// @return the [empty][#isEmpty()] template of this class.
   public static <E> PkIdLong<E> getEmpty(Class<E> entityType) {
 
     PkIdLong<E> empty = getEmpty();
     return empty.withEntityType(entityType);
   }
 
-  /**
-   * @param <E> type of the referenced entity.
-   * @param pk the actual {@link #getPk() primary key}.
-   * @return the {@link PkIdLong}.
-   */
+  /// @param <E> type of the referenced entity.
+  /// @param pk the actual [primary key][#getPk()].
+  /// @return the [PkIdLong].
   static <E> PkIdLong<E> of(Long pk) {
 
     return of(pk, null);
   }
 
-  /**
-   * @param <E> type of the referenced entity.
-   * @param pk the actual {@link #getPk() primary key}.
-   * @param entityClass the {@link #getEntityClass() entity class}.
-   * @return the {@link PkIdLong}.
-   */
+  /// @param <E> type of the referenced entity.
+  /// @param pk the actual [primary key][#getPk()].
+  /// @param entityClass the [entity class][#getEntityClass()].
+  /// @return the [PkIdLong].
   public static <E> PkIdLong<E> of(Long pk, Class<E> entityClass) {
 
     if (pk == null) {

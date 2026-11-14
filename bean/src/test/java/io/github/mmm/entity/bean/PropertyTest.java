@@ -14,12 +14,10 @@ import io.github.mmm.property.factory.PropertyFactoryManager;
 import io.github.mmm.value.observable.ObservableEvent;
 import io.github.mmm.value.observable.ObservableEventListener;
 
-/**
- * Abstract test case for testing sub-classes of {@link Property}.
- *
- * @param <V> type of the {@link Property#get() value}.
- * @param <P> type of the {@link Property}.
- */
+/// Abstract test case for testing sub-classes of [Property].
+///
+/// @param <V> type of the [value][Property#get()].
+/// @param <P> type of the [Property].
 public abstract class PropertyTest<V, P extends Property<V>> extends Assertions {
 
   private static final String PROPERTY_NAME = "name123";
@@ -32,25 +30,21 @@ public abstract class PropertyTest<V, P extends Property<V>> extends Assertions 
 
   private final boolean createByPropertyClass;
 
-  /**
-   * The constructor.
-   *
-   * @param exampleValue the example value used for testing. May not be {@code null}.
-   * @param propertyClass the {@link Class} reflecting the {@link Property} to test.
-   */
+  /// The constructor.
+  ///
+  /// @param exampleValue the example value used for testing. May not be `null`.
+  /// @param propertyClass the [Class] reflecting the [Property] to test.
   public PropertyTest(V exampleValue, Class<P> propertyClass) {
 
     this(exampleValue, propertyClass, false);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param exampleValue the example value used for testing. May not be {@code null}.
-   * @param propertyClass the {@link Class} reflecting the {@link Property} to test.
-   * @param createByPropertyClass - {@code true} to create the property to test from the given {@code propertyClass},
-   *        {@code false} otherwise (to create from {@link Class} of {@code exampleValue}).
-   */
+  /// The constructor.
+  ///
+  /// @param exampleValue the example value used for testing. May not be `null`.
+  /// @param propertyClass the [Class] reflecting the [Property] to test.
+  /// @param createByPropertyClass - `true` to create the property to test from the given `propertyClass`, `false`
+  ///        otherwise (to create from [Class] of `exampleValue`).
   @SuppressWarnings("unchecked")
   public PropertyTest(V exampleValue, Class<P> propertyClass, boolean createByPropertyClass) {
 
@@ -61,7 +55,7 @@ public abstract class PropertyTest<V, P extends Property<V>> extends Assertions 
     this.createByPropertyClass = createByPropertyClass;
   }
 
-  /** Test via {@link PropertyFactoryManager#create(Class, String)}. */
+  /// Test via [PropertyFactoryManager#create(Class, String)].
   @Test
   void testPropertyFromFactory() {
 
@@ -130,13 +124,10 @@ public abstract class PropertyTest<V, P extends Property<V>> extends Assertions 
     assertThat(property2.isEqual(property)).isTrue();
   }
 
-  /**
-   * Verifies the {@link WritableProperty#get() value} of a {@link WritableProperty#getReadOnly() read-only}
-   * {@link Property} pointing to the example value. This method has to be overridden for tests on
-   * {@link Property#isValueMutable() mutable values}.
-   *
-   * @param readOnly the {@link WritableProperty#getReadOnly() read-only property view}.
-   */
+  /// Verifies the [value][WritableProperty#get()] of a [read-only][WritableProperty#getReadOnly()] [Property] pointing
+  /// to the example value. This method has to be overridden for tests on [mutable values][Property#isValueMutable()].
+  ///
+  /// @param readOnly the [read-only property view][WritableProperty#getReadOnly()].
   protected void verifyReadOnlyValue(P readOnly) {
 
     throw new IllegalStateException("Property has mutable value (" + readOnly.getValueClass().getName() + ") but test ("
@@ -149,12 +140,9 @@ public abstract class PropertyTest<V, P extends Property<V>> extends Assertions 
     return property.getClass().getSimpleName() + "[" + PROPERTY_NAME + "=" + valueAsString + "]";
   }
 
-  /**
-   * @param property the {@link WritableProperty} to test.
-   * @return the {@link Object#toString() toString()} representation of the {@link WritableProperty#get() property
-   *         value} for the expected {@link WritableProperty#toString() toString()} representation of the
-   *         {@link WritableProperty}.
-   */
+  /// @param property the [WritableProperty] to test.
+  /// @return the [toString()][Object#toString()] representation of the [property value][WritableProperty#get()] for the
+  ///         expected [toString()][WritableProperty#toString()] representation of the [WritableProperty].
   protected String expectedPropertyValueToString(WritableProperty<V> property) {
 
     return property.get().toString();

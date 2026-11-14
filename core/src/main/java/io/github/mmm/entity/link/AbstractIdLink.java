@@ -8,26 +8,22 @@ import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 
-/**
- * Extends {@link AbstractLink} with the {@link Id} property.
- *
- * @param <E> the generic type of the {@link #getEntity() linked} entity.
- *
- * @since 1.0.0
- */
+/// Extends [AbstractLink] with the [Id] property.
+///
+/// @param <E> the generic type of the [linked][#getEntity()] entity.
+///
+/// @since 1.0.0
 public abstract class AbstractIdLink<E> extends AbstractLink<E> {
 
   private /* final */ GenericId<E, ?, ?, ?> id;
 
-  /** @see #getEntity() */
+  /// @see #getEntity()
   private E entity;
 
-  /**
-   * The constructor.
-   *
-   * @param id - see {@link #getId()}.
-   * @param entity - see {@link #getEntity()}.
-   */
+  /// The constructor.
+  ///
+  /// @param id - see [#getId()].
+  /// @param entity - see [#getEntity()].
   @SuppressWarnings("unchecked")
   protected AbstractIdLink(Id<E> id, E entity) {
 
@@ -69,10 +65,8 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
     return this.id;
   }
 
-  /**
-   * @return {@code true} if the {@link Id#getRevision() revision} should be {@link GenericId#withoutRevision() removed}
-   *         from the {@link Id}, {@code false} otherwise.
-   */
+  /// @return `true` if the [revision][Id#getRevision()] should be [removed][GenericId#withoutRevision()]
+  ///         from the [Id], `false` otherwise.
   protected boolean isRemoveRevision() {
 
     return false;
@@ -90,10 +84,8 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
     return this.entity;
   }
 
-  /**
-   * @param resolver the resolver {@link Function}.
-   * @return the {@link #getEntity() target entity}.
-   */
+  /// @param resolver the resolver [Function].
+  /// @return the [target entity][#getEntity()].
   protected synchronized E updateTarget(Function<Id<E>, E> resolver) {
 
     if ((this.entity == null) && (resolver != null)) {
@@ -103,13 +95,11 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
 
   }
 
-  /**
-   * @param type the new value of {@link Id#getEntityClass()}. Exact type should actually be {@link Class}{@literal <E>}
-   *        but this prevents simple usage.
-   * @return a copy of this {@link Link} with the given {@link Id#getEntityClass() type} or this {@link Link} itself if
-   *         already satisfying.
-   * @see GenericId#withEntityType(Class)
-   */
+  /// @param type the new value of [Id#getEntityClass()]. Exact type should actually be [Class]`<E>`
+  ///        but this prevents simple usage.
+  /// @return a copy of this [Link] with the given [type][Id#getEntityClass()] or this [Link] itself if
+  ///         already satisfying.
+  /// @see GenericId#withEntityType(Class)
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public AbstractIdLink<E> withType(Class<?> type) {
 
@@ -120,9 +110,7 @@ public abstract class AbstractIdLink<E> extends AbstractLink<E> {
     return withId(newId);
   }
 
-  /**
-   * @param newId the new {@link #getId()}.
-   * @return a copy of this link with the given {@link Id}.
-   */
+  /// @param newId the new [#getId()].
+  /// @return a copy of this link with the given [Id].
   protected abstract AbstractIdLink<E> withId(GenericId<E, ?, ?, ?> newId);
 }

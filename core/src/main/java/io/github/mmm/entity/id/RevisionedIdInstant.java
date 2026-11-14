@@ -4,26 +4,20 @@ package io.github.mmm.entity.id;
 
 import java.time.Instant;
 
-/**
- * Implementation of {@link RevisionedId} with {@link Instant} as {@link #getRevisionType() revision type}. On
- * {@link #updateRevision() update} the {@link Instant#now() current timestamp} is used as {@link #getRevision()
- * revision}.
- *
- * @param <E> type of the identified entity.
- * @param <P> type of the {@link #getPk() primary key}.
- * @since 1.0.0
- */
+/// Implementation of [RevisionedId] with [Instant] as [revision type][#getRevisionType()]. On
+/// [update][#updateRevision()] the [current timestamp][Instant#now()] is used as [revision][#getRevision()].
+///
+/// @param <E> type of the identified entity.
+/// @param <P> type of the [primary key][#getPk()].
+/// @since 1.0.0
 public final class RevisionedIdInstant<E, P> extends RevisionedId<E, P, Instant, RevisionedIdInstant<E, P>> {
 
   private final Instant revision;
 
-  /**
-   * The constructor.
-   *
-   * @param id the wrapped {@link PkId} containing {@link #getEntityClass() entity class} and {@link #getPk() primary
-   *        key}.
-   * @param revision the {@link #getRevision() revision}.
-   */
+  /// The constructor.
+  ///
+  /// @param id the wrapped [PkId] containing [entity class][#getEntityClass()] and [primary key][#getPk()].
+  /// @param revision the [revision][#getRevision()].
   public RevisionedIdInstant(PkId<E, P, ?> id, Instant revision) {
 
     super(id);

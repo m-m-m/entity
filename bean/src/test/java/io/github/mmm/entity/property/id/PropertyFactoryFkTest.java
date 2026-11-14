@@ -12,15 +12,11 @@ import io.github.mmm.entity.id.RevisionedIdVersion;
 import io.github.mmm.entity.link.Link;
 import io.github.mmm.entity.property.link.LinkProperty;
 
-/**
- * Test of {@link PropertyFactoryFk} and {@link FkProperty}.
- */
+/// Test of [PropertyFactoryFk] and [FkProperty].
 class PropertyFactoryFkTest extends Assertions {
 
-  /**
-   * Test of that {@link BeanFactory#create(Class) bean creation} using {@link PropertyFactoryFk} will determine and
-   * assign {@link Id#getEntityClass()} correctly.
-   */
+  /// Test of that [bean creation][BeanFactory#create(Class)] using [PropertyFactoryFk] will determine and
+  /// assign [Id#getEntityClass()] correctly.
   @Test
   void testLinkCreationWithEntityType() {
 
@@ -35,7 +31,7 @@ class PropertyFactoryFkTest extends Assertions {
     assertThat(id.getRevision()).isNull();
   }
 
-  /** Test of {@link LinkProperty#set(Object)} with {@link Link} of wrong entity type. */
+  /// Test of [LinkProperty#set(Object)] with [Link] of wrong entity type.
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Test
   void testSetFkOfWrongTypeFails() {
@@ -54,7 +50,7 @@ class PropertyFactoryFkTest extends Assertions {
     }
   }
 
-  /** Test of {@link LinkProperty#set(Object)} with {@link Link} of correct entity type. */
+  /// Test of [LinkProperty#set(Object)] with [Link] of correct entity type.
   @Test
   void testSetLinkWithCorrectTypeSucceeds() {
 

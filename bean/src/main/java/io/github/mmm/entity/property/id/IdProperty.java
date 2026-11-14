@@ -12,25 +12,21 @@ import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.object.SimpleProperty;
 
-/**
- * {@link SimpleProperty} with {@link Id} {@link #get() value} pointing to an entity.
- *
- * @param <V> type of the {@link #get() value}.
- * @since 1.0.0
- */
+/// [SimpleProperty] with [Id] [value][#get()] pointing to an entity.
+///
+/// @param <V> type of the [value][#get()].
+/// @since 1.0.0
 public abstract class IdProperty<V extends Id<?>> extends SimpleProperty<V> {
 
   private V value;
 
   private Class<?> entityClass;
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param id the initial {@link #get() value}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
+  /// The constructor.
+  ///
+  /// @param name the [name][#getName()].
+  /// @param id the initial [value][#get()].
+  /// @param metadata the [metadata][#getMetadata()].
   @SuppressWarnings("unchecked")
   public IdProperty(String name, V id, PropertyMetadata<V> metadata) {
 

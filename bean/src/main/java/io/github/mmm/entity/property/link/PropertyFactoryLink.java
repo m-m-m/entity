@@ -11,13 +11,11 @@ import io.github.mmm.property.factory.AbstractPropertyFactory;
 import io.github.mmm.property.factory.PropertyFactory;
 import io.github.mmm.property.factory.PropertyTypeInfo;
 
-/**
- * Implementation of {@link PropertyFactory} for {@link LinkProperty}.
- *
- * @param <E> the generic type of the {@link Link#getEntity() linked entity}.
- *
- * @since 1.0.0
- */
+/// Implementation of [PropertyFactory] for [LinkProperty].
+///
+/// @param <E> the generic type of the [linked entity][Link#getEntity()].
+///
+/// @since 1.0.0
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class PropertyFactoryLink<E extends EntityBean> extends AbstractPropertyFactory<Link<E>, LinkProperty<E>> {
 

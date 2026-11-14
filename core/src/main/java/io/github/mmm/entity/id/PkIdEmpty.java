@@ -2,24 +2,20 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.mmm.entity.id;
 
-/**
- * Empty implementation of {@link PkId} using as placeholder.
- *
- * @param <E> type of the identified entity.
- * @param <SELF> type of this class itself for fluent API calls.
- * @since 1.0.0
- */
+/// Empty implementation of [PkId] using as placeholder.
+///
+/// @param <E> type of the identified entity.
+/// @param <SELF> type of this class itself for fluent API calls.
+/// @since 1.0.0
 public final class PkIdEmpty<E, SELF extends PkId<E, Object, SELF>> extends PkId<E, Object, SELF> {
 
-  /** The empty instance. */
+  /// The empty instance.
   @SuppressWarnings("rawtypes")
   private static final PkIdEmpty EMPTY = new PkIdEmpty<>(null);
 
-  /**
-   * The constructor.
-   *
-   * @param type the {@link #getEntityClass() type}.
-   */
+  /// The constructor.
+  ///
+  /// @param type the [type][#getEntityClass()].
   public PkIdEmpty(Class<E> type) {
 
     super(type);
@@ -71,10 +67,8 @@ public final class PkIdEmpty<E, SELF extends PkId<E, Object, SELF>> extends PkId
     return null;
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @return the {@link #isEmpty() empty} instance of this class.
-   */
+  /// @param <E> type of the identified entity.
+  /// @return the [empty][#isEmpty()] instance of this class.
   public static <E> PkIdEmpty<E, ?> getEmpty() {
 
     return EMPTY;

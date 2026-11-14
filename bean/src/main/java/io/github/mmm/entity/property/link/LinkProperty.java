@@ -27,15 +27,12 @@ import io.github.mmm.value.PropertyPath;
 import io.github.mmm.value.ReadableValue;
 import io.github.mmm.value.converter.TypeMapper;
 
-/**
- * {@link ObjectProperty} with {@link Link} {@link #getValue() value} {@link Link#getEntity() pointing to} an
- * {@link io.github.mmm.entity.bean.EntityBean entity}.
- *
- * @param <E> the generic type of the {@link Link#getEntity() linked} {@link io.github.mmm.entity.bean.EntityBean
- *        entity}.
- *
- * @since 1.0.0
- */
+/// [ObjectProperty] with [Link] [value][#getValue()] [pointing to][Link#getEntity()] an
+/// [entity][io.github.mmm.entity.bean.EntityBean].
+///
+/// @param <E> the generic type of the [linked][Link#getEntity()] [entity][io.github.mmm.entity.bean.EntityBean].
+///
+/// @since 1.0.0
 public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> {
 
   private Class<E> entityClass;
@@ -44,53 +41,45 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
 
   private LinkMapper typeMapper;
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param entityClass the optional {@link Class} of the linked entity.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
+  /// The constructor.
+  ///
+  /// @param name the [name][#getName()].
+  /// @param entityClass the optional [Class] of the linked entity.
+  /// @param metadata the [metadata][#getMetadata()].
   public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata) {
 
     this(name, entityClass, metadata, null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param entityClass the optional {@link Class} of the linked entity.
-   * @param metadata the {@link #getMetadata() metadata}.
-   * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
-   */
+  /// The constructor.
+  ///
+  /// @param name the [name][#getName()].
+  /// @param entityClass the optional [Class] of the linked entity.
+  /// @param metadata the [metadata][#getMetadata()].
+  /// @param resolver the optional [resolver function][IdLink#of(Id, Function)].
   public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata,
       Function<Id<E>, E> resolver) {
 
     this(name, entityClass, null, metadata, resolver);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param value the (initial) {@link #get() value}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
+  /// The constructor.
+  ///
+  /// @param name the [name][#getName()].
+  /// @param value the (initial) [value][#get()].
+  /// @param metadata the [metadata][#getMetadata()].
   public LinkProperty(String name, Link<E> value, PropertyMetadata<Link<E>> metadata) {
 
     this(name, null, value, metadata, null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param entityClass the optional {@link Class} of the linked entity.
-   * @param value the (initial) {@link #get() value}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
-   */
+  /// The constructor.
+  ///
+  /// @param name the [name][#getName()].
+  /// @param entityClass the optional [Class] of the linked entity.
+  /// @param value the (initial) [value][#get()].
+  /// @param metadata the [metadata][#getMetadata()].
+  /// @param resolver the optional [resolver function][IdLink#of(Id, Function)].
   @SuppressWarnings({ "rawtypes", "unchecked" })
   protected LinkProperty(String name, Class<E> entityClass, Link<E> value, PropertyMetadata<Link<E>> metadata,
       Function<Id<E>, E> resolver) {
@@ -144,10 +133,8 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     super.doSet(newValue);
   }
 
-  /**
-   * @return the linked {@link EntityBean entity}.
-   * @see Link#getEntity()
-   */
+  /// @return the linked [entity][EntityBean].
+  /// @see Link#getEntity()
   public E getEntity() {
 
     Link<E> link = get();
@@ -157,18 +144,14 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     return link.getEntity();
   }
 
-  /**
-   * @param entity the new value of {@link #getEntity()}.
-   */
+  /// @param entity the new value of [#getEntity()].
   public void setEntity(E entity) {
 
     Link<E> link = Link.of(entity);
     set(link);
   }
 
-  /**
-   * @return the {@link Id#getEntityClass() entity class}.
-   */
+  /// @return the [entity class][Id#getEntityClass()].
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Class<E> getEntityClass() {
 
@@ -239,33 +222,27 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     LinkMarshalling.get().writeObject(writer, link);
   }
 
-  /**
-   * @see #eq(Object)
-   * @param other the literal {@link Id} to compare with using {@link PredicateOperator#EQ = (equal)}.
-   * @return the resulting {@link CriteriaPredicate}.
-   */
+  /// @see #eq(Object)
+  /// @param other the literal [Id] to compare with using [= (equal)][PredicateOperator#EQ].
+  /// @return the resulting [CriteriaPredicate].
   public CriteriaPredicate eq(Id<E> other) {
 
     return eq(Link.of(other));
   }
 
-  /**
-   * @see #eq(Object)
-   * @param other the {@link IdProperty} to compare with using {@link PredicateOperator#EQ = (equal)}.
-   * @return the resulting {@link CriteriaPredicate}.
-   */
+  /// @see #eq(Object)
+  /// @param other the [IdProperty] to compare with using [= (equal)][PredicateOperator#EQ].
+  /// @return the resulting [CriteriaPredicate].
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public CriteriaPredicate eq(IdProperty other) {
 
     return predicate((ReadableProperty) this, PredicateOperator.EQ, (PropertyPath) other);
   }
 
-  /**
-   * @see #eq(Object)
-   * @param other the literal {@link Entity} whose {@link Entity#getId() ID} to compare with using
-   *        {@link PredicateOperator#EQ = (equal)}.
-   * @return the resulting {@link CriteriaPredicate}.
-   */
+  /// @see #eq(Object)
+  /// @param other the literal [Entity] whose [ID][Entity#getId()] to compare with using
+  ///        [= (equal)][PredicateOperator#EQ].
+  /// @return the resulting [CriteriaPredicate].
   public CriteriaPredicate eq(E other) {
 
     if ((other != null) && (other.getId() == null)) {
@@ -274,22 +251,18 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     return eq(Link.of(other));
   }
 
-  /**
-   * @see #neq(Object)
-   * @param other the literal {@link Id} to compare with using {@link PredicateOperator#NEQ != (not-equal)}.
-   * @return the resulting {@link CriteriaPredicate}.
-   */
+  /// @see #neq(Object)
+  /// @param other the literal [Id] to compare with using [!= (not-equal)][PredicateOperator#NEQ].
+  /// @return the resulting [CriteriaPredicate].
   public CriteriaPredicate neq(Id<E> other) {
 
     return neq(Link.of(other));
   }
 
-  /**
-   * @see #neq(Object)
-   * @param other the literal {@link Entity} whose {@link Entity#getId() ID} to compare with using
-   *        {@link PredicateOperator#NEQ != (not-equal)}.
-   * @return the resulting {@link CriteriaPredicate}.
-   */
+  /// @see #neq(Object)
+  /// @param other the literal [Entity] whose [ID][Entity#getId()] to compare with using
+  ///        [!= (not-equal)][PredicateOperator#NEQ].
+  /// @return the resulting [CriteriaPredicate].
   public CriteriaPredicate neq(E other) {
 
     if ((other != null) && (other.getId() == null)) {
@@ -298,11 +271,9 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     return neq(Link.of(other));
   }
 
-  /**
-   * @see #neq(Object)
-   * @param other the {@link IdProperty} to compare with using {@link PredicateOperator#NEQ != (not-equal)}.
-   * @return the resulting {@link CriteriaPredicate}.
-   */
+  /// @see #neq(Object)
+  /// @param other the [IdProperty] to compare with using [!= (not-equal)][PredicateOperator#NEQ].
+  /// @return the resulting [CriteriaPredicate].
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public CriteriaPredicate neq(IdProperty other) {
 
@@ -315,13 +286,11 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     return CriteriaPredicate.of(property1, op, property2);
   }
 
-  /**
-   * <b>ATTENTION:<b><br>
-   * This is an internal method for framework code.
-   *
-   * @param resolver new resolver {@link Function}.
-   * @see IdLink#setResolver(Function)
-   */
+  /// **ATTENTION:**
+  /// This is an internal method for framework code.
+  ///
+  /// @param resolver new resolver [Function].
+  /// @see IdLink#setResolver(Function)
   @SuppressWarnings("unchecked")
   public void setResolver(Function<Id<E>, E> resolver) {
 

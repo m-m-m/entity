@@ -14,9 +14,7 @@ import io.github.mmm.marshall.MarshallingConfig;
 import io.github.mmm.marshall.StructuredReader;
 import io.github.mmm.marshall.StructuredWriter;
 
-/**
- * {@link Marshalling} to read and write {@link Link} values.
- */
+/// [Marshalling] to read and write [Link] values.
 public interface LinkMarshalling extends Marshalling<Link<?>> {
 
   @Override
@@ -64,13 +62,11 @@ public interface LinkMarshalling extends Marshalling<Link<?>> {
     return readObject(reader, null, null);
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param reader the {@link StructuredReader}.
-   * @param type the {@link Id#getEntityClass() entity type}.
-   * @param resolver the {@link IdLink#setResolver(Function) resolver} {@link Function}.
-   * @return the unmarshalled {@link Id}.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param reader the [StructuredReader].
+  /// @param type the [entity type][Id#getEntityClass()].
+  /// @param resolver the [resolver][IdLink#setResolver(Function)] [Function].
+  /// @return the unmarshalled [Id].
   @SuppressWarnings("unchecked")
   default <E extends EntityBean> Link<E> readObject(StructuredReader reader, Class<E> type,
       Function<Id<E>, E> resolver) {
@@ -110,9 +106,7 @@ public interface LinkMarshalling extends Marshalling<Link<?>> {
     return link;
   }
 
-  /**
-   * @return the singleton instance of this {@link IdMarshalling}.
-   */
+  /// @return the singleton instance of this [IdMarshalling].
   static LinkMarshalling get() {
 
     return LinkMarshallingImpl.INSTANCE;

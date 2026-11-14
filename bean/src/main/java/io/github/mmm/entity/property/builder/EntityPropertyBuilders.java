@@ -24,68 +24,54 @@ import io.github.mmm.property.AttributeReadOnly;
 import io.github.mmm.property.Property;
 import io.github.mmm.property.builder.PropertyBuilders;
 
-/**
- * Extends {@link PropertyBuilders} for entity specific properties.
- *
- * @since 1.0.0
- */
+/// Extends [PropertyBuilders] for entity specific properties.
+///
+/// @since 1.0.0
 @SuppressWarnings("unchecked")
 public interface EntityPropertyBuilders extends PropertyBuilders {
 
-  /**
-   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link PkPropertyBuilder}.
-   */
+  /// @param idTemplate the [Id] to use as [template][Id#isEmpty()].
+  /// @return a new [PkPropertyBuilder].
   default PkPropertyBuilder newPk() {
 
     return newPk(null);
   }
 
-  /**
-   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link PkPropertyBuilder}.
-   */
+  /// @param idTemplate the [Id] to use as [template][Id#isEmpty()].
+  /// @return a new [PkPropertyBuilder].
   default PkPropertyBuilder newPk(Id<?> idTemplate) {
 
     return builder(new PkPropertyBuilder(getLock(), safeId(idTemplate)), this);
   }
 
-  /**
-   * @param name the {@link Property#getName() property name}.
-   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link PkProperty}.
-   */
+  /// @param name the [property name][Property#getName()].
+  /// @param idTemplate the [Id] to use as [template][Id#isEmpty()].
+  /// @return a new [PkProperty].
   default PkProperty newPk(String name, Id<?> idTemplate) {
 
     return get(name, this, metadata -> accept(new PkProperty(name, safeId(idTemplate), metadata), this));
   }
 
-  /**
-   * @param <E> type of the referenced {@link EntityBean}.
-   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link FkPropertyBuilder}.
-   */
+  /// @param <E> type of the referenced [EntityBean].
+  /// @param idTemplate the [Id] to use as [template][Id#isEmpty()].
+  /// @return a new [FkPropertyBuilder].
   default <E extends EntityBean> FkPropertyBuilder<E> newFk() {
 
     return newFk(null);
   }
 
-  /**
-   * @param <E> type of the referenced {@link EntityBean}.
-   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link PkPropertyBuilder}.
-   */
+  /// @param <E> type of the referenced [EntityBean].
+  /// @param idTemplate the [Id] to use as [template][Id#isEmpty()].
+  /// @return a new [PkPropertyBuilder].
   default <E extends EntityBean> FkPropertyBuilder<E> newFk(Id<E> idTemplate) {
 
     return builder(new FkPropertyBuilder<>(getLock(), safeId(idTemplate)), this);
   }
 
-  /**
-   * @param <E> type of the referenced {@link EntityBean}.
-   * @param name the {@link Property#getName() property name}.
-   * @param idTemplate the {@link Id} to use as {@link Id#isEmpty() template}.
-   * @return a new {@link PkProperty}.
-   */
+  /// @param <E> type of the referenced [EntityBean].
+  /// @param name the [property name][Property#getName()].
+  /// @param idTemplate the [Id] to use as [template][Id#isEmpty()].
+  /// @return a new [PkProperty].
   default <E extends EntityBean> FkProperty<E> newFk(String name, Id<E> idTemplate) {
 
     return get(name, this, metadata -> accept(new FkProperty<>(name, safeId(idTemplate), metadata), this));
@@ -105,23 +91,19 @@ public interface EntityPropertyBuilders extends PropertyBuilders {
     return id;
   }
 
-  /**
-   * @param <E> type of the referenced {@link Entity}.
-   * @param entityClass the {@link Class} reflecting the referenced {@link Entity}.
-   * @return a new {@link LinkPropertyBuilder}.
-   */
+  /// @param <E> type of the referenced [Entity].
+  /// @param entityClass the [Class] reflecting the referenced [Entity].
+  /// @return a new [LinkPropertyBuilder].
   default <E extends EntityBean> LinkPropertyBuilder<E> newLink(Class<E> entityClass) {
 
     return builder(new LinkPropertyBuilder<>(getLock(), entityClass), this);
   }
 
-  /**
-   * @param <E> type of the referenced {@link Entity}.
-   * @param name the {@link Property#getName() property name}.
-   * @param entityClass the {@link Class} reflecting the referenced {@link Entity}.
-   * @param resolver the optional {@link IdLink#of(Id, Function) resolver function}.
-   * @return a new {@link LinkProperty}.
-   */
+  /// @param <E> type of the referenced [Entity].
+  /// @param name the [property name][Property#getName()].
+  /// @param entityClass the [Class] reflecting the referenced [Entity].
+  /// @param resolver the optional [resolver function][IdLink#of(Id, Function)].
+  /// @return a new [LinkProperty].
   default <E extends EntityBean> LinkProperty<E> newLink(String name, Class<E> entityClass,
       Function<Id<E>, E> resolver) {
 

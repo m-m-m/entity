@@ -10,11 +10,9 @@ import io.github.mmm.property.factory.AbstractPropertyFactory;
 import io.github.mmm.property.factory.PropertyFactory;
 import io.github.mmm.property.factory.PropertyTypeInfo;
 
-/**
- * This is the implementation of {@link PropertyFactory} for {@link PkProperty}.
- *
- * @since 1.0.0
- */
+/// This is the implementation of [PropertyFactory] for [PkProperty].
+///
+/// @since 1.0.0
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PropertyFactoryPk extends AbstractPropertyFactory<Id<?>, PkProperty> {
 

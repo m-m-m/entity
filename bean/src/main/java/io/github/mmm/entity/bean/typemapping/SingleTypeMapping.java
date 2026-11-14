@@ -6,26 +6,18 @@ import io.github.mmm.base.range.Range;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.converter.TypeMapper;
 
-/**
- * Abstract base class similar to {@link TypeMapping} but only for a single {@link TypeMapper#getSourceType() source
- * type}.
- *
- * @param <V> the {@link TypeMapper#getSourceType() source type}.
- * @since 1.0.0
- */
+/// Abstract base class similar to [TypeMapping] but only for a single [source type][TypeMapper#getSourceType()].
+///
+/// @param <V> the [source type][TypeMapper#getSourceType()].
+/// @since 1.0.0
 public abstract class SingleTypeMapping<V> {
 
-  /**
-   * @return the static or default {@link TypeMapper} instance.
-   */
+  /// @return the static or default [TypeMapper] instance.
   public abstract TypeMapper<V, ?> getTypeMapper();
 
-  /**
-   * @param property the optional {@link ReadableProperty} containing the type (directly or indirectly). May be
-   *        {@code null}.
-   * @return the {@link TypeMapper} for the given {@link ReadableProperty}. Will be {@code null} if the given
-   *         {@link ReadableProperty#getValueClass() value type} is not mapped.
-   */
+  /// @param property the optional [ReadableProperty] containing the type (directly or indirectly). May be `null`.
+  /// @return the [TypeMapper] for the given [ReadableProperty]. Will be `null` if the given
+  ///         [value type][ReadableProperty#getValueClass()] is not mapped.
   public abstract TypeMapper<V, ?> getTypeMapper(ReadableProperty<?> property);
 
   @Override
@@ -34,11 +26,9 @@ public abstract class SingleTypeMapping<V> {
     return getClass().getSimpleName() + "[" + getTypeMapper() + "]";
   }
 
-  /**
-   * @param <V> type of the {@link Range} bounds.
-   * @param property the {@link ReadableProperty}. May be {@code null}.
-   * @return the {@link Range}.
-   */
+  /// @param <V> type of the [Range] bounds.
+  /// @param property the [ReadableProperty]. May be `null`.
+  /// @return the [Range].
   protected static <V extends Comparable<?>> Range<V> getRange(ReadableProperty<?> property) {
 
     if (property != null) {

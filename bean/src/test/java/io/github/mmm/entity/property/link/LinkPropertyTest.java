@@ -26,9 +26,7 @@ import io.github.mmm.marshall.StructuredTextFormat;
 import io.github.mmm.marshall.StructuredWriter;
 import io.github.mmm.property.WritableProperty;
 
-/**
- * Test of {@link LinkProperty}.
- */
+/// Test of [LinkProperty].
 class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Target>> {
 
   private static final String TEST_INSTANT = "1999-12-31T23:59:59.123456789Z";
@@ -51,7 +49,7 @@ class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Target>> 
     super(LINK, (Class) LinkProperty.class);
   }
 
-  /** Test of {@link LinkProperty#getReadOnly()}. */
+  /// Test of [LinkProperty#getReadOnly()].
   @Test
   void testReadOnly() {
 

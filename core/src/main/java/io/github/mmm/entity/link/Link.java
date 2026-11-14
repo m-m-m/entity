@@ -16,56 +16,44 @@ import io.github.mmm.marshall.id.StructuredIdMapping;
 import io.github.mmm.marshall.id.StructuredIdMappingMap;
 import io.github.mmm.marshall.id.StructuredIdMappingObject;
 
-/**
- * This is the interface for a link to a persistent entity. It acts as a reference that can be evaluated lazily. It will
- * hold the {@link #getId() primary key} of the linked entity.
- *
- * @param <E> type of the {@link #getEntity() linked entity}.
- *
- * @see io.github.mmm.entity.Entity
- *
- * @since 1.0.0
- */
+/// This is the interface for a link to a persistent entity. It acts as a reference that can be evaluated lazily. It
+/// will hold the [primary key][#getId()] of the linked entity.
+///
+/// @param <E> type of the [linked entity][#getEntity()].
+///
+/// @see io.github.mmm.entity.Entity
+///
+/// @since 1.0.0
 public interface Link<E> extends StructuredIdMappingObject {
 
-  /** Name of the {@link #getId() ID} property (e.g. for JSON or XML). */
+  /// Name of the [ID][#getId()] property (e.g. for JSON or XML).
   String PROPERTY_ID = "id";
 
-  /** Name of the {@link #getEntity() target} property (e.g. for JSON or XML). */
+  /// Name of the [target][#getEntity()] property (e.g. for JSON or XML).
   String PROPERTY_TARGET = "t";
 
-  /**
-   * @return the {@link io.github.mmm.entity.Entity#getId() unique identifier} of the linked {@link #getEntity()
-   *         entity}. When creating new {@link io.github.mmm.entity.Entity Entities} a link may hold a transient
-   *         {@link io.github.mmm.entity.Entity} as {@link #getEntity() target} that has no {@link Id#getPk() primary
-   *         key} assigned, yet. In such case this method will return an {@link Id#isEmpty() empty} {@link Id}.
-   */
+  /// @return the [unique identifier][io.github.mmm.entity.Entity#getId()] of the linked [entity][#getEntity()]. When
+  ///         creating new [Entities][io.github.mmm.entity.Entity] a link may hold a transient
+  ///         [io.github.mmm.entity.Entity] as [target][#getEntity()] that has no [primary key][Id#getPk()] assigned,
+  ///         yet. In such case this method will return an [empty][Id#isEmpty()] [Id].
   Id<E> getId();
 
-  /**
-   * @return {@code true} if the {@link #getEntity() link target} is already resolved, {@code false} otherwise (if
-   *         {@link #getEntity()} may trigger lazy loading and could also fail if called without an open transaction).
-   */
+  /// @return `true` if the [link target][#getEntity()] is already resolved, `false` otherwise (if [#getEntity()] may
+  ///         trigger lazy loading and could also fail if called without an open transaction).
   boolean isResolved();
 
-  /**
-   * This method resolves the linked entity.<br/>
-   * <b>ATTENTION:</b><br/>
-   * A {@link Link} can be evaluated lazily. In such case the first call of this method will resolve the linked entity
-   * from the database. That can be a relatively expensive operation and requires an open transaction. Use
-   * {@link #isResolved()} to distinguish and prevent undesired link resolving.<br>
-   * Further, after serialisation (e.g. mapping to JSON and back) maybe only the {@link #getId() ID} was transferred and
-   * this link can not be resolved. In that case this method may return {@code null}. Please note that {@link #getId()
-   * id} and {@link #getEntity() target} can not both be {@code null}.
-   *
-   * @return the link target or {@code null} if the link can not be resolved.
-   */
+  /// This method resolves the linked entity. **ATTENTION:** A [Link] can be evaluated lazily. In such case the first
+  /// call of this method will resolve the linked entity from the database. That can be a relatively expensive operation
+  /// and requires an open transaction. Use [#isResolved()] to distinguish and prevent undesired link resolving. Further,
+  /// after serialisation (e.g. mapping to JSON and back) maybe only the [ID][#getId()] was transferred and this link can
+  /// not be resolved. In that case this method may return `null`. Please note that [id][#getId()] and
+  /// [target][#getEntity()] can not both be `null`.
+  ///
+  /// @return the link target or `null` if the link can not be resolved.
   E getEntity();
 
-  /**
-   * @return {@code true} if this link is empty, {@code false} otherwise.
-   * @see Id#isEmpty()
-   */
+  /// @return `true` if this link is empty, `false` otherwise.
+  /// @see Id#isEmpty()
   default boolean isEmpty() {
 
     Id<E> id = getId();
@@ -87,12 +75,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return StructuredIdMappingMap.of(PROPERTY_ID, PROPERTY_TARGET);
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param entity the {@link Entity}.
-   * @return the {@link Link} for the given {@link Entity}. Will be {@code null} if the given {@link Entity} was
-   *         {@code null}.
-   */
+  /// @param <E> type of [Entity].
+  /// @param entity the [Entity].
+  /// @return the [Link] for the given [Entity]. Will be `null` if the given [Entity] was `null`.
   static <E extends Entity> Link<E> of(E entity) {
 
     if (entity == null) {
@@ -101,11 +86,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return new EntityLinkWithoutRevision<>(entity);
   }
 
-  /**
-   * @param <E> type of the {@link #getEntity() linked} {@link io.github.mmm.entity.Entity}.
-   * @param id the {@link #getId() id}.
-   * @return the {@link Link} for the given {@link Id} {@link GenericId#withoutRevision() without the revision}.
-   */
+  /// @param <E> type of the [linked][#getEntity()] [io.github.mmm.entity.Entity].
+  /// @param id the [id][#getId()].
+  /// @return the [Link] for the given [Id] [without the revision][GenericId#withoutRevision()].
   public static <E> Link<E> of(Id<E> id) {
 
     if (id == null) {
@@ -114,11 +97,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return new IdLinkWithoutRevision<>(id, null);
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param entities the {@link Entity entities} to convert to {@link Link}s.
-   * @return the {@link Set} of {@link Link}s for the given {@link Entity entities}.
-   */
+  /// @param <E> type of [Entity].
+  /// @param entities the [entities][Entity] to convert to [Link]s.
+  /// @return the [Set] of [Link]s for the given [entities][Entity].
   @SuppressWarnings("unchecked")
   static <E extends Entity> Set<Link<E>> ofSet(E... entities) {
 
@@ -130,11 +111,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return links;
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param ids the {@link Id}s to convert to {@link Link}s.
-   * @return the {@link Set} of {@link Link}s for the given {@link Id}s.
-   */
+  /// @param <E> type of [Entity].
+  /// @param ids the [Id]s to convert to [Link]s.
+  /// @return the [Set] of [Link]s for the given [Id]s.
   @SuppressWarnings("unchecked")
   static <E extends Entity> Set<Link<E>> ofSet(Id<E>... ids) {
 
@@ -146,11 +125,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return links;
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param entities the {@link Entity entities} to convert to {@link Link}s.
-   * @return the {@link Set} of {@link Link}s for the given {@link Entity entities}.
-   */
+  /// @param <E> type of [Entity].
+  /// @param entities the [entities][Entity] to convert to [Link]s.
+  /// @return the [Set] of [Link]s for the given [entities][Entity].
   static <E extends Entity> Set<Link<E>> ofSet(Collection<E> entities) {
 
     if (entities == null) {
@@ -161,11 +138,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return links;
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param entities the {@link Entity entities} to convert to {@link Link}s.
-   * @return the {@link List} of {@link Link}s for the given {@link Entity entities}.
-   */
+  /// @param <E> type of [Entity].
+  /// @param entities the [entities][Entity] to convert to [Link]s.
+  /// @return the [List] of [Link]s for the given [entities][Entity].
   @SuppressWarnings("unchecked")
   static <E extends Entity> List<Link<E>> ofList(E... entities) {
 
@@ -177,11 +152,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return links;
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param ids the {@link Id}s to convert to {@link Link}s.
-   * @return the {@link List} of {@link Link}s for the given {@link Id}s.
-   */
+  /// @param <E> type of [Entity].
+  /// @param ids the [Id]s to convert to [Link]s.
+  /// @return the [List] of [Link]s for the given [Id]s.
   @SuppressWarnings("unchecked")
   static <E extends Entity> List<Link<E>> ofList(Id<E>... ids) {
 
@@ -193,12 +166,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     return links;
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param entities the {@link Entity entities} to convert to {@link Link}s.
-   * @return the {@link EntityLink} for the given {@link Entity}. Will be {@code null} if the given {@link Entity} was
-   *         {@code null}.
-   */
+  /// @param <E> type of [Entity].
+  /// @param entities the [entities][Entity] to convert to [Link]s.
+  /// @return the [EntityLink] for the given [Entity]. Will be `null` if the given [Entity] was `null`.
   static <E extends Entity> List<Link<E>> ofList(Collection<E> entities) {
 
     if (entities == null) {
@@ -209,12 +179,10 @@ public interface Link<E> extends StructuredIdMappingObject {
     return links;
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param links the {@link Collection} where to {@link Collection#add(Object) add} the {@link Link}s to create from
-   *        the given {@link Entity entities}.
-   * @param entities the {@link Entity entities} to convert to {@link Link}s.
-   */
+  /// @param <E> type of [Entity].
+  /// @param links the [Collection] where to [add][Collection#add(Object)] the [Link]s to create from the given
+  ///        [entities][Entity].
+  /// @param entities the [entities][Entity] to convert to [Link]s.
   @SuppressWarnings("unchecked")
   static <E extends Entity> void ofCollection(Collection<Link<E>> links, E... entities) {
 
@@ -229,12 +197,10 @@ public interface Link<E> extends StructuredIdMappingObject {
     }
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param links the {@link Collection} where to {@link Collection#add(Object) add} the {@link Link}s to create from
-   *        the given {@link Entity entities}.
-   * @param entities the {@link Entity entities} to convert to {@link Link}s.
-   */
+  /// @param <E> type of [Entity].
+  /// @param links the [Collection] where to [add][Collection#add(Object)] the [Link]s to create from the given
+  ///        [entities][Entity].
+  /// @param entities the [entities][Entity] to convert to [Link]s.
   static <E extends Entity> void ofCollection(Collection<Link<E>> links, Collection<E> entities) {
 
     if (entities == null) {
@@ -248,12 +214,9 @@ public interface Link<E> extends StructuredIdMappingObject {
     }
   }
 
-  /**
-   * @param <E> type of {@link Entity}.
-   * @param links the {@link Collection} where to {@link Collection#add(Object) add} the {@link Link}s to create from
-   *        the given {@link Id}s.
-   * @param ids the {@link Id}s to convert to {@link Link}s.
-   */
+  /// @param <E> type of [Entity].
+  /// @param links the [Collection] where to [add][Collection#add(Object)] the [Link]s to create from the given [Id]s.
+  /// @param ids the [Id]s to convert to [Link]s.
   @SuppressWarnings("unchecked")
   static <E extends Entity> void ofCollection(Collection<Link<E>> links, Id<E>... ids) {
 
@@ -268,14 +231,11 @@ public interface Link<E> extends StructuredIdMappingObject {
     }
   }
 
-  /**
-   * Null-safe variant of {@link Link#getId()}.
-   *
-   * @param <E> type of the {@link #getEntity() linked} entity.
-   * @param link the {@link Link} to get the {@link Id} from. May be {@code null}.
-   * @return the {@link Link#getId() ID} contained in the given {@link Link} or {@code null} if {@link Link} was
-   *         {@code null}.
-   */
+  /// Null-safe variant of [Link#getId()].
+  ///
+  /// @param <E> type of the [linked][#getEntity()] entity.
+  /// @param link the [Link] to get the [Id] from. May be `null`.
+  /// @return the [ID][Link#getId()] contained in the given [Link] or `null` if [Link] was `null`.
   static <E> Id<E> getId(Link<E> link) {
 
     if (link != null) {

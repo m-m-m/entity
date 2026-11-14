@@ -6,32 +6,26 @@ import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.converter.IdentityTypeMapper;
 import io.github.mmm.value.converter.TypeMapper;
 
-/**
- * Implementation of {@link SingleTypeMapping} for a simple static mapping.
- *
- * @param <V> the {@link TypeMapper#getSourceType() source type}.
- * @since 1.0.0
- */
+/// Implementation of [SingleTypeMapping] for a simple static mapping.
+///
+/// @param <V> the [source type][TypeMapper#getSourceType()].
+/// @since 1.0.0
 public class SingleTypeMappingStatic<V> extends SingleTypeMapping<V> {
 
   private final TypeMapper<V, ?> typeMapper;
 
-  /**
-   * The constructor for an {@link IdentityTypeMapper}.
-   *
-   * @param type the {@link IdentityTypeMapper#getSourceType() source and target type}.
-   */
+  /// The constructor for an [IdentityTypeMapper].
+  ///
+  /// @param type the [source and target type][IdentityTypeMapper#getSourceType()].
   public SingleTypeMappingStatic(Class<V> type) {
 
     this(new IdentityTypeMapper<>(type));
   }
 
-  /**
-   * The constructor.
-   *
-   * @param sqlType the {@link TypeMapper} to return as static mapping.
-   *        {@link #getTypeMapper(io.github.mmm.property.ReadableProperty) mapping}.
-   */
+  /// The constructor.
+  ///
+  /// @param sqlType the [TypeMapper] to return as static mapping.
+  ///        [mapping][#getTypeMapper(io.github.mmm.property.ReadableProperty)].
   public SingleTypeMappingStatic(TypeMapper<V, ?> sqlType) {
 
     super();

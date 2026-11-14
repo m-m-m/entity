@@ -4,22 +4,16 @@ package io.github.mmm.entity.bean.reference;
 
 import io.github.mmm.entity.bean.EntityBean;
 
-/**
- * Interface to read the reference to an {@link EntityBean entity}. The reference shall always be available as
- * {@link #getEntityName() name} but typically also as {@link #getEntity() entity prototype}.
- *
- * @param <E> type of the referenced {@link EntityBean}.
- */
+/// Interface to read the reference to an [entity][EntityBean]. The reference shall always be available as
+/// [name][#getEntityName()] but typically also as [entity prototype][#getEntity()].
+///
+/// @param <E> type of the referenced [EntityBean].
 public interface ReadableEntityReference<E extends EntityBean> {
 
-  /**
-   * @return the optional {@link EntityBean} from where to get the data and to operate on.
-   */
+  /// @return the optional [EntityBean] from where to get the data and to operate on.
   E getEntity();
 
-  /**
-   * @return the name of the {@link #getEntity() entity} (or the database table).
-   */
+  /// @return the name of the [entity][#getEntity()] (or the database table).
   String getEntityName();
 
 }

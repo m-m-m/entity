@@ -6,18 +6,14 @@ import java.util.Objects;
 
 import io.github.mmm.entity.id.Id;
 
-/**
- * Abstract base implementation of {@link Link}.
- *
- * @param <E> the generic type of the {@link #getEntity() linked entity}.
- *
- * @since 1.0.0
- */
+/// Abstract base implementation of [Link].
+///
+/// @param <E> the generic type of the [linked entity][#getEntity()].
+///
+/// @since 1.0.0
 public abstract class AbstractLink<E> implements Link<E> {
 
-  /**
-   * The constructor.
-   */
+  /// The constructor.
   public AbstractLink() {
 
     super();

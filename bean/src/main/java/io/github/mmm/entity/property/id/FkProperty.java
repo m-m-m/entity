@@ -8,23 +8,19 @@ import io.github.mmm.entity.id.FkMapper;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.value.converter.TypeMapper;
 
-/**
- * {@link IdProperty} for a foreign key to another entity.
- *
- * @param <E> type of the referenced {@link EntityBean}.
- * @since 1.0.0
- */
+/// [IdProperty] for a foreign key to another entity.
+///
+/// @param <E> type of the referenced [EntityBean].
+/// @since 1.0.0
 public class FkProperty<E extends EntityBean> extends IdProperty<Id<E>> {
 
   private TypeMapper<Id<E>, ?> typeMapper;
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param id the initial {@link #get() value}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
+  /// The constructor.
+  ///
+  /// @param name the [name][#getName()].
+  /// @param id the initial [value][#get()].
+  /// @param metadata the [metadata][#getMetadata()].
   public FkProperty(String name, Id<E> id, PropertyMetadata<Id<E>> metadata) {
 
     super(name, id, metadata);

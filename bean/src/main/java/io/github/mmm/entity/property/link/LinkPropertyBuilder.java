@@ -12,12 +12,10 @@ import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.property.builder.PropertyBuilder;
 import io.github.mmm.validation.main.ValidatorBuilderObject;
 
-/**
- * {@link PropertyBuilder} for {@link LinkProperty}.
- *
- * @param <E> the generic type of the {@link io.github.mmm.entity.bean.EntityBean entity}.
- * @since 1.0.0
- */
+/// [PropertyBuilder] for [LinkProperty].
+///
+/// @param <E> the generic type of the [entity][io.github.mmm.entity.bean.EntityBean].
+/// @since 1.0.0
 public final class LinkPropertyBuilder<E extends EntityBean> extends
     PropertyBuilder<Link<E>, LinkProperty<E>, ValidatorBuilderObject<Link<E>, LinkPropertyBuilder<E>>, LinkPropertyBuilder<E>> {
 
@@ -25,43 +23,35 @@ public final class LinkPropertyBuilder<E extends EntityBean> extends
 
   private Function<Id<E>, E> resolver;
 
-  /**
-   * The constructor.
-   *
-   * @param lock the {@link #getLock() lock}.
-   */
+  /// The constructor.
+  ///
+  /// @param lock the [lock][#getLock()].
   public LinkPropertyBuilder(PropertyLock lock) {
 
     this(lock, null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param lock the {@link #getLock() lock}.
-   * @param entityClass the {@link Class} reflecting the entity.
-   */
+  /// The constructor.
+  ///
+  /// @param lock the [lock][#getLock()].
+  /// @param entityClass the [Class] reflecting the entity.
   public LinkPropertyBuilder(PropertyLock lock, Class<E> entityClass) {
 
     super(lock);
     this.entityClass = entityClass;
   }
 
-  /**
-   * @param entityType the {@link Class} reflecting the entity.
-   * @return this builder itself ({@code this}) for fluent API calls.
-   */
+  /// @param entityType the [Class] reflecting the entity.
+  /// @return this builder itself (`this`) for fluent API calls.
   public LinkPropertyBuilder<E> entityClass(Class<E> entityType) {
 
     this.entityClass = entityType;
     return this;
   }
 
-  /**
-   * @param entityResolver the {@link Function} to load {@link io.github.mmm.entity.Entity entities} by their
-   *        {@link Id}.
-   * @return this builder itself ({@code this}) for fluent API calls.
-   */
+  /// @param entityResolver the [Function] to load [entities][io.github.mmm.entity.Entity] by their
+  ///        [Id].
+  /// @return this builder itself (`this`) for fluent API calls.
   public LinkPropertyBuilder<E> resolver(Function<Id<E>, E> entityResolver) {
 
     this.resolver = entityResolver;

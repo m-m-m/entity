@@ -7,21 +7,17 @@ import java.util.function.Function;
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 
-/**
- * {@link IdLink} but {@link IdLink#isRemoveRevision() without revision}.
- *
- * @param <E> the generic type of the {@link Link#getEntity() linked entity}.
- *
- * @since 1.0.0
- */
+/// [IdLink] but [without revision][IdLink#isRemoveRevision()].
+///
+/// @param <E> the generic type of the [linked entity][Link#getEntity()].
+///
+/// @since 1.0.0
 final class IdLinkWithoutRevision<E> extends IdLink<E> {
 
-  /**
-   * The constructor.
-   *
-   * @param id - see {@link Link#getId()}.
-   * @param resolver the resolver {@link Function}.
-   */
+  /// The constructor.
+  ///
+  /// @param id - see [Link#getId()].
+  /// @param resolver the resolver [Function].
   protected IdLinkWithoutRevision(Id<E> id, Function<Id<E>, E> resolver) {
 
     this(id, null, resolver);

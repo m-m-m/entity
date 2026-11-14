@@ -14,11 +14,9 @@ import org.slf4j.LoggerFactory;
 import io.github.mmm.property.ReadableProperty;
 import io.github.mmm.value.converter.TypeMapper;
 
-/**
- * Implementation of {@link TypeMapping} that is composed out of multiple {@link SingleTypeMapping}s.
- *
- * @since 1.0.0
- */
+/// Implementation of [TypeMapping] that is composed out of multiple [SingleTypeMapping]s.
+///
+/// @since 1.0.0
 public class ComposedTypeMapping implements TypeMapping {
 
   private static final Logger LOG = LoggerFactory.getLogger(ComposedTypeMapping.class);
@@ -27,9 +25,7 @@ public class ComposedTypeMapping implements TypeMapping {
 
   private final Map<Class<?>, Class<?>> classMap;
 
-  /**
-   * The constructor.
-   */
+  /// The constructor.
   public ComposedTypeMapping() {
 
     super();
@@ -37,10 +33,8 @@ public class ComposedTypeMapping implements TypeMapping {
     this.classMap = new ConcurrentHashMap<>();
   }
 
-  /**
-   * @param source the source {@link Class} to remap.
-   * @param target the corresponding basic standard Java datatype {@link Class}.
-   */
+  /// @param source the source [Class] to remap.
+  /// @param target the corresponding basic standard Java datatype [Class].
   private void remap(Class<?> source, Class<?> target) {
 
     if (source == target) {
@@ -55,9 +49,7 @@ public class ComposedTypeMapping implements TypeMapping {
     }
   }
 
-  /**
-   * @param mapping the {@link SingleTypeMapping} to register.
-   */
+  /// @param mapping the [SingleTypeMapping] to register.
   protected void add(SingleTypeMapping<?> mapping) {
 
     SingleTypeMapping<?> duplicate = this.typeMap.put(mapping.getTypeMapper().getSourceType(), mapping);
@@ -66,9 +58,7 @@ public class ComposedTypeMapping implements TypeMapping {
     }
   }
 
-  /**
-   * @param typeMapper the {@link TypeMapper} to add.
-   */
+  /// @param typeMapper the [TypeMapper] to add.
   protected void add(TypeMapper<?, ?> typeMapper) {
 
     if (typeMapper == null) {
@@ -111,9 +101,7 @@ public class ComposedTypeMapping implements TypeMapping {
     return singleMapping;
   }
 
-  /**
-   * Secures this class to avoid further undesired manipulations.
-   */
+  /// Secures this class to avoid further undesired manipulations.
   public void secure() {
 
     this.typeMap = Collections.unmodifiableMap(this.typeMap);

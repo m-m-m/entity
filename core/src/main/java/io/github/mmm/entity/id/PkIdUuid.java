@@ -6,12 +6,10 @@ import java.util.UUID;
 
 import io.github.mmm.base.uuid.UuidParser;
 
-/**
- * Implementation of {@link PkId} using {@link UUID} as type for the {@link #getPk() primary key}.
- *
- * @param <E> type of the identified entity.
- * @since 1.0.0
- */
+/// Implementation of [PkId] using [UUID] as type for the [primary key][#getPk()].
+///
+/// @param <E> type of the identified entity.
+/// @since 1.0.0
 public final class PkIdUuid<E> extends PkId<E, UUID, PkIdUuid<E>> {
 
   @SuppressWarnings("rawtypes")
@@ -19,12 +17,10 @@ public final class PkIdUuid<E> extends PkId<E, UUID, PkIdUuid<E>> {
 
   private final UUID pk;
 
-  /**
-   * The constructor.
-   *
-   * @param entityClass the {@link #getEntityClass() type}.
-   * @param pk the {@link #getPk() primary key}.
-   */
+  /// The constructor.
+  ///
+  /// @param entityClass the [type][#getEntityClass()].
+  /// @param pk the [primary key][#getPk()].
   public PkIdUuid(Class<E> entityClass, UUID pk) {
 
     super(entityClass);
@@ -68,42 +64,34 @@ public final class PkIdUuid<E> extends PkId<E, UUID, PkIdUuid<E>> {
     return PROPERTY_PK_UUID;
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @return the {@link #isEmpty() empty} template of this class.
-   */
+  /// @param <E> type of the identified entity.
+  /// @return the [empty][#isEmpty()] template of this class.
   public static <E> PkIdUuid<E> getEmpty() {
 
     return EMPTY;
   }
 
-  /**
-   * @param <E> type of the identified entity.
-   * @param entityType the {@link #getEntityClass() entity type}.
-   * @return the {@link #isEmpty() empty} template of this class.
-   */
+  /// @param <E> type of the identified entity.
+  /// @param entityType the [entity type][#getEntityClass()].
+  /// @return the [empty][#isEmpty()] template of this class.
   public static <E> PkIdUuid<E> getEmpty(Class<E> entityType) {
 
     PkIdUuid<E> empty = getEmpty();
     return empty.withEntityType(entityType);
   }
 
-  /**
-   * @param <E> type of the referenced entity.
-   * @param pk the actual {@link #getPk() primary key}.
-   * @return the new {@link PkIdUuid}.
-   */
+  /// @param <E> type of the referenced entity.
+  /// @param pk the actual [primary key][#getPk()].
+  /// @return the new [PkIdUuid].
   public static <E> PkIdUuid<E> of(UUID pk) {
 
     return of(pk, null);
   }
 
-  /**
-   * @param <E> type of the referenced entity.
-   * @param pk the actual {@link #getPk() primary key}.
-   * @param type the {@link #getEntityClass() entity type}.
-   * @return the new {@link PkIdUuid}.
-   */
+  /// @param <E> type of the referenced entity.
+  /// @param pk the actual [primary key][#getPk()].
+  /// @param type the [entity type][#getEntityClass()].
+  /// @return the new [PkIdUuid].
   public static <E> PkIdUuid<E> of(UUID pk, Class<E> type) {
 
     if (pk == null) {

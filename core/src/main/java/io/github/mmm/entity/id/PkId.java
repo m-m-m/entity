@@ -8,26 +8,22 @@ import java.util.UUID;
 
 import io.github.mmm.entity.Entity;
 
-/**
- * An abstract base implementation of {@link Id} that has no {@link #getRevision() revision} and will neither support
- * optimistic locking nor reading audit trails.
- *
- * @param <E> type of the identified entity.
- * @param <P> type of the {@link #getPk() primary key}.
- * @param <SELF> type of this class itself for fluent API calls.
- *
- * @since 1.0.0
- */
+/// An abstract base implementation of [Id] that has no [revision][#getRevision()] and will neither support
+/// optimistic locking nor reading audit trails.
+///
+/// @param <E> type of the identified entity.
+/// @param <P> type of the [primary key][#getPk()].
+/// @param <SELF> type of this class itself for fluent API calls.
+///
+/// @since 1.0.0
 public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends AbstractId<E, P, Comparable<?>, SELF> {
 
-  /** @see #getEntityClass() */
+  /// @see #getEntityClass()
   protected final Class<E> entityClass;
 
-  /**
-   * The constructor.
-   *
-   * @param entityClass - see {@link #getEntityClass()}.
-   */
+  /// The constructor.
+  ///
+  /// @param entityClass - see [#getEntityClass()].
   protected PkId(Class<E> entityClass) {
 
     super();
@@ -77,11 +73,9 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
     return null;
   }
 
-  /**
-   * @param newEntityClass the {@link #getEntityClass() entity class}.
-   * @param newPk the {@link #getPk() primary key}.
-   * @return a new instance of this {@link PkId} implementation class with the given parameters.
-   */
+  /// @param newEntityClass the [entity class][#getEntityClass()].
+  /// @param newPk the [primary key][#getPk()].
+  /// @return a new instance of this [PkId] implementation class with the given parameters.
   protected abstract SELF newId(Class<E> newEntityClass, P newPk);
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -140,10 +134,8 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
     return newId(getEntityClass(), newPk);
   }
 
-  /**
-   * @deprecated use {@link #withRevisionGeneric(Comparable)} instead. As the return type can change this method would
-   *             break the generic contract.
-   */
+  /// @deprecated use [#withRevisionGeneric(Comparable)] instead. As the return type can change this method would
+  ///             break the generic contract.
   @Deprecated
   @Override
   public SELF withRevision(Comparable<?> newRevision) {
@@ -155,13 +147,11 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
     return self();
   }
 
-  /**
-   * @param <R> type of the new {@link #getRevision() revision}.
-   * @param newRevision the new {@link #getRevision() revision}.
-   * @return a {@link GenericId} that has the given {@link #getRevision() revision} but other attributes from this
-   *         {@link PkId}. Therefore the returned object may be of a different class and not be an instance of
-   *         {@link PkId}.
-   */
+  /// @param <R> type of the new [revision][#getRevision()].
+  /// @param newRevision the new [revision][#getRevision()].
+  /// @return a [GenericId] that has the given [revision][#getRevision()] but other attributes from this
+  ///         [PkId]. Therefore the returned object may be of a different class and not be an instance of
+  ///         [PkId].
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public <R extends Comparable<?>> GenericId<E, P, R, ?> withRevisionGeneric(R newRevision) {
 
@@ -180,15 +170,13 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
     return result;
   }
 
-  /**
-   * This is a generic convenience method to create a {@link Id#withoutRevision() revision-less} {@link Id} back from
-   * its {@link #getPk() primary key}.
-   *
-   * @param <E> type of {@link Entity}.
-   * @param type the {@link #getEntityClass() entityClass}
-   * @param pk the {@link #getPk() primary key}.
-   * @return the {@link Id#withoutRevision() revision-less} {@link Id} for the given arguments.
-   */
+  /// This is a generic convenience method to create a [revision-less][Id#withoutRevision()] [Id] back from
+  /// its [primary key][#getPk()].
+  ///
+  /// @param <E> type of [Entity].
+  /// @param type the [entityClass][#getEntityClass()]
+  /// @param pk the [primary key][#getPk()].
+  /// @return the [revision-less][Id#withoutRevision()] [Id] for the given arguments.
   public static <E> PkId<E, ?, ?> of(Class<E> type, Object pk) {
 
     if (pk == null) {

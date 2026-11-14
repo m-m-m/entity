@@ -7,46 +7,38 @@ import io.github.mmm.entity.id.PkMapper;
 import io.github.mmm.property.PropertyMetadata;
 import io.github.mmm.value.converter.TypeMapper;
 
-/**
- * {@link IdProperty} for the primary key of an entity.
- *
- * @since 1.0.0
- */
+/// [IdProperty] for the primary key of an entity.
+///
+/// @since 1.0.0
 public class PkProperty extends IdProperty<Id<?>> {
 
-  /** Default {@link #getName() name} for primary key. */
+  /// Default [name][#getName()] for primary key.
   public static final String NAME = "Id";
 
   private TypeMapper<Id<?>, ?> typeMapper;
 
-  /**
-   * The constructor.
-   *
-   * @param id the initial {@link #get() value}.
-   */
+  /// The constructor.
+  ///
+  /// @param id the initial [value][#get()].
   public PkProperty(Id<?> id) {
 
     this(NAME, id, null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param id the initial {@link #get() value}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
+  /// The constructor.
+  ///
+  /// @param id the initial [value][#get()].
+  /// @param metadata the [metadata][#getMetadata()].
   public PkProperty(Id<?> id, PropertyMetadata<Id<?>> metadata) {
 
     this(NAME, id, metadata);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param name the {@link #getName() name}.
-   * @param id the initial {@link #get() value}.
-   * @param metadata the {@link #getMetadata() metadata}.
-   */
+  /// The constructor.
+  ///
+  /// @param name the [name][#getName()].
+  /// @param id the initial [value][#get()].
+  /// @param metadata the [metadata][#getMetadata()].
   public PkProperty(String name, Id<?> id, PropertyMetadata<Id<?>> metadata) {
 
     super(name, id, metadata);

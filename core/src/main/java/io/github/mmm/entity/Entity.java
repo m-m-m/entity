@@ -4,54 +4,44 @@ package io.github.mmm.entity;
 
 import io.github.mmm.entity.id.Id;
 
-/**
- * This is the interface for an entity that can be loaded from or saved to a database. It can be identified uniquely by
- * its {@link #getId() primary key}. Typically you may want to use {@code EntityBean} but for legacy technologies such
- * as JPA you have to use standard Java Beans.
- *
- * @since 1.0.0
- */
+/// This is the interface for an entity that can be loaded from or saved to a database. It can be identified uniquely by
+/// its [primary key][#getId()]. Typically you may want to use `EntityBean` but for legacy technologies such
+/// as JPA you have to use standard Java Beans.
+///
+/// @since 1.0.0
 public interface Entity {
 
-  /** The property name of {@link #getId() ID}. */
+  /// The property name of [ID][#getId()].
   String PROPERTY_NAME_ID = "Id";
 
-  /**
-   * Please prefer the usage of {@link #getId(Entity)} or {@link Id#from(Entity)} instead of using this method directly.
-   *
-   * @return the unique ID (primary key) of this entity. This method should never return {@code null}. A transient
-   *         entity should return an {@link Id#isEmpty() empty} {@link Id}.
-   * @see #getId(Entity)
-   */
+  /// Please prefer the usage of [#getId(Entity)] or [Id#from(Entity)] instead of using this method directly.
+  ///
+  /// @return the unique ID (primary key) of this entity. This method should never return `null`. A transient
+  ///         entity should return an [empty][Id#isEmpty()] [Id].
+  /// @see #getId(Entity)
   Id<?/* extends Entity */> getId();
 
-  /**
-   * Sets the {@link #getId() ID} to the given new {@link Id}.<br>
-   * <b>ATTENTION:</b><br>
-   * This method is reserved for framework code and should not be used by regular API users.
-   *
-   * @param id the new {@link #getId() ID}.
-   */
+  /// Sets the [ID][#getId()] to the given new [Id].
+  /// **ATTENTION:**
+  /// This method is reserved for framework code and should not be used by regular API users.
+  ///
+  /// @param id the new [ID][#getId()].
   void setId(Id<?> id);
 
-  /**
-   * @return the Java {@link Class} of this entity. In the most simple case the same as {@link Object#getClass()} but in
-   *         case of proxy objects {@link Object#getClass()} may return an artificial {@link Class} object while this
-   *         method will typically return what you expect.
-   */
+  /// @return the Java [Class] of this entity. In the most simple case the same as [Object#getClass()] but in
+  ///         case of proxy objects [Object#getClass()] may return an artificial [Class] object while this
+  ///         method will typically return what you expect.
   default Class<?> getJavaClass() {
 
     return getClass();
   }
 
-  /**
-   * Type-safe variant of {@link #getId()}.
-   *
-   * @param <E> type of {@link Entity}.
-   * @param entity the {@link Entity} instance. May be {@code null}.
-   * @return the {@link Id} of the given {@link Entity}. May be {@code null} if given {@link Entity} was {@code null} or
-   *         its {@link #getId() Id} is {@code null}.
-   */
+  /// Type-safe variant of [#getId()].
+  ///
+  /// @param <E> type of [Entity].
+  /// @param entity the [Entity] instance. May be `null`.
+  /// @return the [Id] of the given [Entity]. May be `null` if given [Entity] was `null` or
+  ///         its [Id][#getId()] is `null`.
   @SuppressWarnings("unchecked")
   static <E extends Entity> Id<E> getId(E entity) {
 
@@ -61,14 +51,12 @@ public interface Entity {
     return (Id<E>) entity.getId();
   }
 
-  /**
-   * Type-safe variant of {@link #getJavaClass()}.
-   *
-   * @param <E> type of {@link Entity}.
-   * @param entity the {@link Entity} instance. May be {@code null}.
-   * @return the {@link #getJavaClass() Java class} of the given {@link Entity}. May be {@code null} if given
-   *         {@link Entity} was {@code null}.
-   */
+  /// Type-safe variant of [#getJavaClass()].
+  ///
+  /// @param <E> type of [Entity].
+  /// @param entity the [Entity] instance. May be `null`.
+  /// @return the [Java class][#getJavaClass()] of the given [Entity]. May be `null` if given
+  ///         [Entity] was `null`.
   @SuppressWarnings("unchecked")
   static <E extends Entity> Class<E> getJavaClass(E entity) {
 

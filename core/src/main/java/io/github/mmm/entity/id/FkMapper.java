@@ -3,11 +3,9 @@ package io.github.mmm.entity.id;
 import io.github.mmm.value.converter.AtomicTypeMapper;
 import io.github.mmm.value.converter.ValueMapper;
 
-/**
- * {@link ValueMapper} to convert from {@link Id} to {@link Id#getPk() primary key} and vice versa.
- *
- * @since 1.0.0
- */
+/// [ValueMapper] to convert from [Id] to [primary key][Id#getPk()] and vice versa.
+///
+/// @since 1.0.0
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class FkMapper extends AtomicTypeMapper<Id, Object> {
 
@@ -45,18 +43,14 @@ public class FkMapper extends AtomicTypeMapper<Id, Object> {
     return this.idTemplate.withPk(id);
   }
 
-  /**
-   * @return the default {@link FkMapper}.
-   */
+  /// @return the default [FkMapper].
   public static FkMapper get() {
 
     return DEFAULT;
   }
 
-  /**
-   * @param id the {@link Id} to use as template.
-   * @return the {@link FkMapper}.
-   */
+  /// @param id the [Id] to use as template.
+  /// @return the [FkMapper].
   public static FkMapper of(Id id) {
 
     if (id == null) {

@@ -7,13 +7,11 @@ import java.util.Arrays;
 import io.github.mmm.entity.bean.EntityBean;
 import io.github.mmm.entity.id.Id;
 
-/**
- * Adapter for {@link EntityListener}s.
- *
- * @param <E> type of the {@link EntityBean}s.
- * @since 1.0.0
- * @see EntityListener
- */
+/// Adapter for [EntityListener]s.
+///
+/// @param <E> type of the [EntityBean]s.
+/// @since 1.0.0
+/// @see EntityListener
 public abstract class EntityListenerAdapter<E extends EntityBean> implements EntityListener<E> {
 
   private static final Empty EMPTY = new Empty();
@@ -23,38 +21,28 @@ public abstract class EntityListenerAdapter<E extends EntityBean> implements Ent
     super();
   }
 
-  /**
-   * @param listener the {@link EntityListener} to add.
-   * @return this adapter itself or a new instance capable to handle more listeners.
-   */
+  /// @param listener the [EntityListener] to add.
+  /// @return this adapter itself or a new instance capable to handle more listeners.
   public abstract EntityListenerAdapter<E> add(EntityListener<? super E> listener);
 
-  /**
-   * @param listener the {@link EntityListener} to remove.
-   * @return {@code null} if the given {@link EntityListener} was not registered and nothing changed, otherwise this
-   *         adapter itself or a new instance capable to handle less listeners.
-   */
+  /// @param listener the [EntityListener] to remove.
+  /// @return `null` if the given [EntityListener] was not registered and nothing changed, otherwise this
+  ///         adapter itself or a new instance capable to handle less listeners.
   public abstract EntityListenerAdapter<E> remove(EntityListener<? super E> listener);
 
-  /**
-   * @return the number of {@link #add(EntityListener) registered} {@link EntityListener}s.
-   * @see #get(int)
-   */
+  /// @return the number of [registered][#add(EntityListener)] [EntityListener]s.
+  /// @see #get(int)
   abstract int size();
 
-  /**
-   * @param index the index of the requested {@link EntityListener} in the range from {@code 0} to
-   *        <code>{@link #size()} - 1</code>.
-   * @return the requested {@link EntityListener} or {@code null} if index is out of bounds.
-   * @see #size()
-   */
+  /// @param index the index of the requested [EntityListener] in the range from `0` to
+  ///        `[#size()] - 1`.
+  /// @return the requested [EntityListener] or `null` if index is out of bounds.
+  /// @see #size()
   abstract EntityListener<? super E> get(int index);
 
-  /**
-   * @param <E> type of the {@link EntityBean}s.
-   * @return the empty {@link EntityListenerAdapter}. Is used as a singleton instance for best efficiency allocating
-   *         absolutely no resources until a listener gets {@link #add(EntityListener) added}.
-   */
+  /// @param <E> type of the [EntityBean]s.
+  /// @return the empty [EntityListenerAdapter]. Is used as a singleton instance for best efficiency allocating
+  ///         absolutely no resources until a listener gets [added][#add(EntityListener)].
   @SuppressWarnings("unchecked")
   public static <E extends EntityBean> EntityListenerAdapter<E> empty() {
 

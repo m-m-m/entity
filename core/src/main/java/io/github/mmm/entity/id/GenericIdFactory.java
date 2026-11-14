@@ -9,11 +9,9 @@ import io.github.mmm.base.number.LongParser;
 import io.github.mmm.base.temporal.InstantParser;
 import io.github.mmm.base.uuid.UuidParser;
 
-/**
- * Generic implementation of {@link IdFactory}.
- *
- * @since 1.0.0
- */
+/// Generic implementation of [IdFactory].
+///
+/// @since 1.0.0
 final class GenericIdFactory implements IdFactory<Object, Comparable<?>> {
 
   @SuppressWarnings("rawtypes")

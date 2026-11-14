@@ -6,20 +6,16 @@ import io.github.mmm.entity.Entity;
 import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 
-/**
- * {@link EntityLink} but {@link EntityLink#isRemoveRevision() without revision}.
- *
- * @param <E> the generic type of the {@link Link#getEntity() linked entity}.
- *
- * @since 1.0.0
- */
+/// [EntityLink] but [without revision][EntityLink#isRemoveRevision()].
+///
+/// @param <E> the generic type of the [linked entity][Link#getEntity()].
+///
+/// @since 1.0.0
 final class EntityLinkWithoutRevision<E extends Entity> extends EntityLink<E> {
 
-  /**
-   * The constructor.
-   *
-   * @param entity the {@link Link#getEntity() linked entity}.
-   */
+  /// The constructor.
+  ///
+  /// @param entity the [linked entity][Link#getEntity()].
   public EntityLinkWithoutRevision(E entity) {
 
     this(null, entity);

@@ -14,63 +14,51 @@ import io.github.mmm.entity.property.id.IdProperty;
 import io.github.mmm.entity.property.id.PkProperty;
 import io.github.mmm.property.PropertyMetadata;
 
-/**
- * Implementation of {@link EntityBean} as simple {@link Bean}.
- *
- * @since 1.0.0
- */
+/// Implementation of [EntityBean] as simple [Bean].
+///
+/// @since 1.0.0
 public class AdvancedEntityBean extends AdvancedBean implements EntityBean {
 
-  /** The {@link IdProperty property} with the {@link Id primary key}. */
+  /// The [property][IdProperty] with the [primary key][Id].
   public final PkProperty Id;
 
-  /**
-   * The constructor.
-   */
+  /// The constructor.
   public AdvancedEntityBean() {
 
     this(null, null, null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param writable the {@link WritableBean} to wrap as {@link #isReadOnly() read-only} bean or {@code null} to create
-   *        a mutable bean.
-   */
+  /// The constructor.
+  ///
+  /// @param writable the [WritableBean] to wrap as [read-only][#isReadOnly()] bean or `null` to create
+  ///        a mutable bean.
   public AdvancedEntityBean(WritableBean writable) {
 
     this(writable, null, null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param pkProperty the {@link #Id() ID property}.
-   */
+  /// The constructor.
+  ///
+  /// @param pkProperty the [ID property][#Id()].
   public AdvancedEntityBean(PkProperty pkProperty) {
 
     this(null, null, pkProperty);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param type the {@link #getType() type}.
-   */
+  /// The constructor.
+  ///
+  /// @param type the [type][#getType()].
   public AdvancedEntityBean(BeanClass type) {
 
     this(null, type, null);
   }
 
-  /**
-   * The constructor.
-   *
-   * @param writable the {@link WritableBean} to wrap as {@link #isReadOnly() read-only} bean or {@code null} to create
-   *        a mutable bean.
-   * @param type the {@link #getType() type}.
-   * @param pkProperty the {@link #Id() ID property}.
-   */
+  /// The constructor.
+  ///
+  /// @param writable the [WritableBean] to wrap as [read-only][#isReadOnly()] bean or `null` to create
+  ///        a mutable bean.
+  /// @param type the [type][#getType()].
+  /// @param pkProperty the [ID property][#Id()].
   private AdvancedEntityBean(WritableBean writable, BeanClass type, PkProperty pkProperty) {
 
     super(writable, type);

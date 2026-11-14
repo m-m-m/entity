@@ -6,12 +6,10 @@ import org.junit.jupiter.api.Test;
 import io.github.mmm.entity.DummyEntity;
 import io.github.mmm.entity.id.Id;
 
-/**
- * Test of {@link Link}.
- */
+/// Test of [Link].
 class LinkTest extends Assertions {
 
-  /** Test that creation via {@link Link#of(Id)} with empty {@link Id} fails. */
+  /// Test that creation via [Link#of(Id)] with empty [Id] fails.
   @Test
   void testCreateLinkWithEmptyIdFails() {
 
@@ -27,7 +25,7 @@ class LinkTest extends Assertions {
     }
   }
 
-  /** Test that creation via {@link Link#of(Id)} with valid {@link Id} succeeds. */
+  /// Test that creation via [Link#of(Id)] with valid [Id] succeeds.
   @Test
   void testCreateLinkWithValidIdSucceeds() {
 
@@ -39,7 +37,7 @@ class LinkTest extends Assertions {
     assertThat(link.getId()).isSameAs(id.withoutRevision());
   }
 
-  /** Test of {@link Link#isResolved()}. */
+  /// Test of [Link#isResolved()].
   @Test
   void testIsResolved() {
 

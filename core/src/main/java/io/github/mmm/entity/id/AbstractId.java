@@ -4,29 +4,23 @@ package io.github.mmm.entity.id;
 
 import java.util.Objects;
 
-/**
- * This is the abstract base implementation of {@link Id}.
- *
- * @param <E> type of the identified entity.
- * @param <P> type of the {@link #getPk() primary key}.
- * @param <R> type of the {@link #getRevision() revision}.
- * @param <SELF> type of this class itself for fluent API calls.
- * @since 1.0.0
- */
+/// This is the abstract base implementation of [Id].
+///
+/// @param <E> type of the identified entity.
+/// @param <P> type of the [primary key][#getPk()].
+/// @param <R> type of the [revision][#getRevision()].
+/// @param <SELF> type of this class itself for fluent API calls.
+/// @since 1.0.0
 public abstract class AbstractId<E, P, R extends Comparable<?>, SELF extends AbstractId<E, P, R, SELF>>
     implements GenericId<E, P, R, SELF> {
 
-  /**
-   * The constructor.
-   */
+  /// The constructor.
   protected AbstractId() {
 
     super();
   }
 
-  /**
-   * @return this instance itself as {@code <SELF>}.
-   */
+  /// @return this instance itself as `<SELF>`.
   @SuppressWarnings("unchecked")
   protected SELF self() {
 
@@ -70,11 +64,9 @@ public abstract class AbstractId<E, P, R extends Comparable<?>, SELF extends Abs
     return buffer.toString();
   }
 
-  /**
-   * @see #toString()
-   * @param buffer the {@link StringBuilder} where to {@link StringBuilder#append(CharSequence) append} the string
-   *        representation to.
-   */
+  /// @see #toString()
+  /// @param buffer the [StringBuilder] where to [append][StringBuilder#append(CharSequence)] the string
+  ///        representation to.
   protected void toString(StringBuilder buffer) {
 
     P id = getPk();

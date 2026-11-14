@@ -5,22 +5,17 @@ package io.github.mmm.entity.id;
 import io.github.mmm.base.exception.ApplicationException;
 import io.github.mmm.entity.Entity;
 
-/**
- * {@link ApplicationException} thrown if optimistic locking failed. When a persistent
- * {@link io.github.mmm.entity.Entity} is updated, optimistic locking will check that the {@link Id#getRevision()
- * revision} of its {@link Id} matches the one from the {@link Entity} in the persistent store (e.g. database). If they
- * do not match the update will fail with this exception.<br>
- * This will prevent that two users that want to save changes to the same {@link Entity} concurrently may override each
- * others changes.
- */
+/// [ApplicationException] thrown if optimistic locking failed. When a persistent
+/// [io.github.mmm.entity.Entity] is updated, optimistic locking will check that the [revision][Id#getRevision()] of its [Id] matches the one from the [Entity] in the persistent store (e.g. database). If they
+/// do not match the update will fail with this exception.
+/// This will prevent that two users that want to save changes to the same [Entity] concurrently may override each
+/// others changes.
 public final class OptimisicLockException extends ApplicationException {
 
-  /**
-   * The constructor.
-   *
-   * @param id the {@link Id} of the entity that was to be saved but had an outdated {@link Id#getRevision() revision}.
-   * @param entityName the name of the entity to be saved.
-   */
+  /// The constructor.
+  ///
+  /// @param id the [Id] of the entity that was to be saved but had an outdated [revision][Id#getRevision()].
+  /// @param entityName the name of the entity to be saved.
   public OptimisicLockException(Id<?> id, String entityName) {
 
     super("Cound not save entity '" + entityName + "' with primary key '" + id.getAsString()

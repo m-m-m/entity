@@ -8,11 +8,9 @@ import io.github.mmm.entity.id.GenericId;
 import io.github.mmm.entity.id.Id;
 import io.github.mmm.entity.id.PkIdUuid;
 
-/**
- * {@link IdGenerator} based on {@link UUID} for {@link PkIdUuid}.
- *
- * @since 1.0.0
- */
+/// [IdGenerator] based on [UUID] for [PkIdUuid].
+///
+/// @since 1.0.0
 public class UuidIdGenerator implements IdGenerator {
 
   @SuppressWarnings({ "rawtypes", "unchecked" })

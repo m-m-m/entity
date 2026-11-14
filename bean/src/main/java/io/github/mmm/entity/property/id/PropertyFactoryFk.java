@@ -13,12 +13,10 @@ import io.github.mmm.property.factory.PropertyFactory;
 import io.github.mmm.property.factory.PropertyTypeInfo;
 import io.github.mmm.property.object.ObjectProperty;
 
-/**
- * This is the implementation of {@link PropertyFactory} for {@link ObjectProperty}.
- *
- * @param <E> type of the referenced {@link EntityBean}.
- * @since 1.0.0
- */
+/// This is the implementation of [PropertyFactory] for [ObjectProperty].
+///
+/// @param <E> type of the referenced [EntityBean].
+/// @since 1.0.0
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PropertyFactoryFk<E extends EntityBean> extends AbstractPropertyFactory<Id<E>, FkProperty<E>> {
 
