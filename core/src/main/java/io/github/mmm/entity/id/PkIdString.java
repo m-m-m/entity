@@ -31,6 +31,12 @@ public final class PkIdString<E> extends PkId<E, String, PkIdString<E>> {
   }
 
   @Override
+  public boolean isTransient() {
+
+    return (this.pk == null);
+  }
+
+  @Override
   protected PkIdString<E> newId(Class<E> newEntityClass, String newPk) {
 
     return new PkIdString<>(newEntityClass, newPk);

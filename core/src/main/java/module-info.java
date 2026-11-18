@@ -13,6 +13,8 @@ module io.github.mmm.entity {
 
   requires transitive io.github.mmm.value.converter;
 
+  requires transitive org.slf4j;
+
   exports io.github.mmm.entity;
 
   exports io.github.mmm.entity.id;

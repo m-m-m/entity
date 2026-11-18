@@ -10,14 +10,14 @@ import io.github.mmm.entity.id.sequence.IdSequence;
 /// [IdGenerator] based on an [IdSequence] for [PkIdLong].
 ///
 /// @since 1.0.0
-public class SequenceIdGenerator implements IdGenerator {
+public class IdGeneratorSequence implements IdGenerator {
 
   private final IdSequence sequence;
 
   /// The constructor.
   ///
   /// @param sequence the [IdSequence].
-  public SequenceIdGenerator(IdSequence sequence) {
+  public IdGeneratorSequence(IdSequence sequence) {
 
     super();
     this.sequence = sequence;

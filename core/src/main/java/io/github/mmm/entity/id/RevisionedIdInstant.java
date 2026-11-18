@@ -4,8 +4,8 @@ package io.github.mmm.entity.id;
 
 import java.time.Instant;
 
-/// Implementation of [RevisionedId] with [Instant] as [revision type][#getRevisionType()]. On
-/// [update][#updateRevision()] the [current timestamp][Instant#now()] is used as [revision][#getRevision()].
+/// Implementation of [RevisionedId] with [Instant] as [revision type][#getRevisionType()]. On [update][#updateRevision()] the
+/// [current timestamp][Instant#now()] is used as [revision][#getRevision()].
 ///
 /// @param <E> type of the identified entity.
 /// @param <P> type of the [primary key][#getPk()].

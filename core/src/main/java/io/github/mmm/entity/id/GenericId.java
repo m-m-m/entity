@@ -39,8 +39,7 @@ public interface GenericId<E, P, R extends Comparable<?>, SELF extends GenericId
   /// @see RevisionedIdVersion
   String PROPERTY_REVISION_VERSION = "v";
 
-  /// Name of the [revision][#getRevision()] property (e.g. for JSON or XML) in case of an [java.time.Instant]
-  /// ("t" for "timestamp").
+  /// Name of the [revision][#getRevision()] property (e.g. for JSON or XML) in case of an [java.time.Instant] ("t" for "timestamp").
   ///
   /// @see RevisionedIdInstant
   String PROPERTY_REVISION_INSTANT = "t";
@@ -54,11 +53,6 @@ public interface GenericId<E, P, R extends Comparable<?>, SELF extends GenericId
   @Override
   R getRevision();
 
-  /// @return `true` if this [Id] implementation has a field to store the [revision][#getRevision()],
-  ///         `false` otherwise (see [PkId] and [#withoutRevision()]).
-  boolean hasRevisionField();
-
-  /// @return the [Class] reflecting the [revision][#getRevision()].
   @Override
   Class<R> getRevisionType();
 
@@ -73,19 +67,16 @@ public interface GenericId<E, P, R extends Comparable<?>, SELF extends GenericId
   PkId<E, P, ?> withoutRevision();
 
   /// @param newRevision the new value of [revision][#getRevision()].
-  /// @return a copy of this [Id] with the given [revision][#getRevision()] or this [Id] itself if
-  ///         already satisfying.
+  /// @return a copy of this [Id] with the given [revision][#getRevision()] or this [Id] itself if already satisfying.
   SELF withRevision(R newRevision);
 
   /// @param newPk the new value of [primary key][#getPk()].
-  /// @return a copy of this [Id] with the given [primary key][#getPk()] or this [Id] itself if already
-  ///         satisfying.
+  /// @return a copy of this [Id] with the given [primary key][#getPk()] or this [Id] itself if already satisfying.
   SELF withPk(P newPk);
 
   /// @param newPk the new value of [primary key][#getPk()].
   /// @param newRevision the new value of [revision][#getRevision()].
-  /// @return a copy of this [Id] with the given [primary key][#getPk()] and [revision][#getRevision()]
-  ///         or this [Id] itself if already satisfying.
+  /// @return a copy of this [Id] with the given [primary key][#getPk()] and [revision][#getRevision()] or this [Id] itself if already satisfying.
   SELF withPkAndRevision(P newPk, R newRevision);
 
   @Override

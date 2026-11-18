@@ -4,16 +4,15 @@ package io.github.mmm.entity.id;
 
 import java.util.Objects;
 
-/// Implementation of [AbstractId] that has a [typed][#getRevisionType()] [revision][#getRevision()]. It combines a
-/// [PkId] with the actual [revision][#getRevision()] for better flexibility.
+/// Implementation of [AbstractId] that has a [typed][#getRevisionType()] [revision][#getRevision()]. It combines a [PkId] with the actual
+/// [revision][#getRevision()] for better flexibility.
 ///
 /// @param <E> type of the identified entity.
 /// @param <P> type of the [primary key][#getPk()].
 /// @param <R> type of the [revision][#getRevision()].
 /// @param <SELF> type of this class itself for fluent API calls.
 /// @since 1.0.0
-public abstract class RevisionedId<E, P, R extends Comparable<?>, SELF extends RevisionedId<E, P, R, SELF>>
-    extends AbstractId<E, P, R, SELF> {
+public abstract class RevisionedId<E, P, R extends Comparable<?>, SELF extends RevisionedId<E, P, R, SELF>> extends AbstractId<E, P, R, SELF> {
 
   /// @see #withoutRevision()
   protected final PkId<E, P, ?> id;

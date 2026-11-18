@@ -53,10 +53,7 @@ public final class PkIdLong<E> extends PkId<E, Long, PkIdLong<E>> {
   @Override
   public boolean isTransient() {
 
-    if (this.pk != null) {
-      return false;
-    }
-    return super.isTransient();
+    return (this.pk == null);
   }
 
   @Override

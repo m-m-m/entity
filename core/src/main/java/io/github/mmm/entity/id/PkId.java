@@ -8,8 +8,7 @@ import java.util.UUID;
 
 import io.github.mmm.entity.Entity;
 
-/// An abstract base implementation of [Id] that has no [revision][#getRevision()] and will neither support
-/// optimistic locking nor reading audit trails.
+/// An abstract base implementation of [Id] that has no [revision][#getRevision()] and will neither support optimistic locking nor reading audit trails.
 ///
 /// @param <E> type of the identified entity.
 /// @param <P> type of the [primary key][#getPk()].
@@ -34,6 +33,12 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
   public final Class<E> getEntityClass() {
 
     return this.entityClass;
+  }
+
+  @Override
+  public boolean isTransient() {
+
+    return (getPk() == null);
   }
 
   @Override
@@ -107,8 +112,8 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
     } else if (this.entityClass == null) {
       return newId(newEntityClass, getPk());
     } else {
-      throw new IllegalArgumentException("Illegal type " + newEntityClass.getName() + " - already typed to "
-          + this.entityClass.getName() + " at " + toString());
+      throw new IllegalArgumentException(
+          "Illegal type " + newEntityClass.getName() + " - already typed to " + this.entityClass.getName() + " at " + toString());
     }
   }
 
@@ -125,8 +130,7 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
   public SELF withPkAndRevision(P newPk, Comparable<?> newRevision) {
 
     if (newRevision != null) {
-      throw new IllegalArgumentException(
-          "Cannot change revision type to " + newRevision.getClass().getName() + " - use withRevisionGeneric instead!");
+      throw new IllegalArgumentException("Cannot change revision type to " + newRevision.getClass().getName() + " - use withRevisionGeneric instead!");
     }
     if (Objects.equals(getPk(), newPk)) {
       return self();
@@ -134,24 +138,21 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
     return newId(getEntityClass(), newPk);
   }
 
-  /// @deprecated use [#withRevisionGeneric(Comparable)] instead. As the return type can change this method would
-  ///             break the generic contract.
+  /// @deprecated use [#withRevisionGeneric(Comparable)] instead. As the return type can change this method would break the generic contract.
   @Deprecated
   @Override
   public SELF withRevision(Comparable<?> newRevision) {
 
     if (newRevision != null) {
-      throw new IllegalArgumentException(
-          "You must use withRevisionGeneric instead to avoid violating generic contract.");
+      throw new IllegalArgumentException("You must use withRevisionGeneric instead to avoid violating generic contract.");
     }
     return self();
   }
 
   /// @param <R> type of the new [revision][#getRevision()].
   /// @param newRevision the new [revision][#getRevision()].
-  /// @return a [GenericId] that has the given [revision][#getRevision()] but other attributes from this
-  ///         [PkId]. Therefore the returned object may be of a different class and not be an instance of
-  ///         [PkId].
+  /// @return a [GenericId] that has the given [revision][#getRevision()] but other attributes from this [PkId]. Therefore the returned object may be of a
+  ///         different class and not be an instance of [PkId].
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public <R extends Comparable<?>> GenericId<E, P, R, ?> withRevisionGeneric(R newRevision) {
 
@@ -170,8 +171,7 @@ public abstract class PkId<E, P, SELF extends PkId<E, P, SELF>> extends Abstract
     return result;
   }
 
-  /// This is a generic convenience method to create a [revision-less][Id#withoutRevision()] [Id] back from
-  /// its [primary key][#getPk()].
+  /// This is a generic convenience method to create a [revision-less][Id#withoutRevision()] [Id] back from its [primary key][#getPk()].
   ///
   /// @param <E> type of [Entity].
   /// @param type the [entityClass][#getEntityClass()]

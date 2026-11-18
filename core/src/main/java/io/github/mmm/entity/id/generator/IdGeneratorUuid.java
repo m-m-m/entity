@@ -11,7 +11,7 @@ import io.github.mmm.entity.id.PkIdUuid;
 /// [IdGenerator] based on [UUID] for [PkIdUuid].
 ///
 /// @since 1.0.0
-public class UuidIdGenerator implements IdGenerator {
+public class IdGeneratorUuid implements IdGenerator {
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
   @Override
