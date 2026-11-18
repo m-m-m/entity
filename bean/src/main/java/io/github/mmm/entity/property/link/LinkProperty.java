@@ -27,10 +27,9 @@ import io.github.mmm.value.PropertyPath;
 import io.github.mmm.value.ReadableValue;
 import io.github.mmm.value.converter.TypeMapper;
 
-/// [ObjectProperty] with [Link] [value][#getValue()] [pointing to][Link#getEntity()] an
-/// [entity][io.github.mmm.entity.bean.EntityBean].
+/// [ObjectProperty] with [Link] [value][#getValue()] [pointing to][Link#getEntity()] an [entity][io.github.mmm.entity.bean.EntityBean].
 ///
-/// @param <E> the generic type of the [linked][Link#getEntity()] [entity][io.github.mmm.entity.bean.EntityBean].
+/// @param <E> type of the [linked][Link#getEntity()] [entity][io.github.mmm.entity.bean.EntityBean].
 ///
 /// @since 1.0.0
 public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> {
@@ -57,8 +56,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   /// @param entityClass the optional [Class] of the linked entity.
   /// @param metadata the [metadata][#getMetadata()].
   /// @param resolver the optional [resolver function][IdLink#of(Id, Function)].
-  public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata,
-      Function<Id<E>, E> resolver) {
+  public LinkProperty(String name, Class<E> entityClass, PropertyMetadata<Link<E>> metadata, Function<Id<E>, E> resolver) {
 
     this(name, entityClass, null, metadata, resolver);
   }
@@ -81,8 +79,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   /// @param metadata the [metadata][#getMetadata()].
   /// @param resolver the optional [resolver function][IdLink#of(Id, Function)].
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  protected LinkProperty(String name, Class<E> entityClass, Link<E> value, PropertyMetadata<Link<E>> metadata,
-      Function<Id<E>, E> resolver) {
+  protected LinkProperty(String name, Class<E> entityClass, Link<E> value, PropertyMetadata<Link<E>> metadata, Function<Id<E>, E> resolver) {
 
     super(name, (Class) Link.class, value, metadata);
     if (entityClass == null) {
@@ -124,8 +121,8 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
               newValue = ((IdLink<E>) newValue).withType(this.entityClass);
             }
           } else if (!this.entityClass.isAssignableFrom(idEntityType)) {
-            throw new IllegalArgumentException("Cannot set link of type " + idEntityType.getName() + " to property "
-                + getName() + " with incompatible entity type " + this.entityClass.getName());
+            throw new IllegalArgumentException("Cannot set link of type " + idEntityType.getName() + " to property " + getName()
+                + " with incompatible entity type " + this.entityClass.getName());
           }
         }
       }
@@ -240,8 +237,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   /// @see #eq(Object)
-  /// @param other the literal [Entity] whose [ID][Entity#getId()] to compare with using
-  ///        [= (equal)][PredicateOperator#EQ].
+  /// @param other the literal [Entity] whose [ID][Entity#getId()] to compare with using [= (equal)][PredicateOperator#EQ].
   /// @return the resulting [CriteriaPredicate].
   public CriteriaPredicate eq(E other) {
 
@@ -260,8 +256,7 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
   }
 
   /// @see #neq(Object)
-  /// @param other the literal [Entity] whose [ID][Entity#getId()] to compare with using
-  ///        [!= (not-equal)][PredicateOperator#NEQ].
+  /// @param other the literal [Entity] whose [ID][Entity#getId()] to compare with using [!= (not-equal)][PredicateOperator#NEQ].
   /// @return the resulting [CriteriaPredicate].
   public CriteriaPredicate neq(E other) {
 
@@ -280,14 +275,12 @@ public class LinkProperty<E extends EntityBean> extends ObjectProperty<Link<E>> 
     return predicate((ReadableProperty) this, PredicateOperator.NEQ, (PropertyPath) other);
   }
 
-  private <V> CriteriaPredicate predicate(ReadableProperty<V> property1, PredicateOperator op,
-      PropertyPath<V> property2) {
+  private <V> CriteriaPredicate predicate(ReadableProperty<V> property1, PredicateOperator op, PropertyPath<V> property2) {
 
     return CriteriaPredicate.of(property1, op, property2);
   }
 
-  /// **ATTENTION:**
-  /// This is an internal method for framework code.
+  /// **ATTENTION:** This is an internal method for framework code.
   ///
   /// @param resolver new resolver [Function].
   /// @see IdLink#setResolver(Function)

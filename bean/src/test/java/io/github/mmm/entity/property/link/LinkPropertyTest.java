@@ -81,14 +81,12 @@ class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Target>> 
     String uuidString = uuid.toString();
     checkMapJson("\"" + uuidString + "\"", uuid, null, PkIdUuid.class);
     checkMapJson("{\"id\":{\"u\":\"" + uuidString + "\",\"v\":43}}", uuid, 43L, RevisionedIdVersion.class);
-    checkMapJson("{\"id\":{\"u\":\"" + uuidString + "\",\"t\":\"" + TEST_INSTANT + "\"}}", uuid, instant,
-        RevisionedIdInstant.class);
+    checkMapJson("{\"id\":{\"u\":\"" + uuidString + "\",\"t\":\"" + TEST_INSTANT + "\"}}", uuid, instant, RevisionedIdInstant.class);
     // String variants
     String pk = "primary-key";
     checkMapJson("\"" + pk + "\"", pk, null, PkIdString.class);
     checkMapJson("{\"id\":{\"s\":\"" + pk + "\",\"v\":44}}", pk, 44L, RevisionedIdVersion.class);
-    checkMapJson("{\"id\":{\"s\":\"" + pk + "\",\"t\":\"" + TEST_INSTANT + "\"}}", pk, instant,
-        RevisionedIdInstant.class);
+    checkMapJson("{\"id\":{\"s\":\"" + pk + "\",\"t\":\"" + TEST_INSTANT + "\"}}", pk, instant, RevisionedIdInstant.class);
   }
 
   @SuppressWarnings("rawtypes")
@@ -124,16 +122,19 @@ class LinkPropertyTest extends PropertyTest<Link<Target>, LinkProperty<Target>> 
     LinkProperty<Target> linkProperty = new LinkProperty<>("target", Target.class, null);
     LinkProperty<Target> linkProperty2 = new LinkProperty<>("target", Target.class, null);
     linkProperty.set(Link.of(target));
-    StructuredTextFormat jsonFormat = StandardFormat.json(MarshallingConfig.NO_INDENTATION);
+    StructuredTextFormat jsonFormat = StandardFormat.json(MarshallingConfig.NO_INDENTATION.with(MarshallingConfig.VAR_LINK_TARGET, Boolean.TRUE));
 
     // act
     String json = jsonFormat.write(linkProperty);
     jsonFormat.read(json, linkProperty2);
 
     // assert
-    assertThat(json)
-        .isEqualTo("{\"t\":{\"Id\":\"primary-key\",\"Key\":\"key\",\"Name\":\"name\",\"Title\":\"title\"}}");
+    assertThat(json).isEqualTo("{\"t\":{\"Id\":\"primary-key\",\"Key\":\"key\",\"Name\":\"name\",\"Title\":\"title\"}}");
     assertThat(linkProperty).isEqualTo(linkProperty2);
+    Target entity = linkProperty2.get().getEntity();
+    assertThat(entity.Key().get()).isEqualTo("key");
+    assertThat(entity.Name().get()).isEqualTo("name");
+    assertThat(entity.Title().get()).isEqualTo("title");
   }
 
   @Override

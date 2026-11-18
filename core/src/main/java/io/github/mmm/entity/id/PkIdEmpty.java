@@ -36,7 +36,7 @@ public final class PkIdEmpty<E, SELF extends PkId<E, Object, SELF>> extends PkId
   @Override
   public boolean isTransient() {
 
-    return (getPk() == null);
+    return true;
   }
 
   @Override
