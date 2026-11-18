@@ -43,8 +43,8 @@ public abstract class PropertyTest<V, P extends Property<V>> extends Assertions 
   ///
   /// @param exampleValue the example value used for testing. May not be `null`.
   /// @param propertyClass the [Class] reflecting the [Property] to test.
-  /// @param createByPropertyClass - `true` to create the property to test from the given `propertyClass`, `false`
-  ///        otherwise (to create from [Class] of `exampleValue`).
+  /// @param createByPropertyClass - `true` to create the property to test from the given `propertyClass`, `false` otherwise (to create from
+  ///        [Class] of `exampleValue`).
   @SuppressWarnings("unchecked")
   public PropertyTest(V exampleValue, Class<P> propertyClass, boolean createByPropertyClass) {
 
@@ -124,14 +124,14 @@ public abstract class PropertyTest<V, P extends Property<V>> extends Assertions 
     assertThat(property2.isEqual(property)).isTrue();
   }
 
-  /// Verifies the [value][WritableProperty#get()] of a [read-only][WritableProperty#getReadOnly()] [Property] pointing
-  /// to the example value. This method has to be overridden for tests on [mutable values][Property#isValueMutable()].
+  /// Verifies the [value][WritableProperty#get()] of a [read-only][WritableProperty#getReadOnly()] [Property] pointing to the example value. This method has to
+  /// be overridden for tests on [mutable values][Property#isValueMutable()].
   ///
   /// @param readOnly the [read-only property view][WritableProperty#getReadOnly()].
   protected void verifyReadOnlyValue(P readOnly) {
 
-    throw new IllegalStateException("Property has mutable value (" + readOnly.getValueClass().getName() + ") but test ("
-        + getClass().getSimpleName() + ") does not override verifyReadOnlyValue!");
+    throw new IllegalStateException("Property has mutable value (" + readOnly.getValueClass().getName() + ") but test (" + getClass().getSimpleName()
+        + ") does not override verifyReadOnlyValue!");
   }
 
   private String expectedToString(WritableProperty<V> property) {
@@ -141,8 +141,8 @@ public abstract class PropertyTest<V, P extends Property<V>> extends Assertions 
   }
 
   /// @param property the [WritableProperty] to test.
-  /// @return the [toString()][Object#toString()] representation of the [property value][WritableProperty#get()] for the
-  ///         expected [toString()][WritableProperty#toString()] representation of the [WritableProperty].
+  /// @return the [toString()][Object#toString()] representation of the [property value][WritableProperty#get()] for the expected
+  ///         [toString()][WritableProperty#toString()] representation of the [WritableProperty].
   protected String expectedPropertyValueToString(WritableProperty<V> property) {
 
     return property.get().toString();
